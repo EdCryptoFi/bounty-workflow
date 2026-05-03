@@ -156,6 +156,14 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         {/* ── Hero ── */}
         <section className="relative px-6 mb-32 max-w-[1400px] mx-auto w-full">
           <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
+            {/* Horizontal logo */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-horizontal.png"
+              alt="Bounty Workflow"
+              className="h-20 object-contain mb-10"
+            />
+
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#e9c349]/30 mb-8"
               style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}>
