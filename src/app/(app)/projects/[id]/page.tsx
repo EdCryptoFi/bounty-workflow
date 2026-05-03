@@ -24,21 +24,22 @@ export async function generateMetadata({
   return { title: data?.name ?? "Projeto" };
 }
 
-export default async function ProjectDetailPage({ params }: { params: { id: string } }) {
+export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   await requireUser();
 
   const supabase = await createClient();
   const { data: protocol } = await supabase
     .from("protocols")
     .select("id, name, slug, description, category, website_url")
-    .eq("id", params.id)
+    .eq("id", id)
     .maybeSingle<
       Pick<Protocol, "id" | "name" | "slug" | "description" | "category" | "website_url">
     >();
 
   if (!protocol) notFound();
 
-  const campaigns = await listCampaignsByProtocol(params.id);
+  const campaigns = await listCampaignsByProtocol(id);
 
   return (
     <div className="space-y-6">

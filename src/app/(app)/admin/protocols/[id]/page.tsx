@@ -8,12 +8,13 @@ import type { Protocol } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Editar protocolo" };
 
-export default async function EditProtocolPage({ params }: { params: { id: string } }) {
+export default async function EditProtocolPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await createClient();
   const { data } = await supabase
     .from("protocols")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .maybeSingle();
 
   if (!data) notFound();

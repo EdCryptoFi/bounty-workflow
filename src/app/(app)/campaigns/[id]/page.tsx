@@ -59,10 +59,11 @@ const STEP_STATUS_TEXT: Record<Step["status"], string> = {
 export default async function CampaignDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const { user } = await requireUser();
-  const data = await getCampaignById(params.id);
+  const data = await getCampaignById(id);
   if (!data) notFound();
 
   const { campaign, steps, attachments } = data;
