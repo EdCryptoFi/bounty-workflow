@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const nav = [
+  { href: "/protocols", label: "Protocols", icon: "description" },
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/campaigns", label: "Campaigns", icon: "rocket_launch" },
   { href: "/archive", label: "Archive", icon: "inventory_2" },
   { href: "/reminders", label: "Reminders", icon: "notifications_active" },
-  { href: "/admin/protocols", label: "Protocols", icon: "description" },
 ];
 
 const bottomNav = [
