@@ -1,0 +1,276 @@
+===============================================================================
+BOUNTY WORKFLOW — MÓDULOS BACKEND
+===============================================================================
+Inclui: src/lib, src/app/api, src/middleware.ts, supabase/migrations.
+
+-------------------------------------------------------------------------------
+MÓDULO: MIDDLEWARE (EDGE)
+-------------------------------------------------------------------------------
+Arquivo:  src/middleware.ts
+Função:   Interceptar toda request Next e refrescar sessão Supabase via cookies.
+Exclui:   _next, favicon, assets de imagem, /api/cron, /api/webhooks
+          (webhooks e cron autenticam por HMAC/segredo próprio).
+Usa:      src/lib/supabase/middleware.ts (updateSession).
+
+-------------------------------------------------------------------------------
+MÓDULO: SUPABASE CLIENT
+-------------------------------------------------------------------------------
+Pasta:   src/lib/supabase/
+Papel:   Fábricas de cliente Supabase para 3 contextos distintos.
+
+ client.ts        createClient() para Client Components ("use client").
+                  Usa createBrowserClient de @supabase/ssr.
+
+ server.ts        createClient() para Server Components/Actions.
+                  Usa createServerClient lendo cookies() de next/headers.
+                  Também expõe createAdminClient() com SUPABASE_SERVICE_ROLE_KEY
+                  — bypass de RLS. USAR SÓ em cron e webhooks.
+
+ middleware.ts    updateSession(request) — refresca o token e sincroniza
+                  cookies no NextResponse. Chamado pelo middleware edge.
+
+-------------------------------------------------------------------------------
+MÓDULO: AUTH HELPERS
+-------------------------------------------------------------------------------
+Arquivo: src/lib/auth.ts
+
+ requireUser()    Pega user autenticado via supabase.auth.getUser().
+                  Se não houver user, redirect("/auth/login").
+                  Retorna { supabase, user }.
+
+ isAdmin()        Chama RPC is_admin() do Postgres (que consulta user_roles).
+                  Boolean. Usado em admin/layout.tsx e admin/protocols actions.
+
+-------------------------------------------------------------------------------
+MÓDULO: ENV (VALIDAÇÃO)
+-------------------------------------------------------------------------------
+Arquivo: src/lib/env.ts
+Valida no boot todas as envs com Zod. Separa serverSchema (tudo) de
+clientSchema (apenas NEXT_PUBLIC_*). Expõe `env` tipado e flag
+`paymentsEnabled`.
+
+Envs validadas:
+    NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
+    NEXT_PUBLIC_APP_URL
+    RESEND_API_KEY, RESEND_FROM
+    CRON_SECRET
+    NEXT_PUBLIC_PAYMENTS_ENABLED
+    STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_ID
+    MERCADOPAGO_ACCESS_TOKEN, MERCADOPAGO_WEBHOOK_SECRET, MERCADOPAGO_PLAN_ID
+    NEXT_PUBLIC_SENTRY_DSN (opcional)
+
+-------------------------------------------------------------------------------
+MÓDULO: LOGGER + SENTRY
+-------------------------------------------------------------------------------
+Arquivo: src/lib/logger.ts
+Logger JSON estruturado: { ts, level, message, payload }.
+Níveis: debug, info, warn, error. Em produção, "error" também dispara um
+envelope HTTP direto pra Sentry (sem SDK) usando NEXT_PUBLIC_SENTRY_DSN.
+Parser de stack trace próprio pra montar frames.
+
+-------------------------------------------------------------------------------
+MÓDULO: UTILITIES
+-------------------------------------------------------------------------------
+Arquivo: src/lib/utils.ts
+    cn(...inputs) — combina classnames com clsx + tailwind-merge.
+
+-------------------------------------------------------------------------------
+MÓDULO: TYPES
+-------------------------------------------------------------------------------
+Arquivo: src/lib/types.ts
+Fonte única dos tipos TS que batem com o schema do Supabase:
+    enums:   CampaignStatus, StepStatus, AttachmentType, ReminderChannel,
+             ReminderStatus
+    tabelas: Protocol, Campaign, Step, Attachment
+    composto: CampaignWithCounts (Campaign + step_count, done_count,
+              days_to_deadline)
+
+-------------------------------------------------------------------------------
+MÓDULO: CAMPAIGNS (queries + actions)
+-------------------------------------------------------------------------------
+Pasta: src/lib/campaigns/
+
+ queries.ts
+   listCampaignsForTimeline()
+     SELECT campanhas do user + join implícito (contagem de steps via RPC
+     ou subquery) + cálculo de days_to_deadline. Ordenado por deadline.
+     Usado por /dashboard, /campaigns, /archive.
+
+   getCampaignById(id)
+     Fetch da campanha com steps (ordered by order_index) e attachments.
+     Usado por /campaigns/[id].
+
+ actions.ts  (use server)
+   createCampaignAction(formData)
+     Valida com Zod (title, description, protocol_id, deadline,
+     estimated_value_brl). Insere em campaigns (user_id via RLS).
+     revalidatePath("/dashboard") + redirect(`/campaigns/${id}`).
+
+   addStepAction(campaignId, formData)
+     Calcula next order_index (MAX+1 por campanha). Insere step.
+     revalidatePath(`/campaigns/${campaignId}`).
+
+   toggleStepAction(stepId, nextStatus)
+     Atualiza step.status; se "done" seta completed_at = now.
+
+   archiveAction(id) / unarchiveAction(id)
+     Seta archived_at / limpa; revalida /dashboard e /archive.
+
+-------------------------------------------------------------------------------
+MÓDULO: PROTOCOLS (actions admin)
+-------------------------------------------------------------------------------
+Arquivo: src/lib/protocols/actions.ts  (use server)
+CRUD completo de protocolos — só admins. Cada action chama isAdmin() antes
+de mexer. Campos: slug, name, description, logo_url, category, website_url,
+deadline, is_active.
+
+-------------------------------------------------------------------------------
+MÓDULO: REMINDERS (actions)
+-------------------------------------------------------------------------------
+Arquivo: src/lib/reminders/actions.ts  (use server)
+ createReminderAction(formData)
+   Valida channel ∈ {email, push, in_app} (hoje só email funciona no cron),
+   trigger_at ISO, message. Insere em reminders com status="pending".
+
+ cancelReminderAction(id)
+   UPDATE reminders SET status="canceled" WHERE id = ? AND user_id = auth.uid().
+
+-------------------------------------------------------------------------------
+MÓDULO: PAYMENTS
+-------------------------------------------------------------------------------
+Pasta: src/lib/payments/
+
+ config.ts
+   getActiveProvider(): "mercadopago" | "stripe" | null
+   - null se paymentsEnabled=false
+   - "mercadopago" se MERCADOPAGO_ACCESS_TOKEN está setado (preferência BR)
+   - "stripe" se STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET
+   - null caso contrário
+
+ mercadopago.ts
+   createPreapproval({ userId, email })
+     POST /preapproval — subscription recorrente. external_reference = userId
+     (NUNCA email). Retorna init_point (URL de checkout).
+   getPreapproval(id)
+     Fallback quando webhook chega sem secret — valida evento via API.
+   verifyWebhookSignature(headers, rawBody)
+     Valida x-signature (HMAC-SHA256 com MERCADOPAGO_WEBHOOK_SECRET).
+
+ stripe.ts
+   Cliente Stripe via fetch puro (sem SDK pra manter bundle pequeno).
+   Cria Checkout Sessions e valida assinatura com crypto.subtle.verify.
+
+ idempotency.ts
+   claimEvent(provider, eventId, type, payload)
+     INSERT em webhook_events com UNIQUE(provider, provider_event_id).
+     Se já existe -> retorna "duplicate" e handler retorna 200 sem reprocessar.
+   finalizeEvent(id, status, error?)
+     UPDATE com processed_at e error_message.
+
+-------------------------------------------------------------------------------
+MÓDULO: EMAIL
+-------------------------------------------------------------------------------
+Arquivo: src/lib/email/resend.ts
+ sendEmail({ to, subject, html, text? })
+   POST https://api.resend.com/emails com Authorization: Bearer RESEND_API_KEY.
+   from = RESEND_FROM. Retorna { ok: true, id } ou { ok: false, error }.
+   Se RESEND_API_KEY ausente, retorna { ok: false, error: "not_configured" }
+   (não quebra o build).
+
+-------------------------------------------------------------------------------
+MÓDULO: EXPORT CSV
+-------------------------------------------------------------------------------
+Pasta: src/lib/export/
+
+ csv.ts
+   csvEscape(value)
+     Protege contra CSV injection (fix A4): se o valor começa com "=", "+",
+     "-", "@", tab ou CR, prefixa com apóstrofo "'". RFC 4180: campos com
+     aspas, vírgula ou quebra de linha ficam entre aspas com "" duplicadas.
+   csvRow(fields): junta com ",".
+   toCsv(rows): BOM UTF-8 + linhas com "\r\n".
+
+ __tests__/csv.test.ts
+   Smoke tests dos cenários: =HYPERLINK, +cmd, -exec, @SUM, aspas, vírgulas,
+   line breaks.
+
+-------------------------------------------------------------------------------
+API ROUTES
+-------------------------------------------------------------------------------
+
+ src/app/api/health/route.ts
+   GET /api/health -> 200 { ok: true, ts }
+   Smoke test básico. Usado pelos scripts de verificação de deploy.
+
+ src/app/api/cron/reminders/route.ts
+   GET /api/cron/reminders (Vercel cron — vercel.json — 0 9 * * *)
+   Auth: header "x-cron-secret" == CRON_SECRET.
+   Fluxo:
+     1. createAdminClient() (bypass RLS pra varrer todos os users).
+     2. SELECT reminders WHERE status='pending' AND trigger_at <= now.
+     3. Pra cada reminder: envia e-mail via Resend (canais push/in_app skip).
+     4. UPDATE reminders status='sent' | 'failed'; INSERT notification_logs.
+
+ src/app/api/export/campaigns/route.ts
+   GET /api/export/campaigns?scope=active|archived|all
+   Auth: session normal (RLS enforça escopo do user).
+   Busca campanhas + protocol name, passa por csvEscape(), devolve
+   text/csv com Content-Disposition: attachment;
+   filename="bountyworkflow-{scope}-{YYYY-MM-DD}.csv".
+
+ src/app/api/webhooks/stripe/route.ts
+   POST webhook Stripe. Lê rawBody, valida Stripe-Signature com
+   crypto.subtle. claimEvent -> processa (invoice.paid, subscription.*) ->
+   finalizeEvent. Atualiza subscriptions.
+
+ src/app/api/webhooks/mercadopago/route.ts
+   POST webhook MP. Valida x-signature via HMAC (se secret setado) OU
+   faz fallback getPreapproval(id) pra validar via API. claimEvent ->
+   processa -> finalizeEvent. Atualiza subscriptions.
+
+ src/app/api/webhooks/asaas/route.ts
+   410 Gone. Endpoint deprecated — Asaas foi substituído por MP.
+   Mantido só pra retornar erro claro se algum webhook antigo ainda chegar.
+
+-------------------------------------------------------------------------------
+MIGRATIONS (supabase/migrations)
+-------------------------------------------------------------------------------
+Ordem cronológica (nome contém timestamp):
+
+ 20260417000001_initial_schema.sql
+   - Extensions: uuid-ossp, pgcrypto, citext
+   - Enums: user_role, subscription_provider, subscription_status,
+            campaign_status, step_status, attachment_type, reminder_channel,
+            reminder_status
+   - Tabelas: users, user_roles, protocols, campaigns, steps, attachments,
+              reminders, notification_logs, subscriptions, webhook_events
+   - Views: v_user_billing (trial + status)
+   - RLS: FORCE RLS em todas; policies por user_id / is_admin() / public read
+   - Função: is_admin() — usa user_roles ao invés de auth.role() (fix C3)
+
+ 20260417000002_storage_buckets.sql
+   - CREATE bucket "attachments" (private, 10MB, whitelist MIME)
+   - Policies em storage.objects: path prefix {user_id} via (foldername(name))[1]
+
+ 20260417000003_protocols_seed.sql
+   - INSERT protocolos exemplo (catálogo inicial)
+
+ 20260418000001_add_mercadopago_provider.sql
+   - ALTER TYPE subscription_provider ADD VALUE 'mercadopago'
+
+ 20260419000001_drop_chain_network.sql
+   - ALTER TABLE protocols DROP COLUMN chain (se existia)
+   - ALTER TABLE campaigns DROP COLUMN network (se existia)
+   - Limpeza do Commit 1 (simplificar modelo)
+
+-------------------------------------------------------------------------------
+FIXES DE SEGURANÇA APLICADOS
+-------------------------------------------------------------------------------
+C1  Sessão refrescada em middleware + RLS em todas as tabelas.
+C3  is_admin() consulta user_roles (não auth.role()).
+C4  Mercado Pago: external_reference = user.id (nunca e-mail).
+C5  webhook_events tem UNIQUE(provider, provider_event_id) — idempotência
+    atômica, elimina race condition.
+A4  csvEscape prefixa caracteres perigosos em CSV.
+
+===============================================================================

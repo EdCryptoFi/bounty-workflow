@@ -1,0 +1,122 @@
+===============================================================================
+BOUNTY WORKFLOW — RELATÓRIO DE LIMPEZA
+===============================================================================
+Data: 2026-04-23
+Executado por: compilação automatizada da documentação
+Objetivo: eliminar arquivos mortos, obsoletos ou temporários — manter só o
+que é usado pelo build e pela operação.
+
+-------------------------------------------------------------------------------
+1. ARQUIVOS REMOVIDOS DA RAIZ
+-------------------------------------------------------------------------------
+
+Temporários/leftover (0 bytes, nenhuma referência no código):
+    _test_unlink
+    _tmp_3249_64eccf6db926a4586d42abc33ca03826
+    _tmp_3249_9fb3adc3f857a91ee887879db4036b15
+
+Exports de chat Qwen (anotações soltas, não-referenciadas):
+    Qwen_txt_20260417_1tb2hmejp.txt
+    Qwen_txt_20260417_3ophu82x7.txt
+    Qwen_txt_20260417_7w78ks8ol.txt
+    Qwen_txt_20260417_85yaxvxws.txt
+    Qwen_txt_20260417_9b8ii13gs.txt
+    Qwen_txt_20260417_a4npfq1ij.txt
+    Qwen_txt_20260417_vjvhfvcys.txt
+    Qwen_txt_20260417_yqkz7gl1l.txt
+
+Mockups antigos substituídos pelos da pasta /mockups (commit1/commit2/commit3):
+    pipeline-mockup.html
+    pipeline-mockup-v2.html
+
+-------------------------------------------------------------------------------
+2. CÓDIGO MORTO REMOVIDO DE src/
+-------------------------------------------------------------------------------
+
+Stub de provider descontinuado (Asaas foi substituído por Mercado Pago):
+    src/lib/payments/asaas.ts
+        Conteúdo: só `export {}` com comentário DEPRECATED.
+        Nenhum import no codebase.
+
+Endpoint webhook 410 Gone (já não serve função — MP tem seu próprio endpoint):
+    src/app/api/webhooks/asaas/route.ts
+    src/app/api/webhooks/asaas/         (diretório inteiro)
+
+Ajuste de comentário em src/lib/payments/config.ts:
+    Antes: "sem as chaves do Stripe/Asaas"
+    Depois: "sem as chaves do Mercado Pago/Stripe"
+
+-------------------------------------------------------------------------------
+3. ARQUIVOS MANTIDOS COM RESSALVAS (ATENÇÃO)
+-------------------------------------------------------------------------------
+
+AVALIACAO_COMPLETA.md (15K)
+    Avaliação inicial do projeto; manter como referência histórica.
+
+Ui.png (679K)
+    Screenshot da UI. Sugestão: mover pra /mockups/ pra consistência.
+
+Workflow.ai (1.1M)
+    Arquivo Illustrator — design de referência. Pesa 1.1MB no repo;
+    considerar mover pra storage externo (Figma/Drive) se for crescer.
+
+client_secret_134515549498-*.json
+    >>> CREDENCIAL OAUTH GOOGLE NA RAIZ DO REPO <<<
+    AÇÃO RECOMENDADA: mover pra fora do projeto IMEDIATAMENTE e
+    garantir que .gitignore cobre esse padrão. Se o arquivo já foi
+    commitado, rotacionar a credencial no Google Cloud Console.
+
+.env.local (855 bytes)
+    Segredos locais; já coberto pelo .gitignore — OK, só confirmar.
+
+-------------------------------------------------------------------------------
+4. COMPONENTES VERIFICADOS E TODOS EM USO
+-------------------------------------------------------------------------------
+
+Após cross-check de imports:
+ src/components/app/*                    Todos importados por app-shell.
+ src/components/auth/google-button.tsx   Importado por login-form e signup-form.
+ src/components/auth/twitter-button.tsx  Importado por login-form e signup-form.
+ src/components/campaigns/*              Todos importados em /campaigns/[id] e Timeline.
+ src/components/theme/*                  Importados por root layout.
+ src/components/public/public-header.tsx Importado por (public) layout.
+
+Não foi encontrado nenhum componente órfão.
+
+-------------------------------------------------------------------------------
+5. ESTADO PÓS-LIMPEZA
+-------------------------------------------------------------------------------
+
+Raiz mais enxuta (apenas arquivos de config, lock, docs úteis e assets).
+src/ sem código deprecated — só Mercado Pago e Stripe ativos no módulo
+    de pagamentos.
+docs/ com pasta project/ dedicada à documentação compilada (6 arquivos).
+Referências internas a "asaas" eliminadas de código — resta apenas o enum
+    Postgres subscription_provider com valor 'asaas' (legado) para não
+    quebrar registros antigos; pode ser removido numa migration futura
+    depois de confirmar que não há subscriptions.provider='asaas' em prod.
+
+-------------------------------------------------------------------------------
+6. CHECKLIST DE VERIFICAÇÃO (rodar depois da limpeza)
+-------------------------------------------------------------------------------
+
+    pnpm typecheck     # confirma que nada quebrou em tipos
+    pnpm lint          # confirma que nenhum import perdido
+    pnpm build         # confirma build de produção
+
+Se qualquer um falhar, os únicos pontos prováveis seriam referências
+antigas a payments/asaas ou /api/webhooks/asaas — já varridas aqui,
+mas vale rodar.
+
+-------------------------------------------------------------------------------
+7. SUGESTÕES DE PRÓXIMA LIMPEZA (NÃO EXECUTADAS AINDA)
+-------------------------------------------------------------------------------
+
+- Criar migration pra remover 'asaas' do enum subscription_provider
+  (precisa confirmar antes que nenhuma subscriptions.provider='asaas'
+  existe em produção).
+- Mover Ui.png pra /mockups/ ou /docs/assets/.
+- Mover Workflow.ai pra storage externo se passar de 2MB.
+- Mover client_secret_*.json pra fora do repositório.
+
+===============================================================================

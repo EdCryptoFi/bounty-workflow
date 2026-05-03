@@ -1,0 +1,124 @@
+===============================================================================
+BOUNTY WORKFLOW — VISÃO GERAL DO PROJETO
+===============================================================================
+Data: 2026-04-23
+Stack principal: Next.js 14 (App Router) · Supabase · TypeScript · Tailwind
+Owner: Ed (cryptolairbr@gmail.com)
+Repo: github.com/EdCryptoFi/bounty-workflow
+Deploy: Vercel
+
+-------------------------------------------------------------------------------
+1. O QUE É
+-------------------------------------------------------------------------------
+SaaS em PT-BR para "bounty hunters" / caçadores de recompensas em protocolos
+cripto. O usuário cadastra campanhas (uma por protocolo/bounty), quebra em
+tarefas (steps), anexa arquivos de evidência, define prazos e recebe
+lembretes automáticos por e-mail. Plano freemium com trial de 14 dias +
+assinatura mensal via Mercado Pago (BR) ou Stripe (internacional).
+
+Público-alvo: usuários brasileiros que executam tarefas pagas em protocolos
+DeFi/Web3 (airdrops, quests, bounties) e precisam organizar prazos, evidências
+e pagamentos em um só lugar.
+
+-------------------------------------------------------------------------------
+2. PROPOSTA DE VALOR
+-------------------------------------------------------------------------------
+- Timeline única com todas as campanhas ordenadas por deadline
+- Quebra em steps com status (todo / in_progress / done)
+- Workflow canvas visual (react-flow) para planejamento
+- Upload de anexos por campanha (bucket privado Supabase, RLS)
+- Lembretes por e-mail via cron diário (Vercel + Resend)
+- Export CSV com proteção contra CSV injection (A4)
+- Catálogo público de protocolos suportados
+- Área admin para cadastrar/editar protocolos
+
+-------------------------------------------------------------------------------
+3. STACK
+-------------------------------------------------------------------------------
+Runtime         : Node 20+
+Gerenciador     : pnpm 9.12.3
+Framework       : Next.js 14.2.18 (App Router, React Server Components)
+UI              : React 18.3.1 + Tailwind CSS + next-themes (dark default)
+Ícones          : lucide-react 0.454
+Validação       : Zod 3.23
+Banco + Auth    : Supabase (Postgres + Auth + Storage)
+Cliente SSR     : @supabase/ssr 0.5 (cookies + middleware)
+Canvas visual   : @xyflow/react 12.3 (react-flow)
+Datas           : date-fns 3.6
+E-mail          : Resend (HTTP API)
+Pagamentos      : Mercado Pago (preferencial BR) + Stripe (fallback intl)
+Observabilidade : Logger estruturado + Sentry (via HTTP Store API)
+CI              : GitHub Actions (.github/workflows/ci.yml)
+Deploy          : Vercel
+Cron            : Vercel cron (vercel.json)
+
+-------------------------------------------------------------------------------
+4. COMANDOS
+-------------------------------------------------------------------------------
+Dev             : pnpm dev
+Build           : pnpm build
+Start (prod)    : pnpm start
+Lint            : pnpm lint
+Type-check      : pnpm typecheck
+Format          : pnpm format
+
+-------------------------------------------------------------------------------
+5. ARQUITETURA EM ALTO NÍVEL
+-------------------------------------------------------------------------------
+Next.js App Router com três route groups:
+
+    src/app/(public)   — landing, catálogo de protocolos, páginas legais
+    src/app/(auth)     — login, signup, callback OAuth, signout
+    src/app/(app)      — dashboard, campanhas, admin, reminders, settings
+
+Middleware (src/middleware.ts) refresca sessão Supabase em todas as requests
+exceto assets estáticos, /api/cron e /api/webhooks (webhooks autenticam via
+HMAC próprio).
+
+Dados via Server Components + Server Actions. RLS ativo em TODAS as tabelas
+(FORCE RLS). Service role key só usada em createAdminClient() para cron e
+webhooks.
+
+Fluxo típico de mutação:
+    Form (client) -> Server Action -> Supabase (RLS) -> revalidatePath
+
+Fluxo de pagamento:
+    Usuário clica Upgrade -> Server Action cria Preapproval MP
+    -> redireciona pro checkout -> MP chama /api/webhooks/mercadopago
+    -> valida HMAC + idempotência (webhook_events) -> atualiza subscriptions
+
+Fluxo de cron:
+    Vercel cron (09:00 UTC) -> GET /api/cron/reminders (CRON_SECRET)
+    -> busca reminders pending com trigger_at <= now -> envia e-mail (Resend)
+    -> atualiza status + loga em notification_logs
+
+-------------------------------------------------------------------------------
+6. ESTADO ATUAL (2026-04-23)
+-------------------------------------------------------------------------------
+Commits concluídos:
+    Módulos 1-8 (auth, layout, campanhas, protocolos, reminders, pagamentos,
+        arquivo/export, observabilidade)
+    Commit 1 — Shell novo (topbar, sidebar, drawer, dark default)
+    Commit 2 — Cards ricos, modal Nova Tarefa, react-rnd canvas, painel Info
+    Commit 2.5 — Briefings como badges, modal detail view, login select
+
+Pendente:
+    Commit 3 — /projects (Kreators) e /performance (analytics) — hoje são
+               placeholders (ComingSoon)
+
+Deploy: produção ativa em Vercel.
+Supabase: migrations aplicadas (incluindo Commit 2.5 que zera briefings).
+
+-------------------------------------------------------------------------------
+7. PRINCÍPIOS DE CÓDIGO
+-------------------------------------------------------------------------------
+- DRY, YAGNI, TDD onde faz sentido
+- Português nos comentários e copy (target BR)
+- Nomes de arquivos em kebab-case
+- Tipos em src/lib/types.ts (uma fonte só da verdade)
+- Env vars validadas no boot via src/lib/env.ts (Zod)
+- CSV sempre com csvEscape() pra evitar injection
+- Webhooks sempre com claimEvent()/finalizeEvent() (idempotência atômica)
+- Logger estruturado (nunca console.log em produção)
+
+===============================================================================

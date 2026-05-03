@@ -1,0 +1,212 @@
+===============================================================================
+BOUNTY WORKFLOW — ESTRUTURA COMPLETA DE PASTAS E ARQUIVOS
+===============================================================================
+
+Raiz do projeto: /Users/fabioalves/Desktop/VibeCode/Bounty WorkFlow
+
+-------------------------------------------------------------------------------
+RAIZ (arquivos de config, lock, docs)
+-------------------------------------------------------------------------------
+.env.example                      Modelo de variáveis de ambiente
+.eslintrc.json                    Config ESLint (next/core-web-vitals)
+.prettierrc.json                  Config Prettier + plugin Tailwind
+.npmrc                            Config pnpm
+.gitignore                        Ignora node_modules, .next, .env.local etc.
+next.config.mjs                   Config Next (reactStrictMode, imagens, headers)
+tailwind.config.ts                Config Tailwind (cores mint, dark mode classe)
+postcss.config.mjs                Plugins: tailwindcss + autoprefixer
+tsconfig.json                     TS strict, path alias @/* -> src/*
+package.json                      Scripts e deps (pnpm@9.12.3)
+pnpm-lock.yaml                    Lock de dependências
+vercel.json                       Cron job: /api/cron/reminders (0 9 * * *)
+
+.github/workflows/ci.yml          CI: typecheck + lint + build
+
+-------------------------------------------------------------------------------
+docs/   (documentação do projeto)
+-------------------------------------------------------------------------------
+docs/HANDOFF.md                   Handoff operacional pro dev/owner
+docs/DEPLOY_REPORT.md             Log do deploy inicial
+docs/MERCADO_PAGO_SETUP.md        Guia de setup Mercado Pago (env + webhook)
+docs/superpowers/plans/
+    2026-04-19-commit2-cards-ricos.md        Plano Commit 2
+    2026-04-20-commit2.5-briefings-badges.md Plano Commit 2.5
+docs/project/                     (este diretório — documentação compilada)
+    01-overview.txt               Visão geral
+    02-structure.txt              Estrutura (este arquivo)
+    03-modules-backend.txt        Módulos backend (lib, api, supabase)
+    04-modules-frontend.txt       Módulos frontend (app, components)
+    05-database-schema.txt        Schema do banco + tipos TS
+    06-cleanup-report.txt         Relatório do que foi removido
+
+-------------------------------------------------------------------------------
+mockups/   (HTML de design, não-produção)
+-------------------------------------------------------------------------------
+mockups/pipeline-mockup.html      Mockup v1 (shell inicial)
+mockups/pipeline-mockup-v2.html   Mockup v2 (shell + cards ricos)
+
+-------------------------------------------------------------------------------
+supabase/   (migrations SQL ordenadas)
+-------------------------------------------------------------------------------
+supabase/migrations/
+    20260417000001_initial_schema.sql       Extensions, enums, todas as tabelas,
+                                            RLS completa, is_admin() helper
+    20260417000002_storage_buckets.sql      Bucket "attachments" + policies RLS
+    20260417000003_protocols_seed.sql       Seed de protocolos exemplo
+    20260418000001_add_mercadopago_provider.sql
+                                            ALTER enum subscription_provider
+                                            para incluir 'mercadopago'
+    20260419000001_drop_chain_network.sql   DROP colunas chain/network
+                                            (limpeza Commit 1)
+
+-------------------------------------------------------------------------------
+src/   (todo código-fonte)
+-------------------------------------------------------------------------------
+
+src/middleware.ts                 Middleware Next: refresh de sessão Supabase,
+                                  pula _next, /api/cron e /api/webhooks
+
+src/app/layout.tsx                Root layout: metadata, ThemeProvider, lang pt-BR
+src/app/error.tsx                 Error boundary global
+src/app/not-found.tsx             Página 404
+src/app/globals.css               CSS base (variáveis CSS de tema)
+
+------------------------ src/app/(public) ------------------------
+Route group para páginas públicas (sem auth).
+
+src/app/(public)/layout.tsx                   Layout público (PublicHeader + footer)
+src/app/(public)/page.tsx                     Landing page (hero + 3 features + CTA)
+src/app/(public)/como-funciona/page.tsx       Página "Como funciona"
+src/app/(public)/legal/termos/page.tsx        Termos de uso
+src/app/(public)/legal/privacidade/page.tsx   Política de privacidade
+src/app/(public)/protocols/page.tsx           Catálogo público de protocolos
+src/app/(public)/protocols/[slug]/page.tsx    Detalhe de protocolo
+
+------------------------ src/app/(auth) ------------------------
+Route group para login/signup/callback.
+
+src/app/(auth)/layout.tsx                     Layout auth (mais simples, sem sidebar)
+src/app/(auth)/auth/login/page.tsx            Página de login
+src/app/(auth)/auth/login/login-form.tsx      Form client (email+senha, OAuth)
+src/app/(auth)/auth/login/actions.ts          Server action: signInWithPassword
+src/app/(auth)/auth/signup/page.tsx           Página de signup
+src/app/(auth)/auth/signup/signup-form.tsx    Form client (email+senha+termos)
+src/app/(auth)/auth/signup/actions.ts         Server action: cria auth.users +
+                                              public.users com trial de 14 dias
+src/app/(auth)/auth/callback/route.ts         OAuth callback (Google, X)
+src/app/(auth)/auth/signout/route.ts          Signout + redirect
+
+------------------------ src/app/(app) ------------------------
+Route group autenticado. Layout chama requireUser() e renderiza AppShell.
+
+src/app/(app)/layout.tsx                      Layout autenticado (AppShell)
+
+src/app/(app)/dashboard/page.tsx              Dashboard = Timeline das campanhas
+src/app/(app)/campaigns/page.tsx              Alias para dashboard
+src/app/(app)/campaigns/new/page.tsx          Wrapper da página Nova campanha
+src/app/(app)/campaigns/new/new-form.tsx      Form client Nova campanha
+src/app/(app)/campaigns/[id]/page.tsx         Detalhe da campanha: WorkflowCanvas
+                                              + lista TaskCard + AttachmentDropzone
+                                              + AddStepForm
+
+src/app/(app)/archive/page.tsx                Campanhas arquivadas + export
+src/app/(app)/archive/unarchive-button.tsx    Botão client desarquivar
+
+src/app/(app)/reminders/page.tsx              Lista de reminders
+src/app/(app)/reminders/create-form.tsx       Form client criar reminder
+src/app/(app)/reminders/cancel-button.tsx     Botão client cancelar
+
+src/app/(app)/admin/layout.tsx                Layout admin (guarda isAdmin)
+src/app/(app)/admin/protocols/page.tsx        Lista + CRUD protocolos
+src/app/(app)/admin/protocols/new/page.tsx    Criar protocolo
+src/app/(app)/admin/protocols/[id]/page.tsx   Editar protocolo
+src/app/(app)/admin/protocols/form.tsx        Form compartilhado create/edit
+src/app/(app)/admin/protocols/delete-button.tsx  Botão delete
+
+src/app/(app)/settings/page.tsx               Overview de configurações
+src/app/(app)/settings/account/page.tsx       Perfil (nome, avatar)
+src/app/(app)/settings/billing/page.tsx       Página de assinatura
+src/app/(app)/settings/billing/actions.ts     Server action criar Preapproval MP
+src/app/(app)/settings/billing/upgrade-button.tsx  Botão upgrade
+
+src/app/(app)/timeline/page.tsx               PLACEHOLDER (ComingSoon)
+src/app/(app)/projects/page.tsx               PLACEHOLDER (ComingSoon — Commit 3)
+src/app/(app)/performance/page.tsx            PLACEHOLDER (ComingSoon — Commit 3)
+
+------------------------ src/app/api ------------------------
+API routes (route handlers).
+
+src/app/api/health/route.ts                   GET healthcheck (smoke test)
+src/app/api/cron/reminders/route.ts           GET cron diário (Vercel cron)
+src/app/api/export/campaigns/route.ts         GET ?scope=active|archived|all → CSV
+src/app/api/webhooks/stripe/route.ts          POST webhook Stripe (HMAC + idempotência)
+src/app/api/webhooks/mercadopago/route.ts     POST webhook MP (HMAC + idempotência)
+src/app/api/webhooks/asaas/route.ts           410 Gone — deprecated, retorna erro
+
+------------------------ src/components ------------------------
+
+src/components/app/app-shell.tsx              Shell completo: sidebar + drawer + topbar
+src/components/app/sidebar.tsx                SidebarNav + SidebarUserCard (260px)
+src/components/app/mobile-drawer.tsx          Drawer mobile (hamburger)
+src/components/app/search-bar.tsx             Busca global topo (Cmd+K foca)
+src/components/app/topbar-actions.tsx         NotifBell + SettingsButton
+src/components/app/trial-badge.tsx            Badge de tier/trial (v_user_billing)
+src/components/app/user-menu.tsx              Dropdown avatar (conta, settings, sair)
+src/components/app/coming-soon.tsx            Placeholder de feature futura
+
+src/components/auth/google-button.tsx         Botão OAuth Google
+src/components/auth/twitter-button.tsx        Botão OAuth X/Twitter
+
+src/components/campaigns/timeline.tsx         Lista de cards de campanha
+src/components/campaigns/task-card.tsx        Card de step com toggle de status
+src/components/campaigns/workflow-canvas.tsx  Canvas react-flow visual
+src/components/campaigns/add-step-form.tsx    Form inline Novo step
+src/components/campaigns/attachment-dropzone.tsx  Upload drag-and-drop
+
+src/components/public/public-header.tsx       Header da landing (logo + Entrar)
+
+src/components/theme/theme-provider.tsx       Provider next-themes
+src/components/theme/theme-toggle.tsx         Toggle sol/lua
+
+------------------------ src/lib ------------------------
+
+src/lib/types.ts                  Types TS: Protocol, Campaign, Step,
+                                  Attachment, CampaignWithCounts + enums
+src/lib/utils.ts                  cn() — clsx + tailwind-merge
+src/lib/env.ts                    Validação Zod de envs (server + client)
+src/lib/auth.ts                   requireUser(), isAdmin()
+src/lib/logger.ts                 Logger estruturado + bridge Sentry
+
+src/lib/supabase/client.ts        createClient() browser ("use client")
+src/lib/supabase/server.ts        createClient() server (cookies) +
+                                  createAdminClient() (service_role)
+src/lib/supabase/middleware.ts    updateSession() pro middleware Next
+
+src/lib/campaigns/queries.ts      listCampaignsForTimeline(), getCampaignById()
+src/lib/campaigns/actions.ts      create/addStep/toggleStep/archive actions
+src/lib/protocols/actions.ts      CRUD de protocolos (admin)
+src/lib/reminders/actions.ts      create/cancel reminders
+
+src/lib/payments/config.ts        getActiveProvider() — MP preferred, Stripe fallback
+src/lib/payments/stripe.ts        Client Stripe via HTTP (sem SDK)
+src/lib/payments/mercadopago.ts   createPreapproval, getPreapproval,
+                                  verifyWebhookSignature
+src/lib/payments/idempotency.ts   claimEvent / finalizeEvent (webhook_events)
+
+src/lib/email/resend.ts           sendEmail() via Resend HTTP API
+
+src/lib/export/csv.ts             csvEscape (A4), csvRow, toCsv (BOM + CRLF)
+src/lib/export/__tests__/csv.test.ts   Tests de injection
+
+-------------------------------------------------------------------------------
+ARQUIVOS RAIZ DIVERSOS (auditoria — ver 06-cleanup-report.txt)
+-------------------------------------------------------------------------------
+AVALIACAO_COMPLETA.md                  Avaliação inicial (manter como referência)
+Qwen_txt_*.txt (vários)                Exports de chat (limpeza recomendada)
+Ui.png                                 Screenshot de UI (mover pra /mockups)
+Workflow.ai                            Arquivo Illustrator (referência de design)
+client_secret_*.json                   Credencial OAuth Google (MOVER PRA FORA DO REPO)
+.env.local                             Segredos locais (NÃO commitar)
+_test_unlink, _tmp_*                   Arquivos temporários (deletar)
+
+===============================================================================

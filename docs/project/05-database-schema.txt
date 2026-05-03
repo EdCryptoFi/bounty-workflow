@@ -1,0 +1,292 @@
+===============================================================================
+BOUNTY WORKFLOW — SCHEMA DO BANCO + TIPOS TS
+===============================================================================
+Fonte: supabase/migrations/*.sql + src/lib/types.ts
+Banco: Postgres (Supabase) com RLS ativada e FORCE RLS.
+
+-------------------------------------------------------------------------------
+EXTENSÕES
+-------------------------------------------------------------------------------
+uuid-ossp     — uuid_generate_v4()
+pgcrypto      — gen_random_uuid(), hash
+citext        — texto case-insensitive (emails)
+
+-------------------------------------------------------------------------------
+ENUMS (tipos Postgres)
+-------------------------------------------------------------------------------
+user_role              = 'user' | 'admin'
+subscription_provider  = 'stripe' | 'asaas' (legado) | 'mercadopago'
+subscription_status    = 'trialing' | 'active' | 'past_due' | 'expired'
+                         | 'canceled' | 'incomplete'
+campaign_status        = 'draft' | 'active' | 'completed' | 'archived'
+step_status            = 'todo' | 'in_progress' | 'done'
+attachment_type        = 'image' | 'link' | 'pdf' | 'other'
+reminder_channel       = 'email' | 'push' | 'in_app'
+reminder_status        = 'pending' | 'sent' | 'failed' | 'snoozed' | 'canceled'
+
+-------------------------------------------------------------------------------
+TABELA: users
+-------------------------------------------------------------------------------
+Espelho de auth.users com campos de perfil + billing básico.
+
+ id               uuid PK FK auth.users(id)
+ email            citext UNIQUE NOT NULL
+ full_name        text
+ avatar_url       text
+ trial_ends_at    timestamptz      (now + 14 dias no signup)
+ created_at       timestamptz DEFAULT now()
+ updated_at       timestamptz DEFAULT now()
+
+RLS:
+ SELECT/UPDATE: auth.uid() = id
+ INSERT: via trigger após auth.users (ou via signup action)
+
+-------------------------------------------------------------------------------
+TABELA: user_roles
+-------------------------------------------------------------------------------
+Separada de users pra não precisar policy recursiva. is_admin() consulta aqui.
+
+ user_id     uuid PK FK users(id)
+ role        user_role NOT NULL
+ granted_at  timestamptz DEFAULT now()
+ granted_by  uuid FK users(id)
+
+RLS:
+ SELECT: auth.uid() = user_id OR is_admin()
+ INSERT/UPDATE/DELETE: is_admin() only
+
+-------------------------------------------------------------------------------
+TABELA: protocols
+-------------------------------------------------------------------------------
+Catálogo de protocolos/bounties.
+
+ id            uuid PK DEFAULT uuid_generate_v4()
+ slug          text UNIQUE NOT NULL
+ name          text NOT NULL
+ description   text
+ logo_url      text
+ category      text
+ website_url   text
+ deadline      date
+ is_active     boolean DEFAULT true
+ created_at    timestamptz DEFAULT now()
+ updated_at    timestamptz DEFAULT now()
+
+RLS:
+ SELECT público quando is_active = true
+ INSERT/UPDATE/DELETE: is_admin()
+
+-------------------------------------------------------------------------------
+TABELA: campaigns
+-------------------------------------------------------------------------------
+Campanha de um user atrelada (opcionalmente) a um protocol.
+
+ id                   uuid PK DEFAULT uuid_generate_v4()
+ user_id              uuid NOT NULL FK users(id) ON DELETE CASCADE
+ protocol_id          uuid FK protocols(id) ON DELETE SET NULL
+ title                text NOT NULL
+ description          text
+ status               campaign_status DEFAULT 'draft'
+ deadline             date
+ planning_json        jsonb   ({version, nodes[], edges[]} pro react-flow)
+ estimated_value_brl  numeric(12,2)
+ archived_at          timestamptz
+ created_at           timestamptz DEFAULT now()
+ updated_at           timestamptz DEFAULT now()
+
+Índices: user_id, protocol_id, status, deadline.
+RLS: auth.uid() = user_id em todas as operações.
+
+-------------------------------------------------------------------------------
+TABELA: steps
+-------------------------------------------------------------------------------
+Passos (tarefas) de uma campanha.
+
+ id             uuid PK
+ campaign_id    uuid NOT NULL FK campaigns(id) ON DELETE CASCADE
+ order_index    int NOT NULL
+ title          text NOT NULL
+ description    text
+ status         step_status DEFAULT 'todo'
+ due_date       date
+ completed_at   timestamptz
+ created_at     timestamptz DEFAULT now()
+ updated_at     timestamptz DEFAULT now()
+
+Índices: campaign_id, (campaign_id, order_index).
+RLS: via JOIN em campaigns — só o owner da campanha vê/edita.
+
+-------------------------------------------------------------------------------
+TABELA: attachments
+-------------------------------------------------------------------------------
+Anexos de uma campanha (armazenados no bucket "attachments").
+
+ id              uuid PK
+ campaign_id     uuid NOT NULL FK campaigns(id) ON DELETE CASCADE
+ user_id         uuid NOT NULL FK users(id) ON DELETE CASCADE
+ bucket          text NOT NULL ('attachments')
+ path            text NOT NULL ('{user_id}/{campaign_id}/{file}')
+ mime_type       text
+ size_bytes      bigint
+ type            attachment_type DEFAULT 'other'
+ metadata_json   jsonb
+ uploaded_at     timestamptz DEFAULT now()
+
+RLS: auth.uid() = user_id.
+
+-------------------------------------------------------------------------------
+TABELA: reminders
+-------------------------------------------------------------------------------
+Lembretes agendados. Processados pelo cron /api/cron/reminders.
+
+ id              uuid PK
+ user_id         uuid NOT NULL FK users(id)
+ campaign_id     uuid FK campaigns(id) ON DELETE CASCADE
+ step_id         uuid FK steps(id) ON DELETE CASCADE
+ channel         reminder_channel NOT NULL
+ trigger_at      timestamptz NOT NULL
+ status          reminder_status DEFAULT 'pending'
+ message         text
+ error_message   text
+ sent_at         timestamptz
+ created_at      timestamptz DEFAULT now()
+
+Índices: user_id, (status, trigger_at).
+RLS: auth.uid() = user_id.
+
+-------------------------------------------------------------------------------
+TABELA: notification_logs
+-------------------------------------------------------------------------------
+Log de cada envio de notificação (auditoria).
+
+ id                       uuid PK
+ user_id                  uuid NOT NULL FK users(id)
+ reminder_id              uuid FK reminders(id) ON DELETE SET NULL
+ channel                  reminder_channel NOT NULL
+ status                   text     ('sent' | 'failed')
+ payload_json             jsonb
+ provider_response_json   jsonb
+ created_at               timestamptz DEFAULT now()
+
+RLS: SELECT auth.uid() = user_id. INSERT só via service_role (cron).
+
+-------------------------------------------------------------------------------
+TABELA: subscriptions
+-------------------------------------------------------------------------------
+Assinaturas ativas (sincronizadas via webhooks).
+
+ id                        uuid PK
+ user_id                   uuid NOT NULL FK users(id)
+ provider                  subscription_provider NOT NULL
+ provider_subscription_id  text NOT NULL
+ status                    subscription_status NOT NULL
+ auto_renew                boolean DEFAULT true
+ current_period_start      timestamptz
+ current_period_end        timestamptz
+ cancel_at                 timestamptz
+ created_at                timestamptz DEFAULT now()
+ updated_at                timestamptz DEFAULT now()
+
+UNIQUE (provider, provider_subscription_id).
+RLS: SELECT auth.uid() = user_id. Writes só service_role (webhooks).
+
+-------------------------------------------------------------------------------
+TABELA: webhook_events (IDEMPOTÊNCIA)
+-------------------------------------------------------------------------------
+Cada evento recebido é registrado atomicamente pra evitar reprocesso.
+
+ id                    uuid PK
+ provider              subscription_provider NOT NULL
+ provider_event_id     text NOT NULL
+ event_type            text
+ payload_json          jsonb
+ processed_at          timestamptz
+ error_message         text
+ created_at            timestamptz DEFAULT now()
+
+UNIQUE (provider, provider_event_id)  <- chave da idempotência (fix C5).
+RLS: fully restricted — só service_role.
+
+-------------------------------------------------------------------------------
+VIEW: v_user_billing
+-------------------------------------------------------------------------------
+Consolida users + subscriptions + trial_ends_at em 1 linha por user.
+
+ user_id
+ billing_status    ('trialing' | 'active' | 'past_due' | 'expired')
+ trial_days_left   int (se trialing)
+ current_period_end, cancel_at, provider
+
+Consumida por AppShell (tier), TrialBadge e /settings/billing.
+
+-------------------------------------------------------------------------------
+FUNÇÕES
+-------------------------------------------------------------------------------
+is_admin() RETURNS boolean
+  SELECT EXISTS (
+    SELECT 1 FROM user_roles
+    WHERE user_id = auth.uid() AND role = 'admin'
+  )
+Usada em policies e por isAdmin() no TS. Evita policies recursivas.
+
+-------------------------------------------------------------------------------
+STORAGE
+-------------------------------------------------------------------------------
+Bucket: attachments
+  Privado.
+  Size limit: 10 MB.
+  MIME whitelist: image/*, application/pdf, etc.
+  Path convention: {user_id}/{campaign_id}/{filename}
+  Policy: (storage.foldername(name))[1] = auth.uid()::text
+          garante que só o dono lê/escreve sua pasta.
+
+-------------------------------------------------------------------------------
+TIPOS TS EQUIVALENTES  (src/lib/types.ts)
+-------------------------------------------------------------------------------
+type CampaignStatus   = "draft" | "active" | "completed" | "archived";
+type StepStatus       = "todo" | "in_progress" | "done";
+type AttachmentType   = "image" | "link" | "pdf" | "other";
+type ReminderChannel  = "email" | "push" | "in_app";
+type ReminderStatus   = "pending" | "sent" | "failed" | "snoozed" | "canceled";
+
+type Protocol = {
+  id: string; slug: string; name: string;
+  description: string | null; logo_url: string | null;
+  category: string | null; website_url: string | null;
+  deadline: string | null; is_active: boolean;
+};
+
+type Campaign = {
+  id: string; user_id: string; protocol_id: string | null;
+  title: string; description: string | null;
+  status: CampaignStatus; deadline: string | null;
+  planning_json: { version: number; nodes?: unknown[]; edges?: unknown[] } | null;
+  estimated_value_brl: string | null;
+  archived_at: string | null;
+  created_at: string; updated_at: string;
+};
+
+type Step = {
+  id: string; campaign_id: string; order_index: number;
+  title: string; description: string | null;
+  status: StepStatus; due_date: string | null;
+  completed_at: string | null;
+  created_at: string; updated_at: string;
+};
+
+type Attachment = {
+  id: string; campaign_id: string; user_id: string;
+  bucket: string; path: string;
+  mime_type: string | null; size_bytes: number | null;
+  type: AttachmentType;
+  metadata_json: Record<string, unknown> | null;
+  uploaded_at: string;
+};
+
+type CampaignWithCounts = Campaign & {
+  step_count: number;
+  done_count: number;
+  days_to_deadline: number | null;
+};
+
+===============================================================================

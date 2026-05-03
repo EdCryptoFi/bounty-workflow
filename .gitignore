@@ -1,0 +1,55 @@
+# deps
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env (NEVER commit)
+.env
+.env*.local
+.env.production
+.env.development
+
+# secrets / credenciais OAuth baixadas (NEVER commit)
+client_secret_*.json
+*googleusercontent.com.json
+*.key
+*.pem
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE
+.idea/
+.vscode/
+
+# Local AI memory (not for repo)
+/memory/
+
+# Design reference files (large, local only)
+/design/
+/mockups/

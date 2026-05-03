@@ -1,0 +1,209 @@
+===============================================================================
+BOUNTY WORKFLOW — MÓDULOS FRONTEND
+===============================================================================
+Inclui: src/app (pages + layouts), src/components.
+Padrão: Next.js App Router. Server Components por default; "use client"
+só quando precisa de state/effects/handlers no navegador.
+
+-------------------------------------------------------------------------------
+LAYOUTS E ROUTE GROUPS
+-------------------------------------------------------------------------------
+
+ src/app/layout.tsx
+   Root layout. Define <html lang="pt-BR">, metadata, og:, robots.
+   Wrappa todo o app no ThemeProvider (dark default).
+
+ src/app/error.tsx
+   Error boundary global.
+
+ src/app/not-found.tsx
+   Página 404 customizada.
+
+ src/app/(public)/layout.tsx
+   Layout público: PublicHeader no topo, footer simples com links
+   legais e /como-funciona.
+
+ src/app/(auth)/layout.tsx
+   Layout mais enxuto — header do logo + fundo suave — usado só
+   por /auth/login e /auth/signup.
+
+ src/app/(app)/layout.tsx
+   Layout autenticado. Chama requireUser(); se não tiver user,
+   redirect pra /auth/login. Renderiza <AppShell>.
+
+ src/app/(app)/admin/layout.tsx
+   Sub-layout admin. Chama isAdmin() e bloqueia acesso a não-admins.
+
+-------------------------------------------------------------------------------
+PÁGINAS PÚBLICAS  (src/app/(public)/*)
+-------------------------------------------------------------------------------
+
+ page.tsx                         Landing: hero, 3 features (timeline,
+                                  canvas, reminders), CTA "Começar grátis",
+                                  CTA "Como funciona".
+ como-funciona/page.tsx           Explicação do fluxo em 3 passos.
+ legal/termos/page.tsx            Termos de uso.
+ legal/privacidade/page.tsx       Política de privacidade.
+ protocols/page.tsx               Catálogo público de protocolos (is_active=true).
+ protocols/[slug]/page.tsx        Detalhe de protocolo pelo slug.
+
+-------------------------------------------------------------------------------
+PÁGINAS DE AUTENTICAÇÃO  (src/app/(auth)/auth/*)
+-------------------------------------------------------------------------------
+
+ login/page.tsx          Wrapper da página.
+ login/login-form.tsx    Form client: email, senha, botão Google, botão X.
+ login/actions.ts        Server action: supabase.auth.signInWithPassword.
+
+ signup/page.tsx         Wrapper.
+ signup/signup-form.tsx  Form client: nome, email, senha, checkbox termos.
+ signup/actions.ts       Server action: cria user + insere em public.users
+                         com trial_ends_at = now + 14 dias. Redirect /dashboard.
+
+ callback/route.ts       OAuth callback: exchange code for session.
+ signout/route.ts        Logout + redirect "/".
+
+-------------------------------------------------------------------------------
+PÁGINAS AUTENTICADAS  (src/app/(app)/*)
+-------------------------------------------------------------------------------
+
+ dashboard/page.tsx
+   Renderiza <Timeline campaigns={...} /> + botão Nova campanha + link
+   Exportar CSV. É a home após login.
+
+ campaigns/page.tsx
+   Alias de /dashboard (mesma Timeline).
+
+ campaigns/new/page.tsx
+ campaigns/new/new-form.tsx
+   Formulário client de criação; chama createCampaignAction.
+
+ campaigns/[id]/page.tsx
+   Detalhe da campanha. Busca com getCampaignById. Renderiza:
+     - Cabeçalho com title, deadline, estimated_value_brl, badges
+     - <WorkflowCanvas /> (react-flow)
+     - Lista de <TaskCard /> (steps ordenados por order_index)
+     - <AddStepForm /> inline
+     - <AttachmentDropzone />
+
+ archive/page.tsx
+ archive/unarchive-button.tsx
+   Lista campanhas com archived_at != null. Botão desarquivar + export CSV
+   (scope=archived).
+
+ reminders/page.tsx
+ reminders/create-form.tsx
+ reminders/cancel-button.tsx
+   Lista reminders do user + form de criação + botão cancelar.
+
+ admin/protocols/page.tsx
+ admin/protocols/new/page.tsx
+ admin/protocols/[id]/page.tsx
+ admin/protocols/form.tsx
+ admin/protocols/delete-button.tsx
+   CRUD de protocolos, só admin. Form compartilhado pra create e edit.
+
+ settings/page.tsx                Overview (links conta, billing).
+ settings/account/page.tsx        Editar nome + avatar.
+ settings/billing/page.tsx        Status de assinatura; lê v_user_billing.
+ settings/billing/actions.ts      Server action: cria Preapproval MP.
+ settings/billing/upgrade-button.tsx  Botão client de upgrade.
+
+ timeline/page.tsx                PLACEHOLDER (<ComingSoon />).
+ projects/page.tsx                PLACEHOLDER — Commit 3 (Kreators).
+ performance/page.tsx             PLACEHOLDER — Commit 3 (analytics).
+
+-------------------------------------------------------------------------------
+COMPONENTES: SHELL DA APLICAÇÃO  (src/components/app/*)
+-------------------------------------------------------------------------------
+
+ app-shell.tsx
+   Layout padrão do app autenticado.
+   - Sidebar fixa (260px) em ≥lg com SidebarUserCard no rodapé
+   - <MobileDrawer /> em mobile
+   - Top bar: <SearchBar /> + <TrialBadge /> + <NotifBell /> +
+              <SettingsButton /> + <ThemeToggle /> + <UserMenu />
+   - overflow-x-hidden no <main> (evita scroll horizontal indesejado)
+   Busca profile (users) e billing (v_user_billing) em paralelo (Promise.all).
+
+ sidebar.tsx
+   Duas exports: SidebarNav (links) e SidebarUserCard (avatar + tier).
+   Links: Dashboard, Campanhas, Arquivo, Reminders, Protocols, Settings.
+
+ mobile-drawer.tsx
+   Drawer (hamburger) pro mobile — reusa SidebarNav e SidebarUserCard.
+
+ search-bar.tsx
+   Input de busca global. Cmd/Ctrl+K foca. Submit -> /dashboard?q=<termo>.
+
+ topbar-actions.tsx
+   NotifBell (stub) + SettingsButton (link /settings).
+
+ trial-badge.tsx
+   Badge com label e variante (trial/active/past_due/expired) baseada
+   em v_user_billing.
+
+ user-menu.tsx
+   Dropdown do avatar: Minha conta, Settings, Sair (POST /auth/signout).
+
+ coming-soon.tsx
+   Placeholder com ícone, título, subtítulo e ETA. Usado em
+   /timeline, /projects, /performance.
+
+-------------------------------------------------------------------------------
+COMPONENTES: AUTH OAUTH  (src/components/auth/*)
+-------------------------------------------------------------------------------
+
+ google-button.tsx     Botão OAuth Google — usado em login e signup.
+ twitter-button.tsx    Botão OAuth X/Twitter — usado em login e signup.
+
+-------------------------------------------------------------------------------
+COMPONENTES: CAMPANHAS  (src/components/campaigns/*)
+-------------------------------------------------------------------------------
+
+ timeline.tsx
+   Recebe CampaignWithCounts[] e renderiza uma lista de cards.
+   Cada card: título, protocolo, deadline, barra de progresso
+   (done_count / step_count), link para /campaigns/[id].
+
+ task-card.tsx  ("use client")
+   Card de um Step. Ícone muda pelo status (Circle / Loader2 / CheckCircle2).
+   Botão cicla estado: todo -> in_progress -> done -> todo. Usa useTransition
+   + toggleStepAction. Opacity 70% quando done.
+
+ workflow-canvas.tsx  ("use client")
+   React Flow sobre planning_json da campanha. Nodes = steps, edges = conexões
+   opcionais. Drag-and-drop. Persiste via action.
+
+ add-step-form.tsx  ("use client")
+   Form inline (title obrigatório, description opcional, due_date) que chama
+   addStepAction via useTransition.
+
+ attachment-dropzone.tsx  ("use client")
+   Drag-and-drop pra upload no bucket "attachments". Path: {user_id}/{campaign_id}/{file}.
+   Lista anexos existentes com download.
+
+-------------------------------------------------------------------------------
+COMPONENTES: PÚBLICO  (src/components/public/*)
+-------------------------------------------------------------------------------
+
+ public-header.tsx
+   Header da landing: logo (link /) + "Entrar" (/auth/login).
+
+-------------------------------------------------------------------------------
+COMPONENTES: TEMA  (src/components/theme/*)
+-------------------------------------------------------------------------------
+
+ theme-provider.tsx    Provider next-themes (class, dark default).
+ theme-toggle.tsx      Botão sol/lua que alterna tema.
+
+-------------------------------------------------------------------------------
+STYLING
+-------------------------------------------------------------------------------
+Tailwind com paleta custom "mint" (50-900) + cores de tema (background,
+foreground, muted, card, border, ring, primary, destructive) ligadas a
+CSS vars em globals.css. Dark mode por classe.
+
+Componentes usam class-variance-authority (cva) + cn() pra variantes.
+
+===============================================================================
