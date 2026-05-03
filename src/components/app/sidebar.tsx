@@ -29,10 +29,9 @@ export function SidebarNav({
     <div className="flex h-full flex-col pt-24 pb-8">
       {/* Brand */}
       <div className="px-6 mb-12 flex flex-col gap-2">
-        <div className="h-10 w-10 rounded-lg overflow-hidden border border-secondary/30 bg-surface-container flex items-center justify-center">
-          <span className="material-symbols-outlined text-primary-container text-[24px] filled">
-            rocket_launch
-          </span>
+        <div className="h-10 w-10 rounded-lg overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Bounty Workflow" className="h-full w-full object-contain" />
         </div>
         <div>
           <h1 className="text-[18px] font-bold text-[#ff5c00] leading-tight">

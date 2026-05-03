@@ -38,11 +38,8 @@ export default function ComoFuncionaPage() {
         style={{ background: "rgba(9,9,9,0.70)", backdropFilter: "blur(24px)" }}
       >
         <Link href="/" className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-[rgba(255,92,0,0.15)] border border-[#ff5c00]/30 flex items-center justify-center">
-            <span className="material-symbols-outlined text-[#ff5c00] text-[18px] filled">
-              rocket_launch
-            </span>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Bounty Workflow" className="h-9 w-9 object-contain" />
           <span className="text-sm font-black tracking-tighter text-[#ff5c00]">
             Bounty Workflow
           </span>

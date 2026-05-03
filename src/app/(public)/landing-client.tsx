@@ -107,6 +107,8 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         style={{ background: "rgba(9,9,9,0.70)", backdropFilter: "blur(24px)" }}
       >
         <Link href="/" className="flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Bounty Workflow" className="h-10 w-10 object-contain" />
           <span className="text-xl font-black tracking-tighter text-[#ff5c00]">
             Bounty Workflow
           </span>
