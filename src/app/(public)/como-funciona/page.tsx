@@ -1,168 +1,295 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import {
-  ArrowRight,
-  Bell,
-  Calendar,
-  CheckCircle2,
-  ClipboardList,
-  GitBranch,
-  Sparkles,
-  Timer,
-} from "lucide-react";
-import { PublicHeader } from "@/components/public/public-header";
-import { Badge, Card, buttonClasses } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Como funciona",
+  title: "Como funciona — Bounty WorkFlow",
   description:
     "Entenda como o Bounty WorkFlow ajuda hunters brasileiros a organizar campanhas de bounties cripto, nunca perder um prazo e maximizar ganhos.",
 };
 
 export default function ComoFuncionaPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background via-background to-mint-50/30 dark:to-mint-900/10">
-      <PublicHeader />
+    <div
+      className="min-h-screen flex flex-col text-on-surface antialiased overflow-x-hidden relative"
+      style={{ backgroundColor: "#131313" }}
+    >
+      {/* Grid texture */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      />
 
-      {/* Hero */}
-      <section className="container mx-auto max-w-4xl py-16 text-center sm:py-24">
-        <Badge tone="mint" icon={<Sparkles className="h-3 w-3" />}>
-          Tour de 3 minutos
-        </Badge>
-        <h1 className="typo-hero mt-6 text-balance">
-          Como o Bounty WorkFlow funciona
-        </h1>
-        <p className="typo-hero-sub mx-auto mt-4 max-w-2xl text-pretty">
-          A mesma rotina que um hunter de sucesso usa — agora num app só. Organize, acompanhe e
-          entregue cada bounty antes do deadline vencer.
-        </p>
-      </section>
+      {/* Ambient glow */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 40% at 15% 20%, rgba(255,92,0,0.08) 0%, transparent 60%), radial-gradient(ellipse 50% 30% at 85% 80%, rgba(233,195,73,0.06) 0%, transparent 60%)",
+        }}
+      />
 
-      {/* 4 steps */}
-      <section className="container mx-auto max-w-5xl pb-16">
-        <div className="grid gap-6 md:grid-cols-2">
-          <Step
-            number="01"
-            icon={<ClipboardList className="h-5 w-5" />}
-            title="Cadastre a campanha em 30 segundos"
-            description="Cole o link, escolha o protocolo, defina o deadline. A app quebra em tarefas automaticamente com base no tipo de bounty (conteúdo, código, thread, etc)."
-          />
-          <Step
-            number="02"
-            icon={<Calendar className="h-5 w-5" />}
-            title="Visualize tudo na timeline"
-            description="Todas as suas campanhas ativas numa linha do tempo cronológica. O que vence em 24h fica destacado. O que já foi enviado some do radar automaticamente."
-          />
-          <Step
-            number="03"
-            icon={<GitBranch className="h-5 w-5" />}
-            title="Abra o workflow da campanha"
-            description="Clique numa campanha e veja o fluxo completo: pesquisa → rascunho → revisão → publicação → submissão. Anexe prints, links e notas em cada etapa."
-          />
-          <Step
-            number="04"
-            icon={<Bell className="h-5 w-5" />}
-            title="Receba lembretes no tempo certo"
-            description="Email 48h e 24h antes de cada deadline. Sem notificação spam. Se você atrasar, ela vai pro topo automaticamente."
-          />
-        </div>
-      </section>
-
-      {/* Rotina do hunter */}
-      <section className="container mx-auto max-w-4xl py-16">
-        <h2 className="typo-h2 text-center">
-          Uma rotina feita pra quem caça bounty sério
-        </h2>
-        <p className="typo-body mx-auto mt-4 max-w-2xl text-center text-muted-foreground">
-          Se você já perdeu um bounty de R$500 por esquecer o deadline, sabe como essa ferramenta
-          paga ela mesma em 1 caçada.
-        </p>
-
-        <div className="mt-12 space-y-4">
-          <Bullet text="Catálogo atualizado dos principais protocolos (LayerZero, Hyperliquid, Monad, EigenLayer, etc)." />
-          <Bullet text="Campos específicos pra bounty cripto: wallet, TX hash, link da submissão, recompensa esperada." />
-          <Bullet text="Export CSV das suas campanhas pra colar no Excel e declarar no IR." />
-          <Bullet text="Tudo seu fica salvo no seu workspace — nada é compartilhado com outros hunters." />
-          <Bullet text="Feito pra BR: preços em Real, interface em português, suporte via email." />
-        </div>
-      </section>
-
-      {/* Pricing + CTA */}
-      <section className="container mx-auto max-w-3xl py-16">
-        <Card className="rounded-3xl border-mint-200 bg-mint-50/50 text-center shadow-sm dark:border-mint-800 dark:bg-mint-900/20">
-          <Badge tone="mint" icon={<Timer className="h-3 w-3" />} className="bg-mint-600 text-white dark:bg-mint-600 dark:text-white">
-            14 dias grátis
-          </Badge>
-          <h2 className="typo-h2 mt-4">Experimenta sem compromisso</h2>
-          <p className="typo-body mx-auto mt-3 max-w-lg text-muted-foreground">
-            14 dias grátis, sem cartão. Depois, R$ 29,90/mês — ou cancela quando quiser, sem
-            pergunta.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/auth/signup"
-              className={buttonClasses("primary", "lg")}
-            >
-              Começar agora <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/auth/login"
-              className={buttonClasses("secondary", "lg")}
-            >
-              Já tenho conta
-            </Link>
+      {/* ── Fixed Header ── */}
+      <header
+        className="fixed z-50 top-0 left-0 right-0 flex justify-between items-center px-12 h-20 border-b border-zinc-800/50 shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
+        style={{ background: "rgba(9,9,9,0.70)", backdropFilter: "blur(24px)" }}
+      >
+        <Link href="/" className="flex items-center gap-3">
+          <div className="h-8 w-8 rounded-lg bg-[rgba(255,92,0,0.15)] border border-[#ff5c00]/30 flex items-center justify-center">
+            <span className="material-symbols-outlined text-[#ff5c00] text-[18px] filled">
+              rocket_launch
+            </span>
           </div>
-        </Card>
-      </section>
+          <span className="text-sm font-black tracking-tighter text-[#ff5c00]">
+            Bounty Workflow
+          </span>
+        </Link>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card/30">
-        <div className="container mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 py-8 text-sm text-muted-foreground">
-          <span>© {new Date().getFullYear()} Bounty WorkFlow — por Ed</span>
-          <nav className="flex flex-wrap items-center gap-4">
-            <Link href="/legal/termos" className="hover:text-foreground">
-              Termos de uso
-            </Link>
-            <Link href="/legal/privacidade" className="hover:text-foreground">
-              Privacidade
-            </Link>
-          </nav>
+        <nav className="flex items-center gap-6">
+          <Link href="/como-funciona" className="text-[#ff7b33] text-xs font-medium hover:text-[#ffb59a] transition-colors">
+            Como funciona
+          </Link>
+          <Link href="/auth/login" className="text-zinc-400 text-xs hover:text-[#ff7b33] transition-colors">
+            Entrar
+          </Link>
+          <Link
+            href="/auth/signup"
+            className="px-5 py-2 bg-[#ff5c00] text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-[#ff7b33] hover:shadow-[0_0_20px_rgba(255,92,0,0.4)] transition-all duration-300 active:scale-95"
+          >
+            Começar grátis
+          </Link>
+        </nav>
+      </header>
+
+      <main className="flex-grow pt-32 pb-24 relative z-10">
+
+        {/* ── Hero ── */}
+        <section className="max-w-4xl mx-auto px-6 py-16 text-center sm:py-24">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#e9c349]/30 mb-8"
+            style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}>
+            <span className="material-symbols-outlined text-[#e9c349] text-[14px] filled">timer</span>
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[#e9c349]">
+              Tour de 3 minutos
+            </span>
+          </div>
+
+          <h1 className="text-[48px] sm:text-[56px] font-bold tracking-tight leading-[1.1] text-on-surface mb-6">
+            Como o{" "}
+            <span
+              style={{
+                background: "linear-gradient(135deg, #ffb59a 0%, #ff5c00 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Bounty WorkFlow
+            </span>{" "}
+            funciona
+          </h1>
+
+          <p className="text-base text-tertiary max-w-2xl mx-auto leading-relaxed">
+            A mesma rotina que um hunter de sucesso usa — agora num app só. Organize, acompanhe e
+            entregue cada bounty antes do deadline vencer.
+          </p>
+        </section>
+
+        {/* ── 4 Steps ── */}
+        <section className="max-w-5xl mx-auto px-6 pb-24">
+          <div className="grid gap-6 md:grid-cols-2">
+            <StepCard
+              number="01"
+              icon="assignment_add"
+              title="Cadastre a campanha em 30 segundos"
+              description="Cole o link, escolha o protocolo, defina o deadline. A app quebra em tarefas automaticamente com base no tipo de bounty (conteúdo, código, thread, etc)."
+            />
+            <StepCard
+              number="02"
+              icon="calendar_month"
+              title="Visualize tudo na timeline"
+              description="Todas as suas campanhas ativas numa linha do tempo cronológica. O que vence em 24h fica destacado. O que já foi enviado some do radar automaticamente."
+            />
+            <StepCard
+              number="03"
+              icon="account_tree"
+              title="Abra o workflow da campanha"
+              description="Clique numa campanha e veja o fluxo completo: pesquisa → rascunho → revisão → publicação → submissão. Anexe prints, links e notas em cada etapa."
+            />
+            <StepCard
+              number="04"
+              icon="notifications_active"
+              title="Receba lembretes no tempo certo"
+              description="Email 48h e 24h antes de cada deadline. Sem notificação spam. Se você atrasar, ela vai pro topo automaticamente."
+            />
+          </div>
+        </section>
+
+        {/* ── Rotina do hunter ── */}
+        <section className="max-w-4xl mx-auto px-6 pb-24">
+          <div className="text-center mb-14">
+            <h2 className="text-[32px] font-bold text-on-surface mb-4 tracking-tight">
+              Uma rotina feita pra quem caça{" "}
+              <span className="text-[#ff5c00]">bounty</span> sério
+            </h2>
+            <p className="text-base text-tertiary max-w-xl mx-auto leading-relaxed">
+              Se você já perdeu um bounty de R$500 por esquecer o deadline, sabe como essa
+              ferramenta paga ela mesma em 1 caçada.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <BulletCard text="Catálogo atualizado dos principais protocolos (Clasho, Kreators, MagVerse, Rally, e mais)." />
+            <BulletCard text="Campos específicos pra bounty cripto: wallet, TX hash, link da submissão, recompensa esperada." />
+            <BulletCard text="Export CSV das suas campanhas pra colar no Excel e declarar no IR." />
+            <BulletCard text="Tudo seu fica salvo no seu workspace — nada é compartilhado com outros hunters." />
+            <BulletCard text="Feito pra BR: preços em Real, interface em português, suporte via email." />
+          </div>
+        </section>
+
+        {/* ── CTA ── */}
+        <section className="max-w-3xl mx-auto px-6 pb-16">
+          <div
+            className="rounded-2xl p-10 text-center relative overflow-hidden"
+            style={{
+              background: "rgba(32,31,31,0.7)",
+              backdropFilter: "blur(20px)",
+              border: "1px solid transparent",
+              borderImage: "linear-gradient(to bottom right, rgba(233,195,73,0.4), rgba(233,195,73,0.1)) 1",
+              boxShadow: "inset 0 0 30px rgba(255,92,0,0.06)",
+            }}
+          >
+            {/* Glow top */}
+            <div
+              className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px"
+              style={{ background: "linear-gradient(to right, transparent, rgba(255,92,0,0.6), transparent)" }}
+            />
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#ff5c00]/30 mb-6"
+              style={{ background: "rgba(255,92,0,0.08)" }}>
+              <span
+                className="w-2 h-2 rounded-full bg-[#ff5c00] animate-pulse"
+                style={{ boxShadow: "0 0 8px #ff5c00" }}
+              />
+              <span className="text-[11px] font-bold uppercase tracking-widest text-[#ff5c00]">
+                14 dias grátis
+              </span>
+            </div>
+
+            <h2 className="text-[28px] font-bold text-on-surface mb-3 tracking-tight">
+              Experimenta sem compromisso
+            </h2>
+            <p className="text-sm text-tertiary max-w-md mx-auto leading-relaxed mb-8">
+              14 dias grátis, sem cartão. Depois, R$ 29,90/mês — ou cancela quando quiser, sem
+              pergunta.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/auth/signup"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-xs font-bold uppercase tracking-widest rounded transition-all duration-300 hover:shadow-[0_0_25px_rgba(255,92,0,0.5)] active:scale-95"
+              >
+                Começar agora
+                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </Link>
+              <Link
+                href="/auth/login"
+                className="inline-flex items-center gap-2 px-8 py-3.5 text-on-surface text-xs font-bold uppercase tracking-widest rounded border border-outline-variant/40 hover:border-[#e9c349]/40 transition-all duration-300"
+                style={{ background: "rgba(42,42,42,0.5)" }}
+              >
+                Já tenho conta
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* ── Footer ── */}
+      <footer
+        className="relative z-10 border-t border-zinc-900 py-8 px-12 flex flex-col md:flex-row justify-between items-center gap-4 mt-auto"
+        style={{
+          background: "#000",
+          backgroundImage:
+            "linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
+      >
+        <p className="text-zinc-400 text-[10px] uppercase tracking-[0.2em] font-semibold">
+          © {new Date().getFullYear()} BOUNTY WORKFLOW. TODOS OS DIREITOS RESERVADOS.
+        </p>
+        <div className="flex gap-8">
+          <Link href="/legal/privacidade" className="text-zinc-600 text-[10px] uppercase tracking-[0.2em] font-semibold hover:text-[#e9c349] transition-colors">
+            Privacidade
+          </Link>
+          <Link href="/legal/termos" className="text-zinc-600 text-[10px] uppercase tracking-[0.2em] font-semibold hover:text-[#e9c349] transition-colors">
+            Termos de uso
+          </Link>
+          <span className="text-zinc-600 text-[10px] uppercase tracking-[0.2em] font-semibold flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ff5c00]" />
+            Status do Sistema
+          </span>
         </div>
       </footer>
-    </main>
+    </div>
   );
 }
 
-function Step({
+function StepCard({
   number,
   icon,
   title,
   description,
 }: {
   number: string;
-  icon: React.ReactNode;
+  icon: string;
   title: string;
   description: string;
 }) {
   return (
-    <Card className="relative rounded-2xl">
-      <span className="absolute right-6 top-6 text-3xl font-bold text-mint-200 dark:text-mint-900">
+    <div
+      className="relative p-8 rounded-xl flex flex-col gap-4 group hover:shadow-[inset_0_0_20px_rgba(255,92,0,0.08)] transition-all duration-500"
+      style={{
+        background: "rgba(32,31,31,0.7)",
+        backdropFilter: "blur(20px)",
+        border: "1px solid transparent",
+        borderImage: "linear-gradient(to bottom right, rgba(233,195,73,0.3), rgba(233,195,73,0.08)) 1",
+      }}
+    >
+      {/* Step number */}
+      <span className="absolute right-6 top-6 text-3xl font-bold text-[#e9c349]/15 select-none">
         {number}
       </span>
-      <div className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-mint-100 text-mint-700 dark:bg-mint-900/40 dark:text-mint-300">
-        {icon}
+
+      {/* Icon */}
+      <div className="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center border border-[#e9c349]/20 group-hover:border-[#ff5c00]/40 transition-colors">
+        <span className="material-symbols-outlined text-[#e9c349] text-[22px] group-hover:text-[#ff5c00] transition-colors filled">
+          {icon}
+        </span>
       </div>
-      <h3 className="typo-h3 mt-4 pr-14">{title}</h3>
-      <p className="typo-caption mt-2 text-muted-foreground">{description}</p>
-    </Card>
+
+      <div className="pr-10">
+        <h3 className="text-base font-semibold text-on-surface mb-2">{title}</h3>
+        <p className="text-sm text-tertiary leading-relaxed">{description}</p>
+      </div>
+    </div>
   );
 }
 
-function Bullet({ text }: { text: string }) {
+function BulletCard({ text }: { text: string }) {
   return (
-    <Card padding="tight" className="flex items-start gap-3 rounded-lg">
-      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-mint-600" />
-      <p className="typo-caption">{text}</p>
-    </Card>
+    <div
+      className="flex items-start gap-4 px-5 py-4 rounded-lg hover:bg-surface-container-high/20 transition-colors"
+      style={{
+        background: "rgba(32,31,31,0.5)",
+        backdropFilter: "blur(12px)",
+        border: "1px solid rgba(91,65,55,0.3)",
+      }}
+    >
+      <span className="material-symbols-outlined text-[#e9c349] text-[18px] shrink-0 mt-0.5 filled">
+        check_circle
+      </span>
+      <p className="text-sm text-on-surface leading-relaxed">{text}</p>
+    </div>
   );
 }
