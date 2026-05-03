@@ -8,6 +8,7 @@ import { TaskCard } from "@/components/campaigns/task-card";
 import { AddStepForm } from "@/components/campaigns/add-step-form";
 import { AttachmentDropzone } from "@/components/campaigns/attachment-dropzone";
 import type { Step } from "@/lib/types";
+import { GlowCard } from "@/components/ui/glow-card";
 
 export const metadata: Metadata = { title: "Campanha" };
 
@@ -82,8 +83,8 @@ export default async function CampaignDetailPage({
       </Link>
 
       {/* Header metrics */}
-      <div className="p-[1px] rounded-xl bg-gradient-to-br from-[rgba(233,195,73,0.2)] to-transparent">
-        <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-[inset_0_0_20px_rgba(255,92,0,0.05),0_4px_30px_rgba(0,0,0,0.5)]">
+      <GlowCard className="shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+        <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[11px] p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-[inset_0_0_20px_rgba(255,92,0,0.05)]">
           <div>
             <h1 className="font-display text-[30px] font-semibold tracking-tight text-on-surface leading-tight">
               {campaign.title}
@@ -161,13 +162,13 @@ export default async function CampaignDetailPage({
             )}
           </div>
         </div>
-      </div>
+      </GlowCard>
 
       {/* Main bento grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Fluxo de Protocolo */}
-        <div className="lg:col-span-2 p-[1px] rounded-xl bg-gradient-to-br from-[rgba(233,195,73,0.15)] to-transparent">
-          <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-5 flex flex-col gap-4 shadow-[inset_0_0_20px_rgba(255,92,0,0.05),0_4px_30px_rgba(0,0,0,0.5)] min-h-[600px]">
+        <GlowCard className="lg:col-span-2 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+          <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[11px] p-5 flex flex-col gap-4 shadow-[inset_0_0_20px_rgba(255,92,0,0.05)] min-h-[600px]">
             <div className="flex justify-between items-center">
               <h2 className="text-base font-semibold text-on-surface">
                 Fluxo de Protocolo
@@ -303,13 +304,13 @@ export default async function CampaignDetailPage({
               </div>
             </div>
           </div>
-        </div>
+        </GlowCard>
 
         {/* Right column */}
         <div className="flex flex-col gap-4">
           {/* Campaign Details */}
-          <div className="p-[1px] rounded-xl bg-gradient-to-br from-[rgba(233,195,73,0.15)] to-transparent">
-            <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-5">
+          <GlowCard>
+            <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[11px] p-5">
               <h2 className="text-base font-semibold text-on-surface mb-4 flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#e9c349] text-[18px]">
                   campaign
@@ -375,11 +376,11 @@ export default async function CampaignDetailPage({
                 )}
               </div>
             </div>
-          </div>
+          </GlowCard>
 
           {/* Tasks checklist */}
-          <div className="p-[1px] rounded-xl bg-gradient-to-br from-[rgba(233,195,73,0.15)] to-transparent flex-1">
-            <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-5">
+          <GlowCard className="flex-1">
+            <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[11px] p-5">
               <h2 className="text-base font-semibold text-on-surface mb-4 flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#e9c349] text-[18px]">
                   checklist
@@ -397,18 +398,18 @@ export default async function CampaignDetailPage({
                 )}
               </div>
             </div>
-          </div>
+          </GlowCard>
 
           {/* File Dropzone */}
-          <div className="p-[1px] rounded-xl bg-gradient-to-br from-[rgba(233,195,73,0.15)] to-transparent">
-            <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-5">
+          <GlowCard>
+            <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[11px] p-5">
               <AttachmentDropzone
                 campaignId={campaign.id}
                 userId={user.id}
                 initial={attachments}
               />
             </div>
-          </div>
+          </GlowCard>
         </div>
       </div>
     </div>

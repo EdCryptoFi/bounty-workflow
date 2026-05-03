@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { GlowCard } from "@/components/ui/glow-card";
 
 export const metadata: Metadata = { title: "Protocolos" };
 export const revalidate = 3600;
@@ -36,14 +37,14 @@ export default async function ProtocolsPage() {
         {(protocols ?? []).map((p) => {
           const icon = PROTOCOL_ICONS[p.slug] ?? "description";
           return (
-            <a
-              key={p.id}
-              href={p.website_url ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group p-[1px] rounded-xl bg-gradient-to-br from-[rgba(233,195,73,0.15)] to-transparent hover:from-[rgba(255,181,154,0.22)] transition-all duration-300 block"
-            >
-              <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-6 flex flex-col gap-4 hover:shadow-[inset_0_0_15px_rgba(255,92,0,0.08),0_0_30px_rgba(255,92,0,0.1)] transition-all duration-300 h-full">
+            <GlowCard key={p.id} className="group block">
+              <a
+                href={p.website_url ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block h-full"
+              >
+              <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[11px] p-6 flex flex-col gap-4 h-full">
                 {/* Icon */}
                 <div className="w-12 h-12 shrink-0 bg-surface-container-highest/50 rounded-xl border border-[rgba(233,195,73,0.2)] flex items-center justify-center group-hover:border-[rgba(255,92,0,0.4)] transition-colors">
                   <span className="material-symbols-outlined text-[#e9c349] text-[22px] group-hover:text-[#ff5c00] transition-colors filled">
@@ -76,21 +77,22 @@ export default async function ProtocolsPage() {
                   </span>
                 </div>
               </div>
-            </a>
+              </a>
+            </GlowCard>
           );
         })}
       </div>
 
       {/* Empty state */}
       {(protocols ?? []).length === 0 && (
-        <div className="p-[1px] rounded-xl bg-gradient-to-br from-[rgba(91,65,55,0.3)] to-transparent">
-          <div className="bg-surface-container-highest/60 backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-16 text-center">
+        <GlowCard>
+          <div className="bg-surface-container-highest/60 backdrop-blur-xl rounded-[11px] p-16 text-center">
             <span className="material-symbols-outlined text-[48px] text-tertiary block mb-4">
               description
             </span>
             <p className="text-sm text-tertiary">Nenhum protocolo disponível no momento.</p>
           </div>
-        </div>
+        </GlowCard>
       )}
     </div>
   );

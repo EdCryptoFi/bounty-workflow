@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { listCampaignsForTimeline } from "@/lib/campaigns/queries";
 import { Timeline } from "@/components/campaigns/timeline";
+import { GlowCard } from "@/components/ui/glow-card";
 
 export const metadata: Metadata = { title: "Campanhas" };
 
@@ -68,11 +69,8 @@ export default async function CampaignsPage() {
             color: "text-red-400",
           },
         ].map((s) => (
-          <div
-            key={s.label}
-            className="p-[1px] rounded-xl bg-gradient-to-br from-[rgba(91,65,55,0.4)] to-transparent"
-          >
-            <div className="bg-surface-container-highest/60 backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-4 flex items-center gap-3">
+          <GlowCard key={s.label}>
+            <div className="bg-surface-container-highest/60 backdrop-blur-xl rounded-[11px] p-4 flex items-center gap-3">
               <span className={`material-symbols-outlined text-[22px] ${s.color}`}>
                 {s.icon}
               </span>
@@ -85,14 +83,14 @@ export default async function CampaignsPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </GlowCard>
         ))}
       </div>
 
       {/* Timeline */}
       {campaigns.length === 0 ? (
-        <div className="p-[1px] rounded-xl bg-gradient-to-br from-[rgba(91,65,55,0.3)] to-transparent">
-          <div className="bg-surface-container-highest/60 backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-16 text-center">
+        <GlowCard>
+          <div className="bg-surface-container-highest/60 backdrop-blur-xl rounded-[11px] p-16 text-center">
             <span className="material-symbols-outlined text-[48px] text-tertiary block mb-4">
               rocket_launch
             </span>
@@ -107,7 +105,7 @@ export default async function CampaignsPage() {
               Nova Campanha
             </Link>
           </div>
-        </div>
+        </GlowCard>
       ) : (
         <Timeline campaigns={campaigns} />
       )}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { listCampaignsForTimeline } from "@/lib/campaigns/queries";
 import { createClient } from "@/lib/supabase/server";
 import type { CampaignWithCounts } from "@/lib/types";
+import { GlowCard } from "@/components/ui/glow-card";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -243,26 +244,16 @@ export default async function DashboardPage() {
 
 function GlassCard({
   children,
-  gradient,
 }: {
   children: React.ReactNode;
-  gradient: "orange" | "gold" | "none";
+  gradient?: "orange" | "gold" | "none";
 }) {
-  const gradientClass =
-    gradient === "orange"
-      ? "bg-gradient-to-br from-[rgba(255,181,154,0.12)] to-transparent"
-      : gradient === "gold"
-      ? "bg-gradient-to-br from-[rgba(233,195,73,0.12)] to-transparent"
-      : "";
-
   return (
-    <div
-      className={`p-[1px] rounded-xl shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)] ${gradientClass}`}
-    >
-      <div className="bg-surface-container-highest/70 backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-6 h-full">
+    <GlowCard className="shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
+      <div className="bg-surface-container-highest/70 backdrop-blur-xl rounded-[11px] p-6 h-full">
         {children}
       </div>
-    </div>
+    </GlowCard>
   );
 }
 
@@ -273,14 +264,8 @@ function CampaignCard({ campaign: c }: { campaign: CampaignWithCounts }) {
 
   return (
     <Link href={`/campaigns/${c.id}`}>
-      <div
-        className={`p-[1px] rounded-xl shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)] relative group transition-all hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.9)] ${
-          isPaused
-            ? "bg-gradient-to-br from-[rgba(233,195,73,0.15)] to-transparent"
-            : "bg-gradient-to-br from-[rgba(255,181,154,0.2)] to-transparent"
-        }`}
-      >
-        <div className="bg-surface-container-highest/80 backdrop-blur-xl rounded-[calc(0.75rem-1px)] p-6 relative overflow-hidden">
+      <GlowCard className="group shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)] transition-all hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.9)]">
+        <div className="bg-surface-container-highest/80 backdrop-blur-xl rounded-[11px] p-6 relative overflow-hidden">
           {!isPaused && (
             <div className="absolute -right-10 -top-10 h-40 w-40 bg-[rgba(255,181,154,0.06)] blur-[80px] group-hover:bg-[rgba(255,181,154,0.1)] transition-all pointer-events-none" />
           )}
@@ -363,7 +348,7 @@ function CampaignCard({ campaign: c }: { campaign: CampaignWithCounts }) {
             </div>
           </div>
         </div>
-      </div>
+      </GlowCard>
     </Link>
   );
 }

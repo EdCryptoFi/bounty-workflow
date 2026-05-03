@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { GlowCard } from "@/components/ui/glow-card";
 
 const COPY = {
   pt: {
@@ -260,14 +261,10 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         <section className="max-w-[1400px] mx-auto px-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:h-[600px]">
             {/* 99.9% Uptime — large 2x2 */}
+            <GlowCard className="md:col-span-2 md:row-span-2 group">
             <div
-              className="md:col-span-2 md:row-span-2 rounded-xl p-10 flex flex-col justify-end overflow-hidden relative group hover:shadow-[inset_0_0_20px_rgba(255,92,0,0.1),0_0_30px_rgba(255,92,0,0.15)] transition-all duration-500"
-              style={{
-                background: "rgba(32,31,31,0.7)",
-                backdropFilter: "blur(20px)",
-                border: "1px solid transparent",
-                borderImage: "linear-gradient(to bottom right, rgba(233,195,73,0.3), rgba(233,195,73,0.1)) 1",
-              }}
+              className="rounded-[11px] p-10 flex flex-col justify-end overflow-hidden relative h-full"
+              style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}
             >
               {/* Decorative bg */}
               <div
@@ -296,16 +293,13 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                 <p className="text-base text-tertiary max-w-sm leading-relaxed">{t.statUptimeDesc}</p>
               </div>
             </div>
+            </GlowCard>
 
             {/* 50k+ Orgs */}
+            <GlowCard className="md:col-span-2">
             <div
-              className="md:col-span-2 rounded-xl p-8 flex items-center justify-between group hover:shadow-[inset_0_0_20px_rgba(255,92,0,0.1),0_0_30px_rgba(255,92,0,0.15)] transition-all duration-500"
-              style={{
-                background: "rgba(32,31,31,0.7)",
-                backdropFilter: "blur(20px)",
-                border: "1px solid transparent",
-                borderImage: "linear-gradient(to bottom right, rgba(233,195,73,0.3), rgba(233,195,73,0.1)) 1",
-              }}
+              className="rounded-[11px] p-8 flex items-center justify-between h-full"
+              style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}
             >
               <div>
                 <span className="text-5xl font-bold text-[#ff5c00]">{t.statOrgs}</span>
@@ -329,16 +323,13 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                 </div>
               </div>
             </div>
+            </GlowCard>
 
             {/* Latency */}
+            <GlowCard className="md:col-span-1">
             <div
-              className="md:col-span-1 rounded-xl p-8 text-center flex flex-col justify-center group hover:shadow-[inset_0_0_20px_rgba(255,92,0,0.1),0_0_30px_rgba(255,92,0,0.15)] transition-all duration-500"
-              style={{
-                background: "rgba(32,31,31,0.7)",
-                backdropFilter: "blur(20px)",
-                border: "1px solid transparent",
-                borderImage: "linear-gradient(to bottom right, rgba(233,195,73,0.3), rgba(233,195,73,0.1)) 1",
-              }}
+              className="rounded-[11px] p-8 text-center flex flex-col justify-center h-full"
+              style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}
             >
               <span className="material-symbols-outlined text-[40px] text-[#e9c349] mb-2 filled">bolt</span>
               <span className="text-3xl font-bold text-on-surface">{t.statLatency}</span>
@@ -346,18 +337,18 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                 {t.statLatencyLabel}
               </p>
             </div>
+            </GlowCard>
 
             {/* Global Ready */}
+            <GlowCard className="md:col-span-1">
             <div
-              className="md:col-span-1 rounded-xl p-8 flex flex-col justify-center items-center text-center text-white hover:brightness-110 transition-all duration-300"
-              style={{
-                background: "#ff5c00",
-                boxShadow: "0 0 20px rgba(255,92,0,0.3)",
-              }}
+              className="rounded-[11px] p-8 flex flex-col justify-center items-center text-center text-white h-full hover:brightness-110 transition-all duration-300"
+              style={{ background: "#ff5c00", boxShadow: "0 0 20px rgba(255,92,0,0.3)" }}
             >
               <span className="material-symbols-outlined text-[40px] mb-2 filled">language</span>
               <p className="text-xl font-bold">{t.statGlobal}</p>
             </div>
+            </GlowCard>
           </div>
         </section>
       </main>
@@ -408,27 +399,24 @@ function FeatureCard({
   cta: string;
 }) {
   return (
-    <div
-      className="p-8 rounded-xl flex flex-col group hover:shadow-[inset_0_0_20px_rgba(255,92,0,0.1),0_0_30px_rgba(255,92,0,0.15)] transition-all duration-500"
-      style={{
-        background: "rgba(32,31,31,0.7)",
-        backdropFilter: "blur(20px)",
-        border: "1px solid transparent",
-        borderImage: "linear-gradient(to bottom right, rgba(233,195,73,0.3), rgba(233,195,73,0.1)) 1",
-      }}
-    >
-      <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mb-6 border border-[#e9c349]/20 group-hover:scale-110 transition-transform">
-        <span className={`material-symbols-outlined text-[36px] filled ${iconColor}`}>{icon}</span>
+    <GlowCard className="group">
+      <div
+        className="rounded-[11px] p-8 flex flex-col h-full"
+        style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}
+      >
+        <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mb-6 border border-[#e9c349]/20 group-hover:scale-110 transition-transform">
+          <span className={`material-symbols-outlined text-[36px] filled ${iconColor}`}>{icon}</span>
+        </div>
+        <h3 className="text-xl font-semibold text-on-surface mb-4">{title}</h3>
+        <p className="text-sm text-tertiary mb-6 leading-relaxed flex-1">{description}</p>
+        <div className="pt-4 border-t border-[#e9c349]/20">
+          <span className={`${ctaColor} text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all`}>
+            {cta}
+            <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+          </span>
+        </div>
       </div>
-      <h3 className="text-xl font-semibold text-on-surface mb-4">{title}</h3>
-      <p className="text-sm text-tertiary mb-6 leading-relaxed flex-1">{description}</p>
-      <div className="pt-4 border-t border-[#e9c349]/20">
-        <span className={`${ctaColor} text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all`}>
-          {cta}
-          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-        </span>
-      </div>
-    </div>
+    </GlowCard>
   );
 }
 
