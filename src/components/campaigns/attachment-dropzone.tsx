@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { Upload, X, FileIcon } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Attachment } from "@/lib/types";
 
@@ -104,6 +103,7 @@ export function AttachmentDropzone({
 
   return (
     <div>
+      {/* Drop zone */}
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -115,23 +115,23 @@ export function AttachmentDropzone({
           setDragging(false);
           handleFiles(e.dataTransfer.files);
         }}
-        className={`grid place-items-center rounded-2xl border-2 border-dashed p-6 text-center transition ${
-          dragging ? "border-mint-500 bg-mint-50" : "border-border bg-muted/10"
+        className={`flex flex-col items-center justify-center text-center py-8 rounded-lg border-2 border-dashed transition-all cursor-pointer group ${
+          dragging
+            ? "border-[#e9c349]/60 bg-surface-container-high/30"
+            : "border-outline-variant/50 hover:border-[#e9c349]/50 hover:bg-surface-container-high/20"
         }`}
+        onClick={() => inputRef.current?.click()}
       >
-        <Upload className="h-6 w-6 text-muted-foreground" />
-        <p className="mt-2 text-sm text-muted-foreground">
-          Arraste arquivos aqui ou{" "}
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="font-medium text-mint-700 hover:underline"
-          >
-            selecione
-          </button>
+        <div className="w-12 h-12 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center mb-3 group-hover:border-[#e9c349]/50 group-hover:shadow-[0_0_15px_rgba(233,195,73,0.15)] transition-all">
+          <span className="material-symbols-outlined text-[#e9c349] group-hover:text-[#ffb59a] transition-colors">
+            upload_file
+          </span>
+        </div>
+        <p className="text-sm font-semibold text-on-surface mb-1">
+          Arrastar Arquivos
         </p>
-        <p className="mt-1 text-[11px] text-muted-foreground">
-          PNG, JPG, WEBP, GIF, PDF · até 10 MB
+        <p className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
+          PDF, PNG, JPG, WEBP · até 10 MB
         </p>
         <input
           ref={inputRef}
@@ -142,35 +142,36 @@ export function AttachmentDropzone({
         />
       </div>
 
-      {error && (
-        <p className="mt-2 text-xs text-destructive">{error}</p>
-      )}
-
+      {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
       {pending && (
-        <p className="mt-2 text-xs text-muted-foreground">Enviando...</p>
+        <p className="mt-2 text-xs text-tertiary font-bold uppercase tracking-widest">
+          Enviando...
+        </p>
       )}
 
       {items.length > 0 && (
-        <ul className="mt-4 space-y-2">
+        <ul className="mt-3 flex flex-col gap-2">
           {items.map((a) => (
             <li
               key={a.id}
-              className="flex items-center gap-3 rounded-lg border border-border bg-card px-3 py-2"
+              className="flex items-center gap-3 rounded-lg border border-outline-variant/30 bg-surface-container/50 px-3 py-2"
             >
-              <FileIcon className="h-4 w-4 text-muted-foreground" />
-              <span className="flex-1 truncate text-sm">
+              <span className="material-symbols-outlined text-[16px] text-tertiary">
+                {a.type === "pdf" ? "picture_as_pdf" : a.type === "image" ? "image" : "attach_file"}
+              </span>
+              <span className="flex-1 truncate text-xs text-on-surface">
                 {a.path.split("/").pop()}
               </span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-[10px] text-tertiary font-bold uppercase tracking-widest">
                 {a.size_bytes ? `${Math.round(a.size_bytes / 1024)} KB` : ""}
               </span>
               <button
                 type="button"
-                onClick={() => remove(a)}
-                className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-destructive"
+                onClick={(e) => { e.stopPropagation(); remove(a); }}
+                className="rounded p-1 text-tertiary hover:text-red-400 transition-colors"
                 aria-label="Remover"
               >
-                <X className="h-4 w-4" />
+                <span className="material-symbols-outlined text-[16px]">close</span>
               </button>
             </li>
           ))}

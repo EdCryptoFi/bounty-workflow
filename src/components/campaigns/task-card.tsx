@@ -1,10 +1,25 @@
 "use client";
 
 import { useTransition } from "react";
-import { CheckCircle2, Circle, Loader2, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toggleStepAction } from "@/lib/campaigns/actions";
 import type { Step } from "@/lib/types";
+
+const STATUS_ICON: Record<Step["status"], string> = {
+  todo: "radio_button_unchecked",
+  in_progress: "pending",
+  done: "check_circle",
+};
+const STATUS_ICON_COLOR: Record<Step["status"], string> = {
+  todo: "text-tertiary hover:text-on-surface",
+  in_progress: "text-[#ffb59a]",
+  done: "text-[#e9c349]",
+};
+const STATUS_TEXT: Record<Step["status"], string> = {
+  todo: "text-on-surface",
+  in_progress: "text-[#ffb59a]",
+  done: "text-tertiary line-through",
+};
 
 export function TaskCard({ step }: { step: Step }) {
   const [pending, startTransition] = useTransition();
@@ -21,17 +36,10 @@ export function TaskCard({ step }: { step: Step }) {
     });
   }
 
-  const Icon =
-    step.status === "done"
-      ? CheckCircle2
-      : step.status === "in_progress"
-        ? Loader2
-        : Circle;
-
   return (
     <div
       className={cn(
-        "flex items-start gap-3 rounded-xl border border-border bg-card p-3 transition hover:border-mint-300",
+        "flex items-start gap-3 p-3 rounded-lg border border-transparent hover:border-outline-variant/30 hover:bg-surface-container-high/30 transition-colors cursor-pointer",
         step.status === "done" && "opacity-70",
       )}
     >
@@ -40,36 +48,27 @@ export function TaskCard({ step }: { step: Step }) {
         onClick={cycle}
         disabled={pending}
         className={cn(
-          "mt-0.5 shrink-0 rounded-full transition",
-          step.status === "done" && "text-mint-600",
-          step.status === "in_progress" && "text-mint-500",
-          step.status === "todo" && "text-muted-foreground hover:text-foreground",
+          "mt-0.5 shrink-0 transition",
+          STATUS_ICON_COLOR[step.status],
+          pending && "opacity-50",
         )}
-        aria-label={`Marcar como ${step.status === "done" ? "a fazer" : "próximo"}`}
+        aria-label="Mudar status"
       >
-        <Icon
-          className={cn(
-            "h-5 w-5",
-            step.status === "in_progress" && "animate-spin",
-          )}
-        />
+        <span className={cn("material-symbols-outlined text-[20px]", step.status === "done" ? "filled" : "")}>
+          {STATUS_ICON[step.status]}
+        </span>
       </button>
 
       <div className="min-w-0 flex-1">
-        <p
-          className={cn(
-            "text-sm font-medium",
-            step.status === "done" && "line-through",
-          )}
-        >
+        <p className={cn("text-sm font-medium", STATUS_TEXT[step.status])}>
           {step.title}
         </p>
         {step.description && (
-          <p className="mt-0.5 text-xs text-muted-foreground">{step.description}</p>
+          <p className="mt-0.5 text-[11px] text-tertiary">{step.description}</p>
         )}
         {step.due_date && (
-          <div className="mt-1.5 inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-            <Calendar className="h-3 w-3" />
+          <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-tertiary">
+            <span className="material-symbols-outlined text-[12px]">calendar_today</span>
             {new Date(step.due_date).toLocaleDateString("pt-BR", {
               day: "2-digit",
               month: "short",

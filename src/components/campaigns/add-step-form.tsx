@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { Plus } from "lucide-react";
 import { addStepAction } from "@/lib/campaigns/actions";
 
 export function AddStepForm({ campaignId }: { campaignId: string }) {
@@ -29,23 +28,23 @@ export function AddStepForm({ campaignId }: { campaignId: string }) {
           required
           maxLength={200}
           placeholder="Adicionar tarefa..."
-          className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none ring-ring transition focus:ring-2"
+          className="flex-1 rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40"
         />
         <input
           name="due_date"
           type="date"
-          className="rounded-lg border border-border bg-background px-2 py-2 text-sm outline-none ring-ring transition focus:ring-2"
+          className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-2 py-2 text-sm text-on-surface outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40"
         />
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-mint-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-mint-700 disabled:opacity-60"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-[#ff5c00] px-3 py-2 text-sm font-bold text-white transition hover:bg-[#ff7b33] hover:shadow-[0_0_15px_rgba(255,92,0,0.4)] disabled:opacity-60 active:scale-95"
         >
-          <Plus className="h-4 w-4" />
+          <span className="material-symbols-outlined text-[16px]">add</span>
           <span className="hidden sm:inline">Adicionar</span>
         </button>
       </div>
-      {error && <p className="text-xs text-destructive">{error}</p>}
+      {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
     </form>
   );
 }
