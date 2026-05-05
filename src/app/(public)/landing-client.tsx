@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { GlowCard } from "@/components/ui/glow-card";
 
@@ -164,30 +165,19 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         {/* ── Hero ── */}
         <section className="relative px-6 mb-32 max-w-[1400px] mx-auto w-full">
           <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-            {/* Logo in shiny gold card */}
-            <div className="mb-12 relative">
-              {/* Outer glow */}
+            {/* Hero logo */}
+            <div className="mb-10 relative">
               <div
-                className="absolute inset-0 rounded-2xl blur-2xl opacity-60"
-                style={{ background: "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(233,195,73,0.5) 0%, transparent 70%)" }}
+                className="absolute inset-0 blur-3xl opacity-30 pointer-events-none"
+                style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255,92,0,0.4) 0%, transparent 70%)" }}
               />
-              <div
-                className="relative rounded-2xl px-14 py-8 flex items-center justify-center"
-                style={{
-                  background: "linear-gradient(135deg, rgba(233,195,73,0.18) 0%, rgba(255,181,154,0.08) 100%)",
-                  backdropFilter: "blur(24px)",
-                  border: "1.5px solid rgba(233,195,73,0.45)",
-                  boxShadow: "0 0 40px rgba(233,195,73,0.25), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 30px rgba(233,195,73,0.06)",
-                }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/logo-horizontal.png"
-                  alt="Bounty Workflow"
-                  className="h-24 object-contain relative z-10"
-                  style={{ filter: "drop-shadow(0 0 20px rgba(233,195,73,0.4))" }}
-                />
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/logo-horizontal.png"
+                alt="Bounty Workflow"
+                className="h-28 sm:h-36 object-contain relative z-10"
+                style={{ filter: "drop-shadow(0 0 24px rgba(255,92,0,0.35))" }}
+              />
             </div>
 
             {/* Badge */}
@@ -259,34 +249,84 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         {/* ── Features Bento ── */}
         <section className="mb-32 max-w-[1400px] mx-auto px-12">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-on-surface mb-4">{t.featuresTitle}</h2>
-            <p className="text-base text-tertiary">{t.featuresSub}</p>
+            <h2 className="text-4xl font-bold text-on-surface mb-3">{t.featuresTitle}</h2>
+            <p
+              className="text-xl font-semibold mb-3"
+              style={{
+                background: "linear-gradient(135deg, #ffb59a 0%, #ff5c00 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Orchestrate Work. Ship Faster.
+            </p>
+            <p className="text-sm text-tertiary">{t.featuresSub}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <FeatureCard
+          {/* Bento Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:auto-rows-[22rem]">
+            {/* Timeline — col-span-2 */}
+            <BentoCard
+              className="md:col-span-2"
               icon="timeline"
               iconColor="text-[#ff5c00]"
-              ctaColor="text-[#ff5c00]"
               title={t.f1Title}
               description={t.f1Desc}
               cta={t.f1Cta}
+              href="/auth/signup"
+              background={
+                <div className="absolute inset-0 overflow-hidden opacity-25 pointer-events-none">
+                  {[...Array(8)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute left-0 right-0 h-px"
+                      style={{ top: `${10 + i * 12}%`, background: `rgba(255,92,0,${0.2 + i * 0.08})` }}
+                    />
+                  ))}
+                  {[...Array(5)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-3 h-3 rounded-full border-2 border-[#ff5c00]"
+                      style={{ left: `${15 + i * 18}%`, top: `${10 + i * 12}%`, background: "rgba(255,92,0,0.3)" }}
+                    />
+                  ))}
+                </div>
+              }
             />
-            <FeatureCard
+
+            {/* Canvas — col-span-1 */}
+            <BentoCard
+              className="md:col-span-1"
               icon="dashboard_customize"
               iconColor="text-[#e9c349]"
-              ctaColor="text-[#e9c349]"
               title={t.f2Title}
               description={t.f2Desc}
               cta={t.f2Cta}
+              href="/auth/signup"
+              background={
+                <div className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none"
+                  style={{
+                    backgroundImage: "radial-gradient(circle, rgba(233,195,73,0.4) 1px, transparent 1px)",
+                    backgroundSize: "28px 28px",
+                  }}
+                />
+              }
             />
-            <FeatureCard
+
+            {/* Reminders — col-span-3, shorter row */}
+            <BentoCard
+              className="md:col-span-3 !auto-rows-auto md:!min-h-0 md:max-h-52"
               icon="alarm"
               iconColor="text-[#ffb59a]"
-              ctaColor="text-[#ffb59a]"
               title={t.f3Title}
               description={t.f3Desc}
               cta={t.f3Cta}
+              href="/auth/signup"
+              background={
+                <div className="absolute right-8 top-1/2 -translate-y-1/2 opacity-10 pointer-events-none">
+                  <span className="material-symbols-outlined text-[140px] text-[#ffb59a] filled">alarm</span>
+                </div>
+              }
             />
           </div>
         </section>
@@ -417,40 +457,60 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
   );
 }
 
-function FeatureCard({
+function BentoCard({
   icon,
   iconColor,
-  ctaColor,
   title,
   description,
   cta,
+  href,
+  background,
+  className = "",
 }: {
   icon: string;
   iconColor: string;
-  ctaColor: string;
   title: string;
   description: string;
   cta: string;
+  href: string;
+  background?: ReactNode;
+  className?: string;
 }) {
   return (
-    <GlowCard className="group">
-      <div
-        className="rounded-[11px] p-8 flex flex-col h-full"
-        style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}
-      >
-        <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mb-6 border border-[#e9c349]/20 group-hover:scale-110 transition-transform">
-          <span className={`material-symbols-outlined text-[36px] filled ${iconColor}`}>{icon}</span>
-        </div>
-        <h3 className="text-xl font-semibold text-on-surface mb-4">{title}</h3>
-        <p className="text-sm text-tertiary mb-6 leading-relaxed flex-1">{description}</p>
-        <div className="pt-4 border-t border-[#e9c349]/20">
-          <span className={`${ctaColor} text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all`}>
-            {cta}
-            <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-          </span>
-        </div>
+    <div
+      className={`group relative flex flex-col justify-end overflow-hidden rounded-2xl min-h-[22rem] transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,92,0,0.12)] hover:border-[rgba(255,92,0,0.25)] ${className}`}
+      style={{
+        background: "rgba(24,23,23,0.85)",
+        backdropFilter: "blur(20px)",
+        border: "1px solid rgba(233,195,73,0.12)",
+      }}
+    >
+      {/* Decorative background */}
+      {background}
+
+      {/* Content — slides up on hover */}
+      <div className="relative z-10 p-8 flex flex-col gap-2 transition-all duration-300 lg:group-hover:-translate-y-8">
+        <span className={`material-symbols-outlined text-[40px] filled mb-2 transition-all duration-300 lg:group-hover:scale-75 lg:group-hover:origin-left ${iconColor}`}>
+          {icon}
+        </span>
+        <h3 className="text-xl font-semibold text-on-surface">{title}</h3>
+        <p className="text-sm text-tertiary leading-relaxed max-w-lg">{description}</p>
       </div>
-    </GlowCard>
+
+      {/* CTA — appears on hover */}
+      <div className="relative z-10 px-8 pb-8 opacity-100 translate-y-0 transition-all duration-300 lg:opacity-0 lg:translate-y-4 lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
+        <Link
+          href={href}
+          className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#ffb59a] hover:gap-4 transition-all"
+        >
+          {cta}
+          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+        </Link>
+      </div>
+
+      {/* Hover overlay */}
+      <div className="pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300 group-hover:bg-[rgba(255,92,0,0.025)]" />
+    </div>
   );
 }
 
