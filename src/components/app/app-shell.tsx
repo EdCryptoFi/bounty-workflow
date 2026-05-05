@@ -1,6 +1,7 @@
 import { SidebarNav, SidebarUserCard } from "./sidebar";
 import { MobileDrawer } from "./mobile-drawer";
 import { UserMenu } from "./user-menu";
+import { NotifBell, type ReminderAlert } from "./notif-bell";
 import { createClient } from "@/lib/supabase/server";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
@@ -10,7 +11,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [{ data: profile }, { data: billing }] = await Promise.all([
+  const in48h = new Date(Date.now() + 48 * 3600 * 1000).toISOString();
+
+  const [{ data: profile }, { data: billing }, { data: rawReminders }] = await Promise.all([
     user
       ? supabase
           .from("users")
@@ -19,7 +22,31 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           .maybeSingle()
       : Promise.resolve({ data: null }),
     supabase.from("v_user_billing").select("*").maybeSingle(),
+    user
+      ? supabase
+          .from("reminders")
+          .select("id, message, trigger_at, campaigns(title)")
+          .eq("status", "pending")
+          .lte("trigger_at", in48h)
+          .order("trigger_at", { ascending: true })
+          .limit(10)
+      : Promise.resolve({ data: null }),
   ]);
+
+  const reminders: ReminderAlert[] = (rawReminders ?? []).map((r) => {
+    const row = r as unknown as {
+      id: string;
+      message: string | null;
+      trigger_at: string;
+      campaigns: { title: string } | null;
+    };
+    return {
+      id: row.id,
+      message: row.message,
+      trigger_at: row.trigger_at,
+      campaign_title: row.campaigns?.title ?? null,
+    };
+  });
 
   const email = user?.email ?? "";
   const fullName = profile?.full_name ?? null;
@@ -70,7 +97,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
           {/* Trailing actions */}
           <div className="flex items-center gap-5">
-            <NotifBellInline />
+            <NotifBell reminders={reminders} />
             <button className="text-zinc-400 hover:text-[#ffb59a] transition-colors active:scale-95">
               <span className="material-symbols-outlined text-[24px]">apps</span>
             </button>
@@ -111,14 +138,6 @@ function SearchBarInline() {
   );
 }
 
-function NotifBellInline() {
-  return (
-    <button className="relative text-zinc-400 hover:text-[#ffb59a] transition-colors active:scale-95">
-      <span className="material-symbols-outlined text-[24px]">notifications</span>
-      <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-[#ffb59a] shadow-[0_0_8px_rgba(255,92,0,0.8)]" />
-    </button>
-  );
-}
 
 type Billing = {
   billing_status: "trialing" | "active" | "past_due" | "expired" | null;

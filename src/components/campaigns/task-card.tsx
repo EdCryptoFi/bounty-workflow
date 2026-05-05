@@ -63,9 +63,6 @@ export function TaskCard({ step }: { step: Step }) {
         <p className={cn("text-sm font-medium", STATUS_TEXT[step.status])}>
           {step.title}
         </p>
-        {step.description && (
-          <p className="mt-0.5 text-[11px] text-tertiary">{step.description}</p>
-        )}
         {step.due_date && (
           <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-tertiary">
             <span className="material-symbols-outlined text-[12px]">calendar_today</span>

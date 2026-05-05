@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { toggleStepAction, deleteStepAction, updateStepAction } from "@/lib/campaigns/actions";
+import { toggleStepAction, deleteStepAction, updateStepAction, moveStepAction } from "@/lib/campaigns/actions";
 import type { Step, StepStatus } from "@/lib/types";
 
 const STEP_BORDER: Record<StepStatus, string> = {
@@ -233,6 +233,13 @@ export function FlowNodes({ steps }: { steps: Step[] }) {
     });
   }
 
+  function handleMove(e: React.MouseEvent, step: Step, direction: "up" | "down") {
+    e.stopPropagation();
+    startTransition(async () => {
+      await moveStepAction(step.id, direction);
+    });
+  }
+
   if (steps.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center flex-1 text-center gap-3 h-full">
@@ -251,7 +258,7 @@ export function FlowNodes({ steps }: { steps: Step[] }) {
       {steps.map((step, i) => (
         <div
           key={step.id}
-          className={`w-72 bg-[rgba(42,42,42,0.85)] backdrop-blur-xl border rounded-xl p-3 z-10 relative cursor-pointer group/card transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(255,92,0,0.12)] ${STEP_BORDER[step.status]}`}
+          className={`w-72 bg-[rgba(42,42,42,0.85)] backdrop-blur-xl border rounded-xl p-3 z-10 relative cursor-pointer group/card transition-all duration-200 hover:shadow-[0_0_20px_rgba(255,92,0,0.12)] ${STEP_BORDER[step.status]}`}
           style={
             step.status === "in_progress"
               ? { boxShadow: "0 0 15px rgba(255,92,0,0.15), inset 0 0 12px rgba(255,92,0,0.06)" }
@@ -259,8 +266,30 @@ export function FlowNodes({ steps }: { steps: Step[] }) {
           }
           onClick={() => setEditing(step)}
         >
+          {/* Up / Down reorder arrows — top-left */}
+          <div className="absolute left-2 top-2 flex flex-col gap-0.5" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              title="Mover para cima"
+              disabled={pending || i === 0}
+              onClick={(e) => handleMove(e, step, "up")}
+              className="text-tertiary hover:text-[#ffb59a] transition disabled:opacity-20 disabled:cursor-not-allowed"
+            >
+              <span className="material-symbols-outlined text-[14px]">arrow_drop_up</span>
+            </button>
+            <button
+              type="button"
+              title="Mover para baixo"
+              disabled={pending || i === steps.length - 1}
+              onClick={(e) => handleMove(e, step, "down")}
+              className="text-tertiary hover:text-[#ffb59a] transition disabled:opacity-20 disabled:cursor-not-allowed"
+            >
+              <span className="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+            </button>
+          </div>
+
           {/* Status icon (click to cycle) + title */}
-          <div className="flex items-center gap-2 mb-1 pr-7">
+          <div className="flex items-center gap-2 mb-1 pl-7 pr-7">
             <button
               type="button"
               title="Ciclar status"
@@ -277,13 +306,13 @@ export function FlowNodes({ steps }: { steps: Step[] }) {
             </span>
           </div>
 
-          {/* Edit hint (top-right) */}
-          <span className="absolute top-2.5 right-2.5 opacity-0 group-hover/card:opacity-60 transition">
+          {/* Edit hint — top-right */}
+          <span className="absolute top-2.5 right-2.5 opacity-0 group-hover/card:opacity-60 transition pointer-events-none">
             <span className="material-symbols-outlined text-[13px] text-[#ffb59a]">open_in_new</span>
           </span>
 
           {step.description && (
-            <p className="text-[10px] font-medium text-tertiary mb-2 leading-relaxed line-clamp-2 pl-[23px]">
+            <p className="text-[10px] font-medium text-tertiary mb-2 leading-relaxed line-clamp-2 pl-7">
               {step.description}
             </p>
           )}

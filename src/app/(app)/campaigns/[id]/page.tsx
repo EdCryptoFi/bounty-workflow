@@ -9,23 +9,10 @@ import { AddStepModal } from "@/components/campaigns/add-step-modal";
 import { FlowLeftPanel } from "@/components/campaigns/flow-left-panel";
 import { FlowNodes } from "@/components/campaigns/flow-nodes";
 import { AttachmentDropzone } from "@/components/campaigns/attachment-dropzone";
+import { CampaignStatusSelect } from "@/components/campaigns/campaign-status-select";
 import { GlowCard } from "@/components/ui/glow-card";
 
 export const metadata: Metadata = { title: "Campanha" };
-
-const STATUS_LABEL: Record<string, string> = {
-  draft: "RASCUNHO",
-  active: "ATIVO",
-  completed: "CONCLUÍDO",
-  archived: "ARQUIVADO",
-};
-
-const STATUS_DOT: Record<string, string> = {
-  draft: "bg-zinc-400",
-  active: "bg-[#ff5c00] shadow-[0_0_8px_#ff5c00]",
-  completed: "bg-[#e9c349] shadow-[0_0_8px_rgba(233,195,73,0.6)]",
-  archived: "bg-zinc-600",
-};
 
 
 export default async function CampaignDetailPage({
@@ -65,12 +52,7 @@ export default async function CampaignDetailPage({
               {campaign.title}
             </h1>
             <div className="flex items-center gap-3 mt-2 flex-wrap">
-              <span className="px-3 py-1 bg-surface-container/50 border border-secondary/30 rounded-full flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${STATUS_DOT[campaign.status] ?? "bg-zinc-500"}`} />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#e9c349]">
-                  {STATUS_LABEL[campaign.status] ?? campaign.status}
-                </span>
-              </span>
+              <CampaignStatusSelect campaignId={campaign.id} status={campaign.status} />
               {campaign.description && (
                 <span className="text-xs text-tertiary truncate max-w-[400px]">
                   {campaign.description}
@@ -185,9 +167,7 @@ export default async function CampaignDetailPage({
                   <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
                     Status
                   </span>
-                  <span className="text-xs font-semibold text-on-surface">
-                    {STATUS_LABEL[campaign.status] ?? campaign.status}
-                  </span>
+                  <CampaignStatusSelect campaignId={campaign.id} status={campaign.status} />
                 </div>
                 {campaign.estimated_value_brl && (
                   <div className="flex items-center justify-between p-3 bg-surface-container-high/30 rounded-lg border border-outline-variant/20">

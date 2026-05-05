@@ -179,6 +179,40 @@ export async function toggleStepAction(stepId: string, next: "todo" | "in_progre
   return { ok: true };
 }
 
+export async function moveStepAction(stepId: string, direction: "up" | "down") {
+  await requireUser();
+  const supabase = await createClient();
+
+  const { data: step } = await supabase
+    .from("steps")
+    .select("order_index, campaign_id")
+    .eq("id", stepId)
+    .maybeSingle();
+  if (!step) return { error: "Step not found" };
+
+  const { data: allSteps } = await supabase
+    .from("steps")
+    .select("id, order_index")
+    .eq("campaign_id", (step as { campaign_id: string }).campaign_id)
+    .order("order_index", { ascending: true });
+  if (!allSteps || allSteps.length < 2) return { ok: true };
+
+  const idx = allSteps.findIndex((s) => s.id === stepId);
+  const targetIdx = direction === "up" ? idx - 1 : idx + 1;
+  if (targetIdx < 0 || targetIdx >= allSteps.length) return { ok: true };
+
+  const adjacent = allSteps[targetIdx] as { id: string; order_index: number };
+  const current = allSteps[idx] as { id: string; order_index: number };
+
+  await Promise.all([
+    supabase.from("steps").update({ order_index: adjacent.order_index }).eq("id", current.id),
+    supabase.from("steps").update({ order_index: current.order_index }).eq("id", adjacent.id),
+  ]);
+
+  revalidatePath(`/campaigns/${(step as { campaign_id: string }).campaign_id}`);
+  return { ok: true };
+}
+
 export async function updateStepAction(
   stepId: string,
   data: { title?: string; description?: string | null; due_date?: string | null; status?: StepStatus },
