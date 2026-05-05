@@ -27,6 +27,15 @@ const COPY = {
     f3Title: "Reminders",
     f3Desc: "Alertas inteligentes acionados por IA que garantem que nenhuma etapa crítica seja perdida.",
     f3Cta: "AGENDAR",
+    f4Title: "Google Drive",
+    f4Desc: "Conecte seu Drive e anexe evidências, prints e documentos direto às suas campanhas.",
+    f4Cta: "CONECTAR",
+    f5Title: "DropBox",
+    f5Desc: "Integração com DropBox para armazenar e compartilhar arquivos de bounty com segurança.",
+    f5Cta: "INTEGRAR",
+    f6Title: "Referral System",
+    f6Desc: "Indique outros hunters e acumule recompensas. Programa de indicação exclusivo para membros.",
+    f6Cta: "INDICAR",
     statUptime: "99.9% Up-time",
     statUptimeDesc:
       "Nossa infraestrutura distribuída garante que sua equipe nunca pare, não importa onde estejam.",
@@ -64,6 +73,15 @@ const COPY = {
     f3Title: "Reminders",
     f3Desc: "AI-triggered smart alerts that ensure no critical step is ever missed.",
     f3Cta: "SCHEDULE",
+    f4Title: "Google Drive",
+    f4Desc: "Connect your Drive and attach evidence, screenshots and documents directly to your campaigns.",
+    f4Cta: "CONNECT",
+    f5Title: "DropBox",
+    f5Desc: "DropBox integration to securely store and share bounty files with your team.",
+    f5Cta: "INTEGRATE",
+    f6Title: "Referral System",
+    f6Desc: "Invite other hunters and earn rewards. Exclusive referral program for members.",
+    f6Cta: "REFER",
     statUptime: "99.9% Up-time",
     statUptimeDesc:
       "Our distributed infrastructure ensures your team never stops, no matter where in the universe they are.",
@@ -241,6 +259,19 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                 }}
               >
                 <DashboardMockup />
+                {/* Animated orange gradient overlay */}
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-xl animate-dash-glow"
+                  style={{
+                    background: "radial-gradient(ellipse 70% 50% at 60% 40%, rgba(255,92,0,0.22) 0%, transparent 70%)",
+                  }}
+                />
+                <div
+                  className="pointer-events-none absolute inset-0 rounded-xl animate-dash-glow-2"
+                  style={{
+                    background: "radial-gradient(ellipse 50% 60% at 30% 60%, rgba(255,92,0,0.14) 0%, transparent 70%)",
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -268,8 +299,7 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             {/* Timeline — col-span-2 */}
             <BentoCard
               className="md:col-span-2"
-              icon="timeline"
-              iconColor="text-[#ff5c00]"
+              icon={<IconTimeline />}
               title={t.f1Title}
               description={t.f1Desc}
               cta={t.f1Cta}
@@ -297,8 +327,7 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             {/* Canvas — col-span-1 */}
             <BentoCard
               className="md:col-span-1"
-              icon="dashboard_customize"
-              iconColor="text-[#e9c349]"
+              icon={<IconCanvas />}
               title={t.f2Title}
               description={t.f2Desc}
               cta={t.f2Cta}
@@ -313,18 +342,67 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
               }
             />
 
-            {/* Reminders — col-span-3, shorter row */}
+            {/* Reminders — col-span-1 */}
             <BentoCard
-              className="md:col-span-3 !auto-rows-auto md:!min-h-0 md:max-h-52"
-              icon="alarm"
-              iconColor="text-[#ffb59a]"
+              className="md:col-span-1"
+              icon={<IconReminders />}
               title={t.f3Title}
               description={t.f3Desc}
               cta={t.f3Cta}
               href="/auth/signup"
               background={
-                <div className="absolute right-8 top-1/2 -translate-y-1/2 opacity-10 pointer-events-none">
-                  <span className="material-symbols-outlined text-[140px] text-[#ffb59a] filled">alarm</span>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-8 pointer-events-none">
+                  <span className="material-symbols-outlined text-[120px] text-[#ffb59a] filled">alarm</span>
+                </div>
+              }
+            />
+
+            {/* Google Drive — col-span-1 */}
+            <BentoCard
+              className="md:col-span-1"
+              icon={<IconGoogleDrive />}
+              title={t.f4Title}
+              description={t.f4Desc}
+              cta={t.f4Cta}
+              href="/auth/signup"
+              background={
+                <div className="absolute inset-0 overflow-hidden opacity-15 pointer-events-none"
+                  style={{
+                    background: "radial-gradient(ellipse 80% 80% at 80% 80%, rgba(255,92,0,0.25) 0%, transparent 70%)",
+                  }}
+                />
+              }
+            />
+
+            {/* DropBox — col-span-1 */}
+            <BentoCard
+              className="md:col-span-1"
+              icon={<IconDropbox />}
+              title={t.f5Title}
+              description={t.f5Desc}
+              cta={t.f5Cta}
+              href="/auth/signup"
+              background={
+                <div className="absolute inset-0 overflow-hidden opacity-15 pointer-events-none"
+                  style={{
+                    backgroundImage: "linear-gradient(135deg, rgba(255,92,0,0.1) 25%, transparent 25%, transparent 50%, rgba(255,92,0,0.1) 50%, rgba(255,92,0,0.1) 75%, transparent 75%)",
+                    backgroundSize: "40px 40px",
+                  }}
+                />
+              }
+            />
+
+            {/* Referral System — col-span-1 */}
+            <BentoCard
+              className="md:col-span-1"
+              icon={<IconReferral />}
+              title={t.f6Title}
+              description={t.f6Desc}
+              cta={t.f6Cta}
+              href="/auth/signup"
+              background={
+                <div className="absolute inset-0 overflow-hidden opacity-10 pointer-events-none flex items-end justify-end pr-6 pb-6">
+                  <span className="material-symbols-outlined text-[100px] text-[#ffb59a]">group</span>
                 </div>
               }
             />
@@ -459,7 +537,6 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
 
 function BentoCard({
   icon,
-  iconColor,
   title,
   description,
   cta,
@@ -467,8 +544,7 @@ function BentoCard({
   background,
   className = "",
 }: {
-  icon: string;
-  iconColor: string;
+  icon: ReactNode;
   title: string;
   description: string;
   cta: string;
@@ -485,19 +561,14 @@ function BentoCard({
         border: "1px solid rgba(233,195,73,0.12)",
       }}
     >
-      {/* Decorative background */}
       {background}
-
-      {/* Content — slides up on hover */}
       <div className="relative z-10 p-8 flex flex-col gap-2 transition-all duration-300 lg:group-hover:-translate-y-8">
-        <span className={`material-symbols-outlined text-[40px] filled mb-2 transition-all duration-300 lg:group-hover:scale-75 lg:group-hover:origin-left ${iconColor}`}>
+        <div className="mb-2 transition-all duration-300 lg:group-hover:scale-75 lg:group-hover:origin-left">
           {icon}
-        </span>
+        </div>
         <h3 className="text-xl font-semibold text-on-surface">{title}</h3>
         <p className="text-sm text-tertiary leading-relaxed max-w-lg">{description}</p>
       </div>
-
-      {/* CTA — appears on hover */}
       <div className="relative z-10 px-8 pb-8 opacity-100 translate-y-0 transition-all duration-300 lg:opacity-0 lg:translate-y-4 lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
         <Link
           href={href}
@@ -507,10 +578,121 @@ function BentoCard({
           <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
         </Link>
       </div>
-
-      {/* Hover overlay */}
       <div className="pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300 group-hover:bg-[rgba(255,92,0,0.025)]" />
     </div>
+  );
+}
+
+/* ── Feature SVG Icons ─────────────────────────────────────────────── */
+function IconTimeline() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id="ig-timeline" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffb59a" />
+          <stop offset="1" stopColor="#ff5c00" />
+        </linearGradient>
+      </defs>
+      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
+      <line x1="12" y1="16" x2="36" y2="16" stroke="url(#ig-timeline)" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="18" cy="16" r="3" fill="url(#ig-timeline)" />
+      <line x1="12" y1="24" x2="36" y2="24" stroke="url(#ig-timeline)" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.6" />
+      <circle cx="28" cy="24" r="3" fill="url(#ig-timeline)" fillOpacity="0.7" />
+      <line x1="12" y1="32" x2="36" y2="32" stroke="url(#ig-timeline)" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.35" />
+      <circle cx="22" cy="32" r="3" fill="url(#ig-timeline)" fillOpacity="0.45" />
+    </svg>
+  );
+}
+
+function IconCanvas() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id="ig-canvas" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffb59a" />
+          <stop offset="1" stopColor="#ff5c00" />
+        </linearGradient>
+      </defs>
+      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
+      {[[10,10],[22,10],[34,10],[10,22],[22,22],[34,22],[10,34],[22,34],[34,34]].map(([cx,cy], i) => (
+        <rect key={i} x={cx} y={cy} width="8" height="8" rx="2"
+          fill="url(#ig-canvas)"
+          fillOpacity={i === 4 ? 1 : i < 3 ? 0.8 : i < 6 ? 0.5 : 0.25}
+        />
+      ))}
+    </svg>
+  );
+}
+
+function IconReminders() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id="ig-reminder" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffb59a" />
+          <stop offset="1" stopColor="#ff5c00" />
+        </linearGradient>
+      </defs>
+      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
+      <path d="M24 9 C17 9 13 14 13 20 L13 30 L10 33 L38 33 L35 30 L35 20 C35 14 31 9 24 9Z"
+        fill="url(#ig-reminder)" fillOpacity="0.9" />
+      <rect x="21" y="7" width="6" height="4" rx="2" fill="url(#ig-reminder)" />
+      <path d="M20 34 C20 36.2 21.8 38 24 38 C26.2 38 28 36.2 28 34Z"
+        fill="url(#ig-reminder)" fillOpacity="0.7" />
+    </svg>
+  );
+}
+
+function IconGoogleDrive() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id="ig-drive" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffb59a" />
+          <stop offset="1" stopColor="#ff5c00" />
+        </linearGradient>
+      </defs>
+      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
+      <polygon points="24,10 8,37 16,37" fill="url(#ig-drive)" fillOpacity="0.9" />
+      <polygon points="24,10 40,37 32,37" fill="url(#ig-drive)" fillOpacity="0.6" />
+      <polygon points="16,37 32,37 24,21" fill="url(#ig-drive)" fillOpacity="0.75" />
+    </svg>
+  );
+}
+
+function IconDropbox() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id="ig-dropbox" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffb59a" />
+          <stop offset="1" stopColor="#ff5c00" />
+        </linearGradient>
+      </defs>
+      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
+      <polygon points="24,11 10,20 24,29 38,20" fill="url(#ig-dropbox)" fillOpacity="0.9" />
+      <polygon points="10,29 24,38 38,29 24,20" fill="url(#ig-dropbox)" fillOpacity="0.55" />
+    </svg>
+  );
+}
+
+function IconReferral() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id="ig-referral" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#ffb59a" />
+          <stop offset="1" stopColor="#ff5c00" />
+        </linearGradient>
+      </defs>
+      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
+      <circle cx="24" cy="15" r="5" fill="url(#ig-referral)" />
+      <path d="M13 33 C13 26.4 18 22 24 22 C30 22 35 26.4 35 33Z" fill="url(#ig-referral)" fillOpacity="0.8" />
+      <circle cx="12" cy="18" r="3.5" fill="url(#ig-referral)" fillOpacity="0.55" />
+      <path d="M5 32 C5 27.6 8.1 24.5 12 24.5" stroke="url(#ig-referral)" strokeWidth="2" strokeOpacity="0.55" strokeLinecap="round" />
+      <circle cx="36" cy="18" r="3.5" fill="url(#ig-referral)" fillOpacity="0.55" />
+      <path d="M43 32 C43 27.6 39.9 24.5 36 24.5" stroke="url(#ig-referral)" strokeWidth="2" strokeOpacity="0.55" strokeLinecap="round" />
+    </svg>
   );
 }
 

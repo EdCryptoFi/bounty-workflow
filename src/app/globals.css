@@ -317,6 +317,24 @@
     border-width: 10px;
   }
 
+  /* Dashboard hero gradient animation */
+  @keyframes dashGlow {
+    0%   { opacity: 0.12; transform: scale(1) rotate(0deg); }
+    50%  { opacity: 0.30; transform: scale(1.08) rotate(2deg); }
+    100% { opacity: 0.12; transform: scale(1) rotate(0deg); }
+  }
+  .animate-dash-glow {
+    animation: dashGlow 4s ease-in-out infinite;
+  }
+  @keyframes dashGlow2 {
+    0%   { opacity: 0.08; transform: scale(1) rotate(0deg); }
+    50%  { opacity: 0.20; transform: scale(1.12) rotate(-3deg); }
+    100% { opacity: 0.08; transform: scale(1) rotate(0deg); }
+  }
+  .animate-dash-glow-2 {
+    animation: dashGlow2 5s ease-in-out infinite 1.5s;
+  }
+
   /* Material Symbols */
   .material-symbols-outlined {
     font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
