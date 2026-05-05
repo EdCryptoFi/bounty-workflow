@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import type { ReactNode } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { CheckCircle2, ArrowUpRight } from "lucide-react";
+import { motion, useMotionValue, useTransform, type Variants } from "motion/react";
 import { GlowCard } from "@/components/ui/glow-card";
 
 const COPY = {
@@ -294,119 +295,112 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             <p className="text-sm text-tertiary">{t.featuresSub}</p>
           </div>
 
-          {/* Bento Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:auto-rows-[22rem]">
-            {/* Timeline — col-span-2 */}
-            <BentoCard
-              className="md:col-span-2"
-              icon={<IconTimeline />}
-              title={t.f1Title}
-              description={t.f1Desc}
-              cta={t.f1Cta}
-              href="/auth/signup"
-              background={
-                <div className="absolute inset-0 overflow-hidden opacity-25 pointer-events-none">
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute left-0 right-0 h-px"
-                      style={{ top: `${10 + i * 12}%`, background: `rgba(255,92,0,${0.2 + i * 0.08})` }}
-                    />
-                  ))}
-                  {[...Array(5)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="absolute w-3 h-3 rounded-full border-2 border-[#ff5c00]"
-                      style={{ left: `${15 + i * 18}%`, top: `${10 + i * 12}%`, background: "rgba(255,92,0,0.3)" }}
-                    />
-                  ))}
-                </div>
-              }
-            />
-
-            {/* Canvas — col-span-1 */}
-            <BentoCard
-              className="md:col-span-1"
-              icon={<IconCanvas />}
-              title={t.f2Title}
-              description={t.f2Desc}
-              cta={t.f2Cta}
-              href="/auth/signup"
-              background={
-                <div className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none"
-                  style={{
-                    backgroundImage: "radial-gradient(circle, rgba(233,195,73,0.4) 1px, transparent 1px)",
-                    backgroundSize: "28px 28px",
-                  }}
+          <motion.div
+            className="grid gap-5"
+            initial="hidden"
+            variants={staggerContainer}
+            viewport={{ once: true }}
+            whileInView="visible"
+          >
+            {/* Row 1 */}
+            <div className="grid gap-5 md:grid-cols-3">
+              <motion.div className="md:col-span-1" variants={fadeInUp}>
+                <MotionBentoCard
+                  title={lang === "pt" ? "Rede de Protocolos" : "Protocol Network"}
+                  description={lang === "pt"
+                    ? "Conectado aos maiores protocolos DeFi e NFT do ecossistema. Um catálogo vivo, sempre atualizado."
+                    : "Connected to the leading DeFi and NFT protocols in the ecosystem. A living catalog, always up to date."}
+                  feature="protocols"
+                  href="/auth/signup"
                 />
-              }
-            />
-
-            {/* Reminders — col-span-1 */}
-            <BentoCard
-              className="md:col-span-1"
-              icon={<IconReminders />}
-              title={t.f3Title}
-              description={t.f3Desc}
-              cta={t.f3Cta}
-              href="/auth/signup"
-              background={
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-8 pointer-events-none">
-                  <span className="material-symbols-outlined text-[120px] text-[#ffb59a] filled">alarm</span>
-                </div>
-              }
-            />
-
-            {/* Google Drive — col-span-1 */}
-            <BentoCard
-              className="md:col-span-1"
-              icon={<IconGoogleDrive />}
-              title={t.f4Title}
-              description={t.f4Desc}
-              cta={t.f4Cta}
-              href="/auth/signup"
-              background={
-                <div className="absolute inset-0 overflow-hidden opacity-15 pointer-events-none"
-                  style={{
-                    background: "radial-gradient(ellipse 80% 80% at 80% 80%, rgba(255,92,0,0.25) 0%, transparent 70%)",
-                  }}
+              </motion.div>
+              <motion.div className="md:col-span-2" variants={fadeInUp}>
+                <MotionBentoCard
+                  title={lang === "pt" ? "Gestão de Campanhas" : "Campaign Management"}
+                  description={lang === "pt"
+                    ? "Orquestre cada campanha de bounty do início ao fim com total visibilidade e controle."
+                    : "Orchestrate every bounty campaign from start to finish with full visibility and control."}
+                  feature="spotlight"
+                  spotlightItems={lang === "pt"
+                    ? ["Reordenação de etapas por drag & drop", "Fluxo multi-status (Todo → Em Progresso → Concluído)", "Campanhas vinculadas a protocolos", "Rastreamento de prazo com alertas", "Progresso visual por etapa"]
+                    : ["Drag & drop step reordering", "Multi-status flow (Todo → In Progress → Done)", "Protocol-linked campaigns", "Deadline proximity tracking", "Visual progress per step"]}
+                  href="/auth/signup"
                 />
-              }
-            />
+              </motion.div>
+            </div>
 
-            {/* DropBox — col-span-1 */}
-            <BentoCard
-              className="md:col-span-1"
-              icon={<IconDropbox />}
-              title={t.f5Title}
-              description={t.f5Desc}
-              cta={t.f5Cta}
-              href="/auth/signup"
-              background={
-                <div className="absolute inset-0 overflow-hidden opacity-15 pointer-events-none"
-                  style={{
-                    backgroundImage: "linear-gradient(135deg, rgba(255,92,0,0.1) 25%, transparent 25%, transparent 50%, rgba(255,92,0,0.1) 50%, rgba(255,92,0,0.1) 75%, transparent 75%)",
-                    backgroundSize: "40px 40px",
-                  }}
+            {/* Row 2 */}
+            <div className="grid gap-5 md:grid-cols-3">
+              <motion.div className="md:col-span-2" variants={fadeInUp}>
+                <MotionBentoCard
+                  title={lang === "pt" ? "Alertas Inteligentes" : "Smart Reminders"}
+                  description={lang === "pt"
+                    ? "Sistema de alertas ciente de prazos que mantém sua equipe sempre no ritmo certo."
+                    : "Deadline-aware alert system that keeps your team consistently on track."}
+                  feature="metrics"
+                  metrics={[
+                    { label: lang === "pt" ? "Cobertura de prazos" : "Deadline coverage", value: 95, suffix: "%" },
+                    { label: lang === "pt" ? "Entrega no prazo" : "On-time delivery", value: 87, suffix: "%" },
+                    { label: lang === "pt" ? "Resposta a alertas" : "Alert response rate", value: 78, suffix: "%" },
+                  ]}
+                  href="/auth/signup"
                 />
-              }
-            />
+              </motion.div>
+              <motion.div className="md:col-span-1" variants={fadeInUp}>
+                <MotionBentoCard
+                  title={lang === "pt" ? "Ciclo do Bounty" : "Bounty Lifecycle"}
+                  description={lang === "pt"
+                    ? "Da descoberta ao pagamento, cada etapa rastreada em tempo real."
+                    : "From discovery to payout, every stage tracked in real time."}
+                  feature="timeline"
+                  timeline={[
+                    { year: "01", event: lang === "pt" ? "Protocolo atribuído & campanha criada" : "Protocol assigned & campaign created" },
+                    { year: "02", event: lang === "pt" ? "Etapas definidas com prazos" : "Steps defined with deadlines" },
+                    { year: "03", event: lang === "pt" ? "Em execução — alertas ativos" : "In progress — alerts active" },
+                    { year: "04", event: lang === "pt" ? "Revisão & submissão" : "Review & submission" },
+                    { year: "05", event: lang === "pt" ? "Pagamento confirmado" : "Payout confirmed" },
+                  ]}
+                  href="/auth/signup"
+                />
+              </motion.div>
+            </div>
 
-            {/* Referral System — col-span-1 */}
-            <BentoCard
-              className="md:col-span-1"
-              icon={<IconReferral />}
-              title={t.f6Title}
-              description={t.f6Desc}
-              cta={t.f6Cta}
-              href="/auth/signup"
-              background={
-                <div className="absolute inset-0 overflow-hidden opacity-10 pointer-events-none flex items-end justify-end pr-6 pb-6">
-                  <span className="material-symbols-outlined text-[100px] text-[#ffb59a]">group</span>
-                </div>
-              }
-            />
-          </div>
+            {/* Row 3 */}
+            <div className="grid gap-5 md:grid-cols-3">
+              <motion.div className="md:col-span-1" variants={fadeInUp}>
+                <MotionBentoCard
+                  title={lang === "pt" ? "Armazenamento" : "File Storage"}
+                  description={lang === "pt"
+                    ? "Anexe evidências, prints e documentos às suas campanhas via Google Drive ou DropBox."
+                    : "Attach evidence, screenshots and documents to campaigns via Google Drive or DropBox."}
+                  feature="storage"
+                  href="/auth/signup"
+                />
+              </motion.div>
+              <motion.div className="md:col-span-1" variants={fadeInUp}>
+                <MotionBentoCard
+                  title={lang === "pt" ? "Sistema de Indicação" : "Referral System"}
+                  description={lang === "pt"
+                    ? "Indique outros hunters e multiplique suas recompensas. Programa exclusivo para membros."
+                    : "Invite hunters and multiply your rewards. Exclusive program for members."}
+                  feature="counter"
+                  statistic={{ value: "2.4×", label: lang === "pt" ? "MULTIPLICADOR DE RECOMPENSA" : "REWARD MULTIPLIER", start: 0, end: 2.4, suffix: "×" }}
+                  href="/auth/signup"
+                />
+              </motion.div>
+              <motion.div className="md:col-span-1" variants={fadeInUp}>
+                <MotionBentoCard
+                  title={lang === "pt" ? "Canvas Infinito" : "Infinite Canvas"}
+                  description={lang === "pt"
+                    ? "Uma tela infinita para mapear protocolos complexos e automações sem nenhum limite."
+                    : "An infinite canvas to map complex protocols and automation flows without limits."}
+                  feature="chart"
+                  statistic={{ value: "∞", label: lang === "pt" ? "NÓS NO CANVAS" : "CANVAS NODES", start: 0, end: 100, suffix: "+" }}
+                  href="/auth/signup"
+                />
+              </motion.div>
+            </div>
+          </motion.div>
         </section>
 
         {/* ── Stats Bento ── */}
@@ -535,114 +529,269 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
   );
 }
 
-function BentoCard({
-  icon,
-  title,
-  description,
-  cta,
-  href,
-  background,
-  className = "",
-}: {
-  icon: ReactNode;
-  title: string;
-  description: string;
-  cta: string;
-  href: string;
-  background?: ReactNode;
-  className?: string;
-}) {
+/* ── Motion Bento animations ──────────────────────────────────────── */
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.2 } },
+};
+
+/* ── Sub-feature components ────────────────────────────────────────── */
+function BentoSpotlight({ items }: { items: string[] }) {
   return (
-    <div
-      className={`group relative flex flex-col justify-end overflow-hidden rounded-2xl min-h-[22rem] transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,92,0,0.12)] hover:border-[rgba(255,92,0,0.25)] ${className}`}
-      style={{
-        background: "rgba(24,23,23,0.85)",
-        backdropFilter: "blur(20px)",
-        border: "1px solid rgba(233,195,73,0.12)",
-      }}
-    >
-      {background}
-      <div className="relative z-10 p-8 flex flex-col gap-2 transition-all duration-300 lg:group-hover:-translate-y-8">
-        <div className="mb-2 transition-all duration-300 lg:group-hover:scale-75 lg:group-hover:origin-left">
-          {icon}
-        </div>
-        <h3 className="text-xl font-semibold text-on-surface">{title}</h3>
-        <p className="text-sm text-tertiary leading-relaxed max-w-lg">{description}</p>
-      </div>
-      <div className="relative z-10 px-8 pb-8 opacity-100 translate-y-0 transition-all duration-300 lg:opacity-0 lg:translate-y-4 lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
-        <Link
-          href={href}
-          className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#ffb59a] hover:gap-4 transition-all"
+    <ul className="mt-3 space-y-2">
+      {items.map((item, i) => (
+        <motion.li
+          key={item}
+          className="flex items-center gap-2"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 * i }}
         >
-          {cta}
-          <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-        </Link>
-      </div>
-      <div className="pointer-events-none absolute inset-0 rounded-2xl transition-all duration-300 group-hover:bg-[rgba(255,92,0,0.025)]" />
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-[#ff5c00]" />
+          <span className="text-sm text-tertiary">{item}</span>
+        </motion.li>
+      ))}
+    </ul>
+  );
+}
+
+function BentoMetrics({ metrics }: { metrics: Array<{ label: string; value: number; suffix?: string }> }) {
+  return (
+    <div className="mt-4 space-y-3">
+      {metrics.map((m, i) => (
+        <motion.div
+          key={m.label}
+          className="space-y-1"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 * i }}
+        >
+          <div className="flex justify-between text-xs">
+            <span className="font-medium text-tertiary">{m.label}</span>
+            <span className="font-semibold text-[#ffb59a]">{m.value}{m.suffix}</span>
+          </div>
+          <div className="h-1.5 w-full overflow-hidden rounded-full" style={{ background: "rgba(255,92,0,0.12)" }}>
+            <motion.div
+              className="h-full rounded-full"
+              style={{ background: "linear-gradient(90deg, #ff5c00, #ffb59a)" }}
+              initial={{ width: 0 }}
+              animate={{ width: `${m.value}%` }}
+              transition={{ duration: 1.2, ease: "easeOut", delay: 0.15 * i }}
+            />
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 }
 
-/* ── Feature SVG Icons ─────────────────────────────────────────────── */
-function IconTimeline() {
+function BentoTimeline({ items }: { items: Array<{ year: string; event: string }> }) {
   return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-      <defs>
-        <linearGradient id="ig-timeline" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#ffb59a" />
-          <stop offset="1" stopColor="#ff5c00" />
-        </linearGradient>
-      </defs>
-      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
-      <line x1="12" y1="16" x2="36" y2="16" stroke="url(#ig-timeline)" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="18" cy="16" r="3" fill="url(#ig-timeline)" />
-      <line x1="12" y1="24" x2="36" y2="24" stroke="url(#ig-timeline)" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.6" />
-      <circle cx="28" cy="24" r="3" fill="url(#ig-timeline)" fillOpacity="0.7" />
-      <line x1="12" y1="32" x2="36" y2="32" stroke="url(#ig-timeline)" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.35" />
-      <circle cx="22" cy="32" r="3" fill="url(#ig-timeline)" fillOpacity="0.45" />
-    </svg>
-  );
-}
-
-function IconCanvas() {
-  return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-      <defs>
-        <linearGradient id="ig-canvas" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#ffb59a" />
-          <stop offset="1" stopColor="#ff5c00" />
-        </linearGradient>
-      </defs>
-      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
-      {[[10,10],[22,10],[34,10],[10,22],[22,22],[34,22],[10,34],[22,34],[34,34]].map(([cx,cy], i) => (
-        <rect key={i} x={cx} y={cy} width="8" height="8" rx="2"
-          fill="url(#ig-canvas)"
-          fillOpacity={i === 4 ? 1 : i < 3 ? 0.8 : i < 6 ? 0.5 : 0.25}
-        />
+    <div className="relative mt-3">
+      <div className="absolute top-0 bottom-0 left-[9px] w-[2px]" style={{ background: "rgba(255,92,0,0.2)" }} />
+      {items.map((item, i) => (
+        <motion.div
+          key={item.year}
+          className="relative mb-3 flex gap-3"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 * i }}
+        >
+          <div
+            className="z-10 mt-0.5 h-5 w-5 shrink-0 rounded-full border-2 flex items-center justify-center"
+            style={{ borderColor: "rgba(255,92,0,0.5)", background: "rgba(255,92,0,0.1)" }}
+          />
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-[#ff5c00]">{item.year}</div>
+            <div className="text-xs text-tertiary mt-0.5">{item.event}</div>
+          </div>
+        </motion.div>
       ))}
-    </svg>
+    </div>
   );
 }
 
-function IconReminders() {
+function BentoCounter({ start, end, suffix }: { start: number; end: number; suffix: string }) {
+  const [count, setCount] = useState(start);
+  useEffect(() => {
+    const duration = 2000;
+    const fps = 1000 / 60;
+    const frames = Math.round(duration / fps);
+    let frame = 0;
+    const id = setInterval(() => {
+      frame++;
+      const p = 1 - (1 - frame / frames) ** 3;
+      setCount(Math.min(start + (end - start) * p, end));
+      if (frame === frames) clearInterval(id);
+    }, fps);
+    return () => clearInterval(id);
+  }, [start, end]);
   return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-      <defs>
-        <linearGradient id="ig-reminder" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#ffb59a" />
-          <stop offset="1" stopColor="#ff5c00" />
-        </linearGradient>
-      </defs>
-      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
-      <path d="M24 9 C17 9 13 14 13 20 L13 30 L10 33 L38 33 L35 30 L35 20 C35 14 31 9 24 9Z"
-        fill="url(#ig-reminder)" fillOpacity="0.9" />
-      <rect x="21" y="7" width="6" height="4" rx="2" fill="url(#ig-reminder)" />
-      <path d="M20 34 C20 36.2 21.8 38 24 38 C26.2 38 28 36.2 28 34Z"
-        fill="url(#ig-reminder)" fillOpacity="0.7" />
-    </svg>
+    <div className="mt-4 flex items-baseline gap-1">
+      <span className="font-bold text-4xl" style={{ color: "#ff5c00" }}>
+        {count % 1 === 0 ? count.toFixed(0) : count.toFixed(1)}
+      </span>
+      <span className="text-2xl font-bold text-[#ffb59a]">{suffix}</span>
+    </div>
   );
 }
 
+function BentoProtocols() {
+  const protocols = [
+    { name: "DRiP", domain: "drip.haus" },
+    { name: "MagicEden", domain: "magiceden.io" },
+    { name: "Rally", domain: "rally.io" },
+    { name: "P2P Kols", domain: "p2pkols.com" },
+    { name: "3Look", domain: "3look.io" },
+    { name: "More", domain: null },
+  ];
+  return (
+    <div className="mt-4 grid grid-cols-3 gap-3">
+      {protocols.map((p) => (
+        <motion.div
+          key={p.name}
+          className="flex flex-col items-center gap-1.5 rounded-xl p-2.5 transition-all duration-300"
+          style={{ background: "rgba(255,92,0,0.06)", border: "1px solid rgba(255,92,0,0.12)" }}
+          whileHover={{ borderColor: "rgba(255,92,0,0.35)", background: "rgba(255,92,0,0.1)" }}
+        >
+          <div className="h-8 w-8 rounded-full overflow-hidden flex items-center justify-center"
+            style={{ background: "rgba(255,92,0,0.1)" }}>
+            {p.domain ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={`https://www.google.com/s2/favicons?sz=64&domain=${p.domain}`}
+                alt={p.name}
+                className="w-5 h-5 object-contain"
+              />
+            ) : (
+              <span className="text-[#ff5c00] text-xs font-bold">+</span>
+            )}
+          </div>
+          <span className="text-[9px] font-bold uppercase tracking-widest text-tertiary text-center leading-tight">{p.name}</span>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+function BentoStorage() {
+  return (
+    <div className="mt-6 flex gap-4">
+      {[
+        { name: "Google Drive", icon: <IconGoogleDrive /> },
+        { name: "DropBox", icon: <IconDropbox /> },
+      ].map((item) => (
+        <motion.div
+          key={item.name}
+          className="flex-1 flex flex-col items-center gap-2 rounded-xl p-4"
+          style={{ background: "rgba(255,92,0,0.06)", border: "1px solid rgba(255,92,0,0.12)" }}
+          whileHover={{ borderColor: "rgba(255,92,0,0.35)" }}
+        >
+          {item.icon}
+          <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">{item.name}</span>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+/* ── Main animated bento card ─────────────────────────────────────── */
+function MotionBentoCard({
+  title,
+  description,
+  feature,
+  spotlightItems,
+  timeline,
+  metrics,
+  statistic,
+  href,
+}: {
+  title: string;
+  description: string;
+  feature: "spotlight" | "metrics" | "timeline" | "counter" | "chart" | "protocols" | "storage";
+  spotlightItems?: string[];
+  timeline?: Array<{ year: string; event: string }>;
+  metrics?: Array<{ label: string; value: number; suffix?: string }>;
+  statistic?: { value: string; label: string; start: number; end: number; suffix: string };
+  href: string;
+}) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-100, 100], [2, -2]);
+  const rotateY = useTransform(x, [-100, 100], [-2, 2]);
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const r = e.currentTarget.getBoundingClientRect();
+    x.set(((e.clientX - r.left) / r.width - 0.5) * 100);
+    y.set(((e.clientY - r.top) / r.height - 0.5) * 100);
+  }
+  function handleMouseLeave() { x.set(0); y.set(0); }
+
+  return (
+    <motion.div
+      className="h-full"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      variants={fadeInUp}
+      whileHover={{ y: -5 }}
+    >
+      <Link
+        href={href}
+        className="group relative flex h-full min-h-[22rem] flex-col gap-3 rounded-2xl p-6 transition-all duration-500"
+        style={{
+          background: "rgba(20,19,19,0.9)",
+          backdropFilter: "blur(20px)",
+          border: "1px solid rgba(255,92,0,0.14)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+          transform: "translateZ(0)",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLElement).style.border = "1px solid rgba(255,92,0,0.35)";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(255,92,0,0.12)";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.border = "1px solid rgba(255,92,0,0.14)";
+          (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(0,0,0,0.4)";
+        }}
+      >
+        {/* Subtle top gradient sheen */}
+        <div
+          className="pointer-events-none absolute inset-0 rounded-2xl"
+          style={{ background: "linear-gradient(to bottom, rgba(255,92,0,0.04) 0%, transparent 40%)" }}
+        />
+
+        <div className="relative z-10 flex h-full flex-col" style={{ transform: "translateZ(20px)" }}>
+          <div className="flex items-start justify-between mb-1">
+            <h3 className="font-semibold text-xl tracking-tight text-on-surface">{title}</h3>
+            <ArrowUpRight className="h-5 w-5 text-tertiary opacity-0 transition-opacity duration-200 group-hover:opacity-100 shrink-0 mt-0.5" />
+          </div>
+          <p className="text-sm text-tertiary leading-relaxed">{description}</p>
+
+          {feature === "spotlight" && spotlightItems && <BentoSpotlight items={spotlightItems} />}
+          {feature === "metrics" && metrics && <BentoMetrics metrics={metrics} />}
+          {feature === "timeline" && timeline && <BentoTimeline items={timeline} />}
+          {feature === "protocols" && <BentoProtocols />}
+          {feature === "storage" && <BentoStorage />}
+          {(feature === "counter" || feature === "chart") && statistic && (
+            <div className="mt-auto pt-4">
+              <BentoCounter start={statistic.start} end={statistic.end} suffix={statistic.suffix} />
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#e9c349] mt-1">{statistic.label}</p>
+            </div>
+          )}
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
+/* ── Feature SVG Icons (used in BentoStorage) ──────────────────────── */
 function IconGoogleDrive() {
   return (
     <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
@@ -672,26 +821,6 @@ function IconDropbox() {
       <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
       <polygon points="24,11 10,20 24,29 38,20" fill="url(#ig-dropbox)" fillOpacity="0.9" />
       <polygon points="10,29 24,38 38,29 24,20" fill="url(#ig-dropbox)" fillOpacity="0.55" />
-    </svg>
-  );
-}
-
-function IconReferral() {
-  return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-      <defs>
-        <linearGradient id="ig-referral" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#ffb59a" />
-          <stop offset="1" stopColor="#ff5c00" />
-        </linearGradient>
-      </defs>
-      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
-      <circle cx="24" cy="15" r="5" fill="url(#ig-referral)" />
-      <path d="M13 33 C13 26.4 18 22 24 22 C30 22 35 26.4 35 33Z" fill="url(#ig-referral)" fillOpacity="0.8" />
-      <circle cx="12" cy="18" r="3.5" fill="url(#ig-referral)" fillOpacity="0.55" />
-      <path d="M5 32 C5 27.6 8.1 24.5 12 24.5" stroke="url(#ig-referral)" strokeWidth="2" strokeOpacity="0.55" strokeLinecap="round" />
-      <circle cx="36" cy="18" r="3.5" fill="url(#ig-referral)" fillOpacity="0.55" />
-      <path d="M43 32 C43 27.6 39.9 24.5 36 24.5" stroke="url(#ig-referral)" strokeWidth="2" strokeOpacity="0.55" strokeLinecap="round" />
     </svg>
   );
 }
