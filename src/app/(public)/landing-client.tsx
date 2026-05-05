@@ -128,6 +128,24 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         </nav>
 
         <div className="flex items-center gap-3">
+          {/* Language switcher — PT-BR | EN */}
+          <div className="flex items-center rounded border border-zinc-700/60 bg-zinc-900/40 overflow-hidden text-[10px] font-bold uppercase tracking-widest">
+            <button
+              type="button"
+              onClick={() => setLang("pt")}
+              className={`px-2.5 py-1.5 transition-all ${lang === "pt" ? "bg-[#e9c349] text-zinc-900" : "text-zinc-500 hover:text-[#e9c349]"}`}
+            >
+              PT-BR
+            </button>
+            <span className="text-zinc-700">|</span>
+            <button
+              type="button"
+              onClick={() => setLang("en")}
+              className={`px-2.5 py-1.5 transition-all ${lang === "en" ? "bg-[#e9c349] text-zinc-900" : "text-zinc-500 hover:text-[#e9c349]"}`}
+            >
+              EN
+            </button>
+          </div>
           <Link href="/auth/login" className="text-zinc-400 text-sm hover:text-[#ff7b33] transition-colors">
             {t.login}
           </Link>
@@ -137,16 +155,6 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
           >
             {t.cta}
           </Link>
-          {/* Language toggle */}
-          <button
-            type="button"
-            onClick={() => setLang(lang === "pt" ? "en" : "pt")}
-            className="flex items-center gap-1 px-2.5 py-2 rounded border border-zinc-700/60 bg-zinc-900/40 text-zinc-400 hover:text-[#e9c349] hover:border-[#e9c349]/40 transition-all text-[11px] font-bold uppercase tracking-widest"
-            title={lang === "pt" ? "Switch to English" : "Mudar para Português"}
-          >
-            <span className="material-symbols-outlined text-[14px]">language</span>
-            {lang === "pt" ? "EN" : "PT"}
-          </button>
         </div>
       </header>
 
@@ -156,13 +164,31 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         {/* ── Hero ── */}
         <section className="relative px-6 mb-32 max-w-[1400px] mx-auto w-full">
           <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-            {/* Horizontal logo */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo-horizontal.png"
-              alt="Bounty Workflow"
-              className="h-20 object-contain mb-10"
-            />
+            {/* Logo in shiny gold card */}
+            <div className="mb-12 relative">
+              {/* Outer glow */}
+              <div
+                className="absolute inset-0 rounded-2xl blur-2xl opacity-60"
+                style={{ background: "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(233,195,73,0.5) 0%, transparent 70%)" }}
+              />
+              <div
+                className="relative rounded-2xl px-14 py-8 flex items-center justify-center"
+                style={{
+                  background: "linear-gradient(135deg, rgba(233,195,73,0.18) 0%, rgba(255,181,154,0.08) 100%)",
+                  backdropFilter: "blur(24px)",
+                  border: "1.5px solid rgba(233,195,73,0.45)",
+                  boxShadow: "0 0 40px rgba(233,195,73,0.25), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 0 30px rgba(233,195,73,0.06)",
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo-horizontal.png"
+                  alt="Bounty Workflow"
+                  className="h-24 object-contain relative z-10"
+                  style={{ filter: "drop-shadow(0 0 20px rgba(233,195,73,0.4))" }}
+                />
+              </div>
+            </div>
 
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#e9c349]/30 mb-8"

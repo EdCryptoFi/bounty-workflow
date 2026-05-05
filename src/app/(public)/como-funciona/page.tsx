@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Como funciona — Bounty WorkFlow",
+  title: "How it works — Bounty WorkFlow",
   description:
-    "Entenda como o Bounty WorkFlow ajuda hunters brasileiros a organizar campanhas de bounties cripto, nunca perder um prazo e maximizar ganhos.",
+    "Discover how Bounty WorkFlow helps crypto bounty hunters organize campaigns, never miss a deadline, and maximize rewards.",
 };
 
 export default function ComoFuncionaPage() {
@@ -37,12 +37,9 @@ export default function ComoFuncionaPage() {
         className="fixed z-50 top-0 left-0 right-0 flex justify-between items-center px-12 h-20 border-b border-zinc-800/50 shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
         style={{ background: "rgba(9,9,9,0.70)", backdropFilter: "blur(24px)" }}
       >
-        <Link href="/" className="flex items-center gap-3">
+        <Link href="/">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Bounty Workflow" className="h-9 w-9 object-contain" />
-          <span className="text-sm font-black tracking-tighter text-[#ff5c00]">
-            Bounty Workflow
-          </span>
+          <img src="/logo-horizontal.png" alt="Bounty Workflow" className="h-9 object-contain" />
         </Link>
 
         <nav className="flex items-center gap-6">
@@ -139,9 +136,9 @@ export default function ComoFuncionaPage() {
           <div className="flex flex-col gap-3">
             <BulletCard text="Catálogo atualizado dos principais protocolos (Clasho, Kreators, MagVerse, Rally, e mais)." />
             <BulletCard text="Campos específicos pra bounty cripto: wallet, TX hash, link da submissão, recompensa esperada." />
-            <BulletCard text="Export CSV das suas campanhas pra colar no Excel e declarar no IR." />
+            <BulletCard text="Conexão direta com Google Drive — anexe evidências, prints e documentos direto do seu Drive." />
+            <BulletCard text="Export CSV das suas campanhas para análise e controle de ganhos." />
             <BulletCard text="Tudo seu fica salvo no seu workspace — nada é compartilhado com outros hunters." />
-            <BulletCard text="Feito pra BR: preços em Real, interface em português, suporte via email." />
           </div>
         </section>
 

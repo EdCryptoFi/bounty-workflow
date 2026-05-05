@@ -66,4 +66,7 @@ export type CampaignWithCounts = Campaign & {
   step_count: number;
   done_count: number;
   days_to_deadline: number | null;
+  protocol_slug?: string | null;
+  protocol_website?: string | null;
+  protocol_logo?: string | null;
 };

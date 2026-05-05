@@ -5,9 +5,10 @@ import { getCampaignById } from "@/lib/campaigns/queries";
 import { daysUntil, formatDeadlineFull } from "@/lib/campaigns/date-utils";
 import { requireUser } from "@/lib/auth";
 import { TaskCard } from "@/components/campaigns/task-card";
-import { AddStepForm } from "@/components/campaigns/add-step-form";
+import { AddStepModal } from "@/components/campaigns/add-step-modal";
+import { FlowLeftPanel } from "@/components/campaigns/flow-left-panel";
+import { FlowNodes } from "@/components/campaigns/flow-nodes";
 import { AttachmentDropzone } from "@/components/campaigns/attachment-dropzone";
-import type { Step } from "@/lib/types";
 import { GlowCard } from "@/components/ui/glow-card";
 
 export const metadata: Metadata = { title: "Campanha" };
@@ -26,35 +27,6 @@ const STATUS_DOT: Record<string, string> = {
   archived: "bg-zinc-600",
 };
 
-const STEP_BORDER: Record<Step["status"], string> = {
-  todo: "border-outline-variant",
-  in_progress: "border-[#ff5c00]/50",
-  done: "border-[#e9c349]/50",
-};
-
-const STEP_ICON: Record<Step["status"], string> = {
-  todo: "radio_button_unchecked",
-  in_progress: "pending",
-  done: "check_circle",
-};
-
-const STEP_ICON_COLOR: Record<Step["status"], string> = {
-  todo: "text-tertiary",
-  in_progress: "text-[#ffb59a]",
-  done: "text-[#e9c349]",
-};
-
-const STEP_STATUS_LABEL: Record<Step["status"], string> = {
-  todo: "Pendente",
-  in_progress: "Em Progresso",
-  done: "Concluído",
-};
-
-const STEP_STATUS_TEXT: Record<Step["status"], string> = {
-  todo: "text-tertiary",
-  in_progress: "text-[#ffb59a]",
-  done: "text-[#e9c349]",
-};
 
 export default async function CampaignDetailPage({
   params,
@@ -67,6 +39,8 @@ export default async function CampaignDetailPage({
   if (!data) notFound();
 
   const { campaign, steps, attachments } = data;
+  const links = attachments.filter((a) => a.type === "link");
+  const driveFiles = attachments.filter((a) => a.type !== "link");
   const daysLeft = daysUntil(campaign.deadline);
   const stepsDone = steps.filter((s) => s.status === "done").length;
   const efficiency =
@@ -174,134 +148,22 @@ export default async function CampaignDetailPage({
               <h2 className="text-base font-semibold text-on-surface">
                 Fluxo de Protocolo
               </h2>
-              <AddStepForm campaignId={campaign.id} />
+              <AddStepModal campaignId={campaign.id} />
             </div>
 
             {/* Inner canvas */}
             <div className="flex-1 bg-[rgba(14,14,14,0.5)] border border-outline-variant/30 rounded-lg flex flex-row p-4 gap-6 overflow-hidden min-h-[500px]">
-              {/* Left sub-col: Links & Prompts */}
-              <div className="w-1/3 flex flex-col gap-4 h-full overflow-y-auto pr-1">
-                {/* Links */}
-                <div className="bg-[rgba(32,31,31,0.8)] border border-outline-variant/50 rounded-lg p-3 flex flex-col gap-3">
-                  <h3 className="text-xs font-semibold text-on-surface flex items-center gap-2">
-                    <span className="material-symbols-outlined text-tertiary text-[14px]">
-                      link
-                    </span>
-                    Links
-                  </h3>
-                  {attachments.filter((a) => a.type === "link").length > 0 ? (
-                    <ul className="flex flex-col gap-2">
-                      {attachments
-                        .filter((a) => a.type === "link")
-                        .map((a) => (
-                          <li
-                            key={a.id}
-                            className="text-[10px] text-tertiary hover:text-[#ffb59a] cursor-pointer flex items-center gap-2 font-bold uppercase tracking-widest"
-                          >
-                            <span className="material-symbols-outlined text-[12px]">
-                              open_in_new
-                            </span>
-                            {a.path.split("/").pop()}
-                          </li>
-                        ))}
-                    </ul>
-                  ) : (
-                    <p className="text-[10px] text-tertiary font-bold uppercase tracking-widest">
-                      Nenhum link
-                    </p>
-                  )}
-                </div>
-
-                {/* Prompts */}
-                <div className="bg-[rgba(32,31,31,0.8)] border border-outline-variant/50 rounded-lg p-3 flex flex-col gap-3 flex-1">
-                  <h3 className="text-xs font-semibold text-on-surface flex items-center gap-2">
-                    <span className="material-symbols-outlined text-tertiary text-[14px]">
-                      terminal
-                    </span>
-                    Prompts
-                  </h3>
-                  {steps.length > 0 ? (
-                    <div className="flex flex-col gap-2">
-                      {steps.slice(0, 5).map((s) => (
-                        <div
-                          key={s.id}
-                          className="p-2 bg-surface-container/50 border border-outline-variant/30 rounded text-[10px] font-mono text-tertiary break-all"
-                        >
-                          /{s.title.toLowerCase().replace(/\s+/g, "_")}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-[10px] text-tertiary font-bold uppercase tracking-widest">
-                      Nenhuma tarefa ainda
-                    </p>
-                  )}
-                </div>
-              </div>
+              {/* Left sub-col: Links, Prompts & Drive */}
+              <FlowLeftPanel
+                campaignId={campaign.id}
+                links={links}
+                steps={steps}
+                driveFiles={driveFiles}
+              />
 
               {/* Right sub-col: flow nodes */}
               <div className="w-2/3 relative flex flex-col items-center justify-start gap-10 py-4 overflow-y-auto h-full">
-                {steps.length > 0 ? (
-                  <>
-                    <div className="absolute left-1/2 top-4 bottom-4 w-0 border-l-2 border-dashed border-[#ff5c00]/40 -translate-x-1/2 z-0" />
-                    {steps.map((step, i) => (
-                      <div
-                        key={step.id}
-                        className={`w-72 bg-[rgba(42,42,42,0.85)] backdrop-blur-xl border rounded-lg p-3 z-10 relative ${STEP_BORDER[step.status]}`}
-                        style={
-                          step.status === "in_progress"
-                            ? { boxShadow: "0 0 15px rgba(255,92,0,0.2), inset 0 0 15px rgba(255,92,0,0.08)" }
-                            : undefined
-                        }
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <span
-                            className={`material-symbols-outlined text-[14px] filled ${STEP_ICON_COLOR[step.status]}`}
-                          >
-                            {STEP_ICON[step.status]}
-                          </span>
-                          <span className="text-xs font-semibold text-on-surface">
-                            {i + 1}. {step.title}
-                          </span>
-                        </div>
-                        {step.description && (
-                          <p className="text-[10px] font-bold uppercase tracking-widest text-tertiary mb-2 leading-relaxed">
-                            {step.description}
-                          </p>
-                        )}
-                        <div className="border-t border-outline-variant/30 pt-2 flex justify-between items-center mt-1">
-                          {step.due_date ? (
-                            <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-tertiary">
-                              <span className="material-symbols-outlined text-[12px]">
-                                calendar_today
-                              </span>
-                              {new Date(step.due_date).toLocaleDateString("pt-BR", {
-                                day: "2-digit",
-                                month: "short",
-                              })}
-                            </div>
-                          ) : (
-                            <span />
-                          )}
-                          <span
-                            className={`text-[10px] font-bold uppercase tracking-widest ${STEP_STATUS_TEXT[step.status]}`}
-                          >
-                            {STEP_STATUS_LABEL[step.status]}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <div className="flex flex-col items-center justify-center flex-1 text-center gap-3 h-full">
-                    <span className="material-symbols-outlined text-[48px] text-tertiary">
-                      account_tree
-                    </span>
-                    <p className="text-xs text-tertiary font-bold uppercase tracking-widest">
-                      Adicione tarefas para ver o fluxo
-                    </p>
-                  </div>
-                )}
+                <FlowNodes steps={steps} />
               </div>
             </div>
           </div>

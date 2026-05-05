@@ -136,10 +136,13 @@ export async function listCampaignsForTimeline(): Promise<CampaignWithCounts[]> 
 
   const { data: campaigns, error } = await supabase
     .from("campaigns")
-    .select("*, steps(status)")
+    .select("*, steps(status), protocols(slug, website_url, logo_url)")
     .is("archived_at", null)
     .order("deadline", { ascending: true, nullsFirst: false })
-    .returns<(Campaign & { steps: { status: string }[] })[]>();
+    .returns<(Campaign & {
+      steps: { status: string }[];
+      protocols: { slug: string | null; website_url: string | null; logo_url: string | null } | null;
+    })[]>();
 
   if (error || !campaigns) return [];
 
@@ -147,9 +150,17 @@ export async function listCampaignsForTimeline(): Promise<CampaignWithCounts[]> 
     const step_count = c.steps.length;
     const done_count = c.steps.filter((s) => s.status === "done").length;
     const days_to_deadline = daysUntil(c.deadline);
-    const { steps: _steps, ...rest } = c;
+    const { steps: _steps, protocols, ...rest } = c;
     void _steps;
-    return { ...rest, step_count, done_count, days_to_deadline };
+    return {
+      ...rest,
+      step_count,
+      done_count,
+      days_to_deadline,
+      protocol_slug: protocols?.slug ?? null,
+      protocol_website: protocols?.website_url ?? null,
+      protocol_logo: protocols?.logo_url ?? null,
+    };
   });
 }
 

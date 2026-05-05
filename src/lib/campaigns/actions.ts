@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
+import type { CampaignStatus, StepStatus } from "@/lib/types";
 
 const createSchema = z.object({
   title: z.string().min(2, "Título curto demais").max(120),
@@ -68,7 +69,7 @@ const stepSchema = z.object({
 });
 
 export async function addStepAction(formData: FormData) {
-  await requireUser();
+  const { user } = await requireUser();
   const parsed = stepSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
@@ -96,7 +97,66 @@ export async function addStepAction(formData: FormData) {
   });
 
   if (error) return { error: error.message };
+
+  const links = (formData.getAll("link") as string[]).filter(Boolean);
+  if (links.length > 0) {
+    await supabase.from("attachments").insert(
+      links.map((url) => ({
+        campaign_id: parsed.data.campaign_id,
+        user_id: user.id,
+        bucket: "attachments",
+        path: url,
+        type: "link" as const,
+        mime_type: null,
+        size_bytes: null,
+      })),
+    );
+  }
+
   revalidatePath(`/campaigns/${parsed.data.campaign_id}`);
+  return { ok: true };
+}
+
+export async function deleteStepAction(stepId: string) {
+  await requireUser();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("steps")
+    .delete()
+    .eq("id", stepId)
+    .select("campaign_id")
+    .single();
+  if (error || !data) return { error: error?.message ?? "Erro" };
+  revalidatePath(`/campaigns/${data.campaign_id}`);
+  return { ok: true };
+}
+
+export async function addLinkAction(campaignId: string, url: string) {
+  const { user } = await requireUser();
+  const supabase = await createClient();
+  const { error } = await supabase.from("attachments").insert({
+    campaign_id: campaignId,
+    user_id: user.id,
+    bucket: "attachments",
+    path: url,
+    type: "link" as const,
+    mime_type: null,
+    size_bytes: null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/campaigns/${campaignId}`);
+  return { ok: true };
+}
+
+export async function removeAttachmentAction(attachmentId: string, campaignId: string) {
+  await requireUser();
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("attachments")
+    .delete()
+    .eq("id", attachmentId);
+  if (error) return { error: error.message };
+  revalidatePath(`/campaigns/${campaignId}`);
   return { ok: true };
 }
 
@@ -116,6 +176,48 @@ export async function toggleStepAction(stepId: string, next: "todo" | "in_progre
   if (error || !data) return { error: error?.message ?? "Erro" };
   revalidatePath(`/campaigns/${data.campaign_id}`);
   revalidatePath("/dashboard");
+  return { ok: true };
+}
+
+export async function updateStepAction(
+  stepId: string,
+  data: { title?: string; description?: string | null; due_date?: string | null; status?: StepStatus },
+) {
+  await requireUser();
+  const supabase = await createClient();
+  const patch: Record<string, unknown> = {};
+  if (data.title !== undefined) patch.title = data.title;
+  if ("description" in data) patch.description = data.description ?? null;
+  if ("due_date" in data) patch.due_date = data.due_date ?? null;
+  if (data.status !== undefined) {
+    patch.status = data.status;
+    patch.completed_at = data.status === "done" ? new Date().toISOString() : null;
+  }
+  const { data: updated, error } = await supabase
+    .from("steps")
+    .update(patch)
+    .eq("id", stepId)
+    .select("campaign_id")
+    .single();
+  if (error || !updated) return { error: error?.message ?? "Erro" };
+  revalidatePath(`/campaigns/${(updated as { campaign_id: string }).campaign_id}`);
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
+
+export async function updateCampaignStatusAction(campaignId: string, status: CampaignStatus) {
+  await requireUser();
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("campaigns")
+    .update({
+      status,
+      archived_at: status === "archived" ? new Date().toISOString() : null,
+    })
+    .eq("id", campaignId);
+  if (error) return { error: error.message };
+  revalidatePath("/dashboard");
+  revalidatePath("/campaigns");
   return { ok: true };
 }
 

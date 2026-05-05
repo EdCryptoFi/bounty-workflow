@@ -28,19 +28,9 @@ export function SidebarNav({
   return (
     <div className="flex h-full flex-col pt-24 pb-8">
       {/* Brand */}
-      <div className="px-6 mb-12 flex flex-col gap-2">
-        <div className="h-10 w-10 rounded-lg overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Bounty Workflow" className="h-full w-full object-contain" />
-        </div>
-        <div>
-          <h1 className="text-[18px] font-bold text-[#ff5c00] leading-tight">
-            Bounty Workflow
-          </h1>
-          <p className="text-xs text-tertiary tracking-wider font-medium mt-0.5">
-            Technical Operations
-          </p>
-        </div>
+      <div className="px-6 mb-12">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-horizontal.png" alt="Bounty Workflow" className="h-10 w-auto object-contain" />
       </div>
 
       {/* Nav links */}
@@ -104,6 +94,19 @@ export function SidebarNav({
       {userSlot && (
         <div className="px-4 mt-4">{userSlot}</div>
       )}
+
+      {/* Logout */}
+      <div className="px-4 mt-3">
+        <form action="/auth/signout" method="post">
+          <button
+            type="submit"
+            className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 text-xs font-bold uppercase tracking-widest transition-all duration-200"
+          >
+            <span className="material-symbols-outlined text-[18px]">logout</span>
+            Logout
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

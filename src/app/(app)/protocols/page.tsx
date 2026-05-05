@@ -10,6 +10,40 @@ const PROTOCOL_ICONS: Record<string, string> = {
   kreators: "auto_awesome",
   magverse: "view_in_ar",
   rally: "rocket_launch",
+  zealy: "leaderboard",
+  layer3: "layers",
+  galxe: "public",
+  intract: "hub",
+  guild: "shield",
+  galxe_quest: "explore",
+  questn: "task_alt",
+  crew3: "groups",
+  crew: "groups",
+  rep3: "verified",
+  lens: "camera",
+  farcaster: "rss_feed",
+  mirror: "article",
+  twitter: "tag",
+  discord: "chat",
+  telegram: "send",
+  github: "code",
+  snapshot: "how_to_vote",
+  tally: "how_to_vote",
+  commonwealth: "forum",
+  dework: "work",
+  coordinape: "share",
+  wonderverse: "travel_explore",
+  layer0: "layers",
+  superfluid: "water",
+  optimism: "bolt",
+  arbitrum: "swap_horiz",
+  polygon: "hexagon",
+  ethereum: "currency_bitcoin",
+  solana: "flash_on",
+  aptos: "diamond",
+  sui: "water_drop",
+  near: "near_me",
+  cosmos: "public",
 };
 
 export default async function ProtocolsPage() {
@@ -57,11 +91,6 @@ export default async function ProtocolsPage() {
                   <p className="font-semibold text-on-surface group-hover:text-[#ffb59a] transition-colors text-base">
                     {p.name}
                   </p>
-                  {p.category && (
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-tertiary mt-1">
-                      {p.category}
-                    </p>
-                  )}
                   {p.description && (
                     <p className="text-xs text-tertiary mt-2 line-clamp-2 leading-relaxed">
                       {p.description}

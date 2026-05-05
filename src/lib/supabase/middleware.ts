@@ -37,6 +37,9 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname;
 
+  // Expose pathname to server components via header
+  response.headers.set("x-pathname", pathname);
+
   // Proteção de rotas do grupo (app)
   const isAppRoute =
     pathname.startsWith("/dashboard") ||
@@ -44,7 +47,9 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/reminders") ||
     pathname.startsWith("/archive") ||
     pathname.startsWith("/settings") ||
-    pathname.startsWith("/admin");
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/protocols") ||
+    pathname === "/subscribe";
 
   if (isAppRoute && !user) {
     const url = request.nextUrl.clone();
