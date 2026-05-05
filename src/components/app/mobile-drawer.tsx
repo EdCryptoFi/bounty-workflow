@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { SidebarNav } from "./sidebar";
 import { Button } from "@/components/ui";
 
-export function MobileDrawer({ userSlot }: { userSlot?: React.ReactNode }) {
+export function MobileDrawer({ userSlot, showAdmin }: { userSlot?: React.ReactNode; showAdmin?: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -51,7 +51,7 @@ export function MobileDrawer({ userSlot }: { userSlot?: React.ReactNode }) {
             >
               <X className="h-4 w-4" />
             </Button>
-            <SidebarNav onNavigate={() => setOpen(false)} userSlot={userSlot} />
+            <SidebarNav onNavigate={() => setOpen(false)} userSlot={userSlot} showAdmin={showAdmin} />
           </aside>
         </div>
       )}

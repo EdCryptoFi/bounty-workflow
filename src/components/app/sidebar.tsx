@@ -19,9 +19,11 @@ const bottomNav = [
 export function SidebarNav({
   onNavigate,
   userSlot,
+  showAdmin = false,
 }: {
   onNavigate?: () => void;
   userSlot?: React.ReactNode;
+  showAdmin?: boolean;
 }) {
   const pathname = usePathname();
 
@@ -67,6 +69,21 @@ export function SidebarNav({
         })}
 
         <div className="mt-auto">
+          {showAdmin && (
+            <Link
+              href="/admin"
+              onClick={onNavigate}
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200 mb-1",
+                pathname.startsWith("/admin")
+                  ? "text-[#e9c349] bg-[rgba(233,195,73,0.08)] border-r-2 border-[#e9c349]"
+                  : "text-zinc-500 hover:text-[#e9c349] hover:bg-zinc-800/40",
+              )}
+            >
+              <span className="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+              <span>Admin</span>
+            </Link>
+          )}
           {bottomNav.map((item) => {
             const active = pathname.startsWith(item.href);
             return (

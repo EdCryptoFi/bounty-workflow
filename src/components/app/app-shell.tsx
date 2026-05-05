@@ -3,6 +3,7 @@ import { MobileDrawer } from "./mobile-drawer";
 import { UserMenu } from "./user-menu";
 import { NotifBell, type ReminderAlert } from "./notif-bell";
 import { createClient } from "@/lib/supabase/server";
+import { isAdmin } from "@/lib/auth";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -13,7 +14,8 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   const in48h = new Date(Date.now() + 48 * 3600 * 1000).toISOString();
 
-  const [{ data: profile }, { data: billing }, { data: rawReminders }] = await Promise.all([
+  const [adminFlag, { data: profile }, { data: billing }, { data: rawReminders }] = await Promise.all([
+    isAdmin(),
     user
       ? supabase
           .from("users")
@@ -80,7 +82,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Sidebar — desktop */}
       <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 flex-col border-r border-zinc-800/60 bg-zinc-950/80 backdrop-blur-[40px] z-50">
-        <SidebarNav userSlot={userCard} />
+        <SidebarNav userSlot={userCard} showAdmin={adminFlag} />
       </aside>
 
       {/* Main workspace */}
@@ -89,7 +91,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         <header className="flex justify-between items-center w-full px-8 h-20 bg-zinc-950/70 backdrop-blur-2xl border-b border-zinc-800/50 shadow-[0_4px_30px_rgba(0,0,0,0.5)] z-40 shrink-0">
           {/* Mobile drawer */}
           <div className="lg:hidden mr-3">
-            <MobileDrawer userSlot={userCard} />
+            <MobileDrawer userSlot={userCard} showAdmin={adminFlag} />
           </div>
 
           {/* Search */}
