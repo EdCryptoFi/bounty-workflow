@@ -39,17 +39,10 @@ export default function DicasPage() {
             href={tip.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative flex flex-col gap-4 rounded-2xl p-6 border transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,92,0,0.12)] hover:-translate-y-1"
+            className="group relative flex flex-col gap-4 rounded-2xl p-6 border border-[rgba(255,92,0,0.14)] hover:border-[rgba(255,92,0,0.4)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,92,0,0.12)] hover:-translate-y-1"
             style={{
               background: "rgba(24,23,23,0.9)",
               backdropFilter: "blur(20px)",
-              borderColor: "rgba(255,92,0,0.14)",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,92,0,0.4)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,92,0,0.14)";
             }}
           >
             {/* Glow top */}
