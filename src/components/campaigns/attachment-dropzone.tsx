@@ -3,6 +3,8 @@
 import { useRef, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Attachment } from "@/lib/types";
+import { saveCloudAttachmentAction } from "@/lib/campaigns/actions";
+import { CloudPickerButtons } from "./cloud-picker-buttons";
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 const ALLOWED = new Set([
@@ -139,6 +141,30 @@ export function AttachmentDropzone({
           accept="image/png,image/jpeg,image/webp,image/gif,application/pdf"
           className="hidden"
           onChange={(e) => e.target.files && handleFiles(e.target.files)}
+        />
+      </div>
+
+      {/* Cloud pickers */}
+      <div className="mt-3 flex items-center gap-3">
+        <div className="flex-1 border-t border-outline-variant/30" />
+        <span className="text-[9px] font-bold uppercase tracking-widest text-tertiary shrink-0">
+          ou importe da nuvem
+        </span>
+        <div className="flex-1 border-t border-outline-variant/30" />
+      </div>
+      <div className="mt-2 flex justify-center">
+        <CloudPickerButtons
+          onFile={(url, name, source) => {
+            startTransition(async () => {
+              setError(null);
+              const res = await saveCloudAttachmentAction(campaignId, url, name, source);
+              if (res.error) {
+                setError(res.error);
+              } else if (res.data) {
+                setItems((prev) => [res.data!, ...prev]);
+              }
+            });
+          }}
         />
       </div>
 

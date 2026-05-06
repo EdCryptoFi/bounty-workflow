@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { addStepAction } from "@/lib/campaigns/actions";
+import { CloudPickerButtons } from "./cloud-picker-buttons";
 
 const MONTHS = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
@@ -20,11 +21,11 @@ export function AddStepModal({
   const [month, setMonth] = useState("");
   const [day, setDay] = useState("");
 
-  function addLink() {
-    const url = linkInput.trim();
+  function addLink(directUrl?: string) {
+    const url = (directUrl ?? linkInput).trim();
     if (url) {
       setLinks((prev) => [...prev, url]);
-      setLinkInput("");
+      if (!directUrl) setLinkInput("");
     }
   }
 
@@ -139,6 +140,7 @@ export function AddStepModal({
                 <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
                   Links
                 </label>
+                <CloudPickerButtons onFile={(url) => addLink(url)} />
                 <div className="flex gap-2">
                   <input
                     type="url"
@@ -155,7 +157,7 @@ export function AddStepModal({
                   />
                   <button
                     type="button"
-                    onClick={addLink}
+                    onClick={() => addLink()}
                     className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2 text-tertiary hover:text-[#ff5c00] transition"
                   >
                     <span className="material-symbols-outlined text-[16px]">add</span>

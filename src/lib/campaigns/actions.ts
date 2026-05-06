@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
-import type { CampaignStatus, StepStatus } from "@/lib/types";
+import type { Attachment, CampaignStatus, StepStatus } from "@/lib/types";
 
 const createSchema = z.object({
   title: z.string().min(2, "Título curto demais").max(120),
@@ -267,6 +267,33 @@ export async function archiveCampaignAction(campaignId: string) {
   revalidatePath("/campaigns");
   revalidatePath("/archive");
   redirect("/dashboard");
+}
+
+export async function saveCloudAttachmentAction(
+  campaignId: string,
+  url: string,
+  name: string,
+  source: "dropbox" | "drive",
+): Promise<{ data?: Attachment; error?: string }> {
+  const { user } = await requireUser();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("attachments")
+    .insert({
+      campaign_id: campaignId,
+      user_id: user.id,
+      bucket: "attachments",
+      path: url,
+      type: "link" as const,
+      mime_type: null,
+      size_bytes: null,
+      metadata_json: { source, name },
+    })
+    .select("*")
+    .single();
+  if (error || !data) return { error: error?.message ?? "Erro ao salvar" };
+  revalidatePath(`/campaigns/${campaignId}`);
+  return { data: data as Attachment };
 }
 
 export async function unarchiveCampaignAction(campaignId: string) {
