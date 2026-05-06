@@ -3,8 +3,16 @@
 import { useRef, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Attachment } from "@/lib/types";
-import { saveCloudAttachmentAction } from "@/lib/campaigns/actions";
-import { CloudPickerButtons } from "./cloud-picker-buttons";
+function detectPlatform(url: string): { label: string; color: string; icon: string } {
+  if (/drive\.google\.com|docs\.google\.com/.test(url)) return { label: "Drive", color: "#4285F4", icon: "cloud" };
+  if (/dropbox\.com/.test(url)) return { label: "Dropbox", color: "#0061FF", icon: "cloud" };
+  if (/youtube\.com|youtu\.be/.test(url)) return { label: "YouTube", color: "#FF0000", icon: "play_circle" };
+  if (/github\.com/.test(url)) return { label: "GitHub", color: "#9e9e9e", icon: "code" };
+  if (/figma\.com/.test(url)) return { label: "Figma", color: "#a259ff", icon: "design_services" };
+  if (/notion\.so|notion\.com/.test(url)) return { label: "Notion", color: "#9e9e9e", icon: "article" };
+  if (/x\.com|twitter\.com/.test(url)) return { label: "X", color: "#9e9e9e", icon: "chat" };
+  return { label: "Link", color: "#888", icon: "link" };
+}
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 const ALLOWED = new Set([
@@ -144,30 +152,6 @@ export function AttachmentDropzone({
         />
       </div>
 
-      {/* Cloud pickers */}
-      <div className="mt-3 flex items-center gap-3">
-        <div className="flex-1 border-t border-outline-variant/30" />
-        <span className="text-[9px] font-bold uppercase tracking-widest text-tertiary shrink-0">
-          ou importe da nuvem
-        </span>
-        <div className="flex-1 border-t border-outline-variant/30" />
-      </div>
-      <div className="mt-2 flex justify-center">
-        <CloudPickerButtons
-          onFile={(url, name, source) => {
-            startTransition(async () => {
-              setError(null);
-              const res = await saveCloudAttachmentAction(campaignId, url, name, source);
-              if (res.error) {
-                setError(res.error);
-              } else if (res.data) {
-                setItems((prev) => [res.data!, ...prev]);
-              }
-            });
-          }}
-        />
-      </div>
-
       {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
       {pending && (
         <p className="mt-2 text-xs text-tertiary font-bold uppercase tracking-widest">
@@ -182,15 +166,30 @@ export function AttachmentDropzone({
               key={a.id}
               className="flex items-center gap-3 rounded-lg border border-outline-variant/30 bg-surface-container/50 px-3 py-2"
             >
-              <span className="material-symbols-outlined text-[16px] text-tertiary">
-                {a.type === "pdf" ? "picture_as_pdf" : a.type === "image" ? "image" : "attach_file"}
-              </span>
-              <span className="flex-1 truncate text-xs text-on-surface">
-                {a.path.split("/").pop()}
-              </span>
-              <span className="text-[10px] text-tertiary font-bold uppercase tracking-widest">
-                {a.size_bytes ? `${Math.round(a.size_bytes / 1024)} KB` : ""}
-              </span>
+              {a.type === "link" ? (() => {
+                const p = detectPlatform(a.path);
+                return (
+                  <>
+                    <span className="material-symbols-outlined text-[16px]" style={{ color: p.color }}>{p.icon}</span>
+                    <span className="text-[9px] font-bold uppercase tracking-widest shrink-0" style={{ color: p.color }}>{p.label}</span>
+                    <a href={a.path} target="_blank" rel="noopener noreferrer" className="flex-1 truncate text-xs text-tertiary hover:text-on-surface transition-colors">
+                      {a.path}
+                    </a>
+                  </>
+                );
+              })() : (
+                <>
+                  <span className="material-symbols-outlined text-[16px] text-tertiary">
+                    {a.type === "pdf" ? "picture_as_pdf" : "image"}
+                  </span>
+                  <span className="flex-1 truncate text-xs text-on-surface">
+                    {a.path.split("/").pop()}
+                  </span>
+                  <span className="text-[10px] text-tertiary font-bold uppercase tracking-widest">
+                    {a.size_bytes ? `${Math.round(a.size_bytes / 1024)} KB` : ""}
+                  </span>
+                </>
+              )}
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); remove(a); }}

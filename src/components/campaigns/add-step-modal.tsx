@@ -2,7 +2,17 @@
 
 import { useState, useTransition } from "react";
 import { addStepAction } from "@/lib/campaigns/actions";
-import { CloudPickerButtons } from "./cloud-picker-buttons";
+
+function detectPlatform(url: string): { label: string; color: string; icon: string } {
+  if (/drive\.google\.com|docs\.google\.com/.test(url)) return { label: "Drive", color: "#4285F4", icon: "cloud" };
+  if (/dropbox\.com/.test(url)) return { label: "Dropbox", color: "#0061FF", icon: "cloud" };
+  if (/youtube\.com|youtu\.be/.test(url)) return { label: "YouTube", color: "#FF0000", icon: "play_circle" };
+  if (/github\.com/.test(url)) return { label: "GitHub", color: "#9e9e9e", icon: "code" };
+  if (/figma\.com/.test(url)) return { label: "Figma", color: "#a259ff", icon: "design_services" };
+  if (/notion\.so|notion\.com/.test(url)) return { label: "Notion", color: "#9e9e9e", icon: "article" };
+  if (/x\.com|twitter\.com/.test(url)) return { label: "X", color: "#9e9e9e", icon: "chat" };
+  return { label: "Link", color: "#666", icon: "link" };
+}
 
 const MONTHS = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
@@ -138,15 +148,14 @@ export function AddStepModal({
               {/* Links */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
-                  Links
+                  Links <span className="normal-case text-[9px] text-tertiary/60 font-normal tracking-normal">— Drive, Dropbox, GitHub, etc.</span>
                 </label>
-                <CloudPickerButtons onFile={(url) => addLink(url)} />
                 <div className="flex gap-2">
                   <input
                     type="url"
                     value={linkInput}
                     onChange={(e) => setLinkInput(e.target.value)}
-                    placeholder="https://..."
+                    placeholder="Cole o link de compartilhamento..."
                     className="flex-1 rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
@@ -165,19 +174,23 @@ export function AddStepModal({
                 </div>
                 {links.length > 0 && (
                   <div className="flex flex-col gap-1.5 mt-1">
-                    {links.map((url, i) => (
-                      <div key={i} className="flex items-center gap-2 text-[11px]">
-                        <span className="material-symbols-outlined text-[12px] text-tertiary">link</span>
-                        <span className="flex-1 truncate text-tertiary">{url}</span>
-                        <button
-                          type="button"
-                          onClick={() => removeLink(i)}
-                          className="text-tertiary hover:text-red-400 transition"
-                        >
-                          <span className="material-symbols-outlined text-[14px]">close</span>
-                        </button>
-                      </div>
-                    ))}
+                    {links.map((url, i) => {
+                      const p = detectPlatform(url);
+                      return (
+                        <div key={i} className="flex items-center gap-2 text-[11px] rounded-lg border border-outline-variant/30 bg-surface-container/30 px-2.5 py-1.5">
+                          <span className="material-symbols-outlined text-[13px]" style={{ color: p.color }}>{p.icon}</span>
+                          <span className="text-[9px] font-bold uppercase tracking-widest shrink-0" style={{ color: p.color }}>{p.label}</span>
+                          <span className="flex-1 truncate text-tertiary">{url}</span>
+                          <button
+                            type="button"
+                            onClick={() => removeLink(i)}
+                            className="text-tertiary hover:text-red-400 transition shrink-0"
+                          >
+                            <span className="material-symbols-outlined text-[13px]">close</span>
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
