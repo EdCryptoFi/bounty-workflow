@@ -10,6 +10,7 @@ const nav = [
   { href: "/campaigns", label: "Campaigns", icon: "rocket_launch" },
   { href: "/archive", label: "Archive", icon: "inventory_2" },
   { href: "/reminders", label: "Reminders", icon: "notifications_active" },
+  { href: "/referrals", label: "Referrals", icon: "redeem" },
   { href: "/dicas", label: "Dicas", icon: "tips_and_updates" },
   { href: "/como-usar", label: "Como usar", icon: "school" },
 ];
