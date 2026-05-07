@@ -31,6 +31,7 @@ type SettingsTabsProps = {
     cancelAtPeriodEnd: boolean;
     campaignCount: number;
     paymentsEnabled: boolean;
+    walletAddress: string | null;
   };
   attachments: AttachmentRow[];
   appliedCode: string | null;
@@ -105,16 +106,20 @@ export function SettingsTabs({ profile, billing, attachments, appliedCode, trial
         )}
 
         {active === "billing" && (
-          <BillingPanel
-            tier={billing.tier}
-            trialEnds={billing.trialEnds ? new Date(billing.trialEnds) : null}
-            status={billing.status}
-            provider={billing.provider}
-            periodEnd={billing.periodEnd ? new Date(billing.periodEnd) : null}
-            cancelAtPeriodEnd={billing.cancelAtPeriodEnd}
-            campaignCount={billing.campaignCount}
-            paymentsEnabled={billing.paymentsEnabled}
-          />
+          <div className="flex flex-col gap-6">
+            <BillingPanel
+              tier={billing.tier}
+              trialEnds={billing.trialEnds ? new Date(billing.trialEnds) : null}
+              status={billing.status}
+              provider={billing.provider}
+              periodEnd={billing.periodEnd ? new Date(billing.periodEnd) : null}
+              cancelAtPeriodEnd={billing.cancelAtPeriodEnd}
+              campaignCount={billing.campaignCount}
+              paymentsEnabled={billing.paymentsEnabled}
+              walletAddress={billing.walletAddress}
+            />
+            <ActivationCodePanel appliedCode={appliedCode} trialEndsAt={trialEndsAt} />
+          </div>
         )}
 
         {active === "drive" && <DrivePanel attachments={attachments} />}

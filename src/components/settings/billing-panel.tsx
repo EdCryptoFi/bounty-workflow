@@ -1,7 +1,7 @@
 "use client";
 
-import { useTransition } from "react";
-import { startCheckoutAction } from "@/lib/settings/actions";
+import { useState, useTransition } from "react";
+import { startCheckoutAction, saveWalletAction } from "@/lib/settings/actions";
 
 type BillingPanelProps = {
   tier: string;
@@ -12,6 +12,7 @@ type BillingPanelProps = {
   cancelAtPeriodEnd: boolean;
   campaignCount: number;
   paymentsEnabled: boolean;
+  walletAddress: string | null;
 };
 
 export function BillingPanel({
@@ -23,6 +24,7 @@ export function BillingPanel({
   cancelAtPeriodEnd,
   campaignCount,
   paymentsEnabled,
+  walletAddress,
 }: BillingPanelProps) {
   const [pending, start] = useTransition();
   const isTrialing = status === "trialing";
@@ -232,27 +234,57 @@ export function BillingPanel({
           </div>
 
           {/* Resgate */}
-          <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl border border-outline-variant/50 rounded-xl p-5 shadow-[inset_0_0_20px_rgba(255,92,0,0.03)]">
-            <h3 className="text-sm font-semibold text-on-surface mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#e9c349] text-[16px]">savings</span>
-              Resgate
-            </h3>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-tertiary mb-2">
-              Carteira Solana
-            </p>
-            <div className="p-2 bg-surface-container/30 rounded-lg border border-outline-variant/20 font-mono text-[10px] text-tertiary mb-3 truncate">
-              —
-            </div>
-            <button
-              type="button"
-              className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-[#e9c349]/30 bg-[#e9c349]/10 px-3 py-2 text-xs font-bold text-[#e9c349] transition hover:bg-[#e9c349]/20"
-            >
-              <span className="material-symbols-outlined text-[14px]">account_balance_wallet</span>
-              Solicitar Resgate
-            </button>
-          </div>
+          <WalletPanel initial={walletAddress} />
         </div>
       </div>
+    </div>
+  );
+}
+
+function WalletPanel({ initial }: { initial: string | null }) {
+  const [wallet, setWallet] = useState(initial ?? "");
+  const [saved, setSaved] = useState(false);
+  const [walletPending, startWallet] = useTransition();
+
+  function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    startWallet(async () => {
+      await saveWalletAction(wallet);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    });
+  }
+
+  return (
+    <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl border border-outline-variant/50 rounded-xl p-5 shadow-[inset_0_0_20px_rgba(255,92,0,0.03)]">
+      <h3 className="text-sm font-semibold text-on-surface mb-4 flex items-center gap-2">
+        <span className="material-symbols-outlined text-[#e9c349] text-[16px]">savings</span>
+        Resgate
+      </h3>
+      <form onSubmit={handleSave} className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
+            Carteira Solana
+          </label>
+          <input
+            type="text"
+            value={wallet}
+            onChange={(e) => setWallet(e.target.value)}
+            placeholder="Endereço da sua wallet..."
+            className="w-full rounded-lg border border-outline-variant/50 bg-surface-container/30 px-3 py-2 font-mono text-xs text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#e9c349]/60 focus:ring-1 focus:ring-[#e9c349]/40"
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={walletPending}
+          className="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-[#e9c349]/30 bg-[#e9c349]/10 px-3 py-2 text-xs font-bold text-[#e9c349] transition hover:bg-[#e9c349]/20 disabled:opacity-60"
+        >
+          <span className="material-symbols-outlined text-[14px]">
+            {saved ? "check" : "account_balance_wallet"}
+          </span>
+          {walletPending ? "Salvando..." : saved ? "Salvo!" : "Salvar Wallet"}
+        </button>
+      </form>
     </div>
   );
 }

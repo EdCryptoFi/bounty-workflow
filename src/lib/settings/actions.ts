@@ -96,3 +96,16 @@ export async function startCheckoutAction(): Promise<CheckoutResult> {
   if (!res.ok) return { ok: false, error: res.error };
   return { ok: true, url: res.url };
 }
+
+
+export async function saveWalletAction(wallet: string) {
+  const { user } = await requireUser();
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("users")
+    .update({ wallet_address: wallet.trim() || null })
+    .eq("id", user.id);
+  if (error) return { error: error.message };
+  revalidatePath("/settings");
+  return { ok: true };
+}

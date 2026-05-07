@@ -11,7 +11,7 @@ const addSchema = z.object({
   url: z.string().url("URL inválida"),
 });
 
-export type ReferralState = { error?: string } | null;
+export type ReferralState = { error?: string; data?: Record<string, unknown> } | null;
 
 export async function addReferralAction(
   _: ReferralState,
@@ -22,16 +22,20 @@ export async function addReferralAction(
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
 
   const supabase = await createClient();
-  const { error } = await supabase.from("referrals").insert({
-    user_id: user.id,
-    protocol_id: parsed.data.protocol_id || null,
-    label: parsed.data.label || null,
-    url: parsed.data.url,
-  });
+  const { data, error } = await supabase
+    .from("referrals")
+    .insert({
+      user_id: user.id,
+      protocol_id: parsed.data.protocol_id || null,
+      label: parsed.data.label || null,
+      url: parsed.data.url,
+    })
+    .select("id, url, label, protocol_id, created_at, protocol:protocols(id, name, logo_url, website_url)")
+    .single();
 
-  if (error) return { error: error.message };
+  if (error || !data) return { error: error?.message ?? "Erro ao salvar" };
   revalidatePath("/referrals");
-  return null;
+  return { data: data as Record<string, unknown> };
 }
 
 export async function deleteReferralAction(id: string) {

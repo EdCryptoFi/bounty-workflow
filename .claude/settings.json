@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push *)",
+      "Bash(mkdir -p \"/Users/fabioalves/Desktop/VibeCode/Bounty WorkFlow/src/app/\\(app\\)/dicas\" \"/Users/fabioalves/Desktop/VibeCode/Bounty WorkFlow/src/app/\\(app\\)/como-usar\")"
+    ],
+    "additionalDirectories": [
+      "/Users/fabioalves/Desktop/VibeCode/Bounty WorkFlow/src/app/(app)"
+    ]
+  }
+}

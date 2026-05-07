@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useTransition, useActionState } from "react";
-import { addReferralAction, deleteReferralAction, type ReferralState } from "@/lib/referrals/actions";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { addReferralAction, deleteReferralAction } from "@/lib/referrals/actions";
 
 type Protocol = { id: string; name: string; logo_url: string | null; website_url: string | null };
 type Referral = {
@@ -20,25 +21,29 @@ export function ReferralsList({
   referrals: Referral[];
   protocols: Protocol[];
 }) {
+  const router = useRouter();
   const [items, setItems] = useState(referrals);
   const [showModal, setShowModal] = useState(false);
   const [, startTransition] = useTransition();
-
-  function onAdded() {
-    setShowModal(false);
-    // revalidatePath via server action already refreshes — but we also optimistically close modal
-  }
 
   function handleDelete(id: string) {
     setItems((prev) => prev.filter((r) => r.id !== id));
     startTransition(() => deleteReferralAction(id));
   }
 
+  function handleAdded(newItem: Referral) {
+    setItems((prev) => [newItem, ...prev]);
+    setShowModal(false);
+    router.refresh();
+  }
+
   return (
     <div className="flex flex-col gap-6">
       {/* Header row */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-tertiary">{items.length} referral{items.length !== 1 ? "s" : ""} salvo{items.length !== 1 ? "s" : ""}</p>
+        <p className="text-sm text-tertiary">
+          {items.length} referral{items.length !== 1 ? "s" : ""} salvo{items.length !== 1 ? "s" : ""}
+        </p>
         <button
           type="button"
           onClick={() => setShowModal(true)}
@@ -55,6 +60,14 @@ export function ReferralsList({
           <span className="material-symbols-outlined text-[40px] text-tertiary">redeem</span>
           <p className="text-sm font-semibold text-on-surface">Nenhum referral salvo</p>
           <p className="text-xs text-tertiary">Adicione seus links de referral para ter sempre à mão.</p>
+          <button
+            type="button"
+            onClick={() => setShowModal(true)}
+            className="mt-2 inline-flex items-center gap-2 rounded-lg border border-[#ff5c00]/30 bg-[rgba(255,92,0,0.08)] px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#ff5c00] transition hover:bg-[rgba(255,92,0,0.15)]"
+          >
+            <span className="material-symbols-outlined text-[14px]">add</span>
+            Adicionar primeiro referral
+          </button>
         </div>
       )}
 
@@ -72,7 +85,7 @@ export function ReferralsList({
         <AddReferralModal
           protocols={protocols}
           onClose={() => setShowModal(false)}
-          onSuccess={onAdded}
+          onAdded={handleAdded}
         />
       )}
     </div>
@@ -98,23 +111,13 @@ function ReferralCard({ referral, onDelete }: { referral: Referral; onDelete: ()
       className="relative flex flex-col gap-4 rounded-2xl border border-[rgba(255,92,0,0.14)] p-5 transition-all hover:border-[rgba(255,92,0,0.35)] hover:-translate-y-0.5"
       style={{ background: "rgba(24,23,23,0.9)", backdropFilter: "blur(20px)" }}
     >
-      {/* Delete */}
-      <button
-        type="button"
-        onClick={onDelete}
-        className="absolute right-3 top-3 rounded p-1 text-tertiary hover:text-red-400 transition-colors"
-        aria-label="Remover"
-      >
-        <span className="material-symbols-outlined text-[16px]">close</span>
-      </button>
-
       {/* Protocol identity */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 pr-8">
         {logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={logoUrl} alt="" className="h-8 w-8 rounded-lg object-contain bg-surface-container p-1" />
+          <img src={logoUrl} alt="" className="h-8 w-8 rounded-lg object-contain bg-surface-container p-1 shrink-0" />
         ) : (
-          <div className="h-8 w-8 rounded-lg bg-[rgba(255,92,0,0.1)] border border-[rgba(255,92,0,0.2)] flex items-center justify-center">
+          <div className="h-8 w-8 rounded-lg bg-[rgba(255,92,0,0.1)] border border-[rgba(255,92,0,0.2)] flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-[16px] text-[#ff5c00]">redeem</span>
           </div>
         )}
@@ -145,10 +148,19 @@ function ReferralCard({ referral, onDelete }: { referral: Referral; onDelete: ()
           href={referral.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-1.5 rounded-lg border border-outline-variant/40 bg-surface-container/50 px-3 py-2 text-[11px] font-bold uppercase tracking-widest text-tertiary hover:text-[#ffb59a] hover:border-[#ff5c00]/40 transition-all"
+          className="flex items-center justify-center rounded-lg border border-outline-variant/40 bg-surface-container/50 px-3 py-2 text-tertiary hover:text-[#ffb59a] hover:border-[#ff5c00]/40 transition-all"
+          title="Abrir link"
         >
           <span className="material-symbols-outlined text-[14px]">open_in_new</span>
         </a>
+        <button
+          type="button"
+          onClick={onDelete}
+          className="flex items-center justify-center rounded-lg border border-outline-variant/40 bg-surface-container/50 px-3 py-2 text-tertiary hover:text-red-400 hover:border-red-400/40 transition-all"
+          title="Remover"
+        >
+          <span className="material-symbols-outlined text-[14px]">delete</span>
+        </button>
       </div>
     </div>
   );
@@ -157,16 +169,30 @@ function ReferralCard({ referral, onDelete }: { referral: Referral; onDelete: ()
 function AddReferralModal({
   protocols,
   onClose,
-  onSuccess,
+  onAdded,
 }: {
   protocols: Protocol[];
   onClose: () => void;
-  onSuccess: () => void;
+  onAdded: (item: Referral) => void;
 }) {
-  const [state, action, pending] = useActionState<ReferralState, FormData>(addReferralAction, null);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
 
-  if (state === null && !pending) {
-    // already handled by onSuccess below
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+    const fd = new FormData(e.currentTarget);
+
+    startTransition(async () => {
+      const res = await addReferralAction(null, fd);
+      if (res?.error) {
+        setError(res.error);
+        return;
+      }
+      if (res?.data) {
+        onAdded(res.data as Referral);
+      }
+    });
   }
 
   return (
@@ -180,13 +206,7 @@ function AddReferralModal({
           </button>
         </div>
 
-        <form
-          action={async (fd) => {
-            await action(fd);
-            onSuccess();
-          }}
-          className="flex flex-col gap-4"
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* Protocol */}
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">Protocolo</label>
@@ -201,10 +221,11 @@ function AddReferralModal({
             </select>
           </div>
 
-          {/* Label personalizado */}
+          {/* Label */}
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
-              Nome personalizado <span className="normal-case text-[9px] text-tertiary/60 font-normal tracking-normal">— opcional</span>
+              Nome personalizado{" "}
+              <span className="normal-case text-[9px] text-tertiary/60 font-normal tracking-normal">— opcional</span>
             </label>
             <input
               name="label"
@@ -228,9 +249,7 @@ function AddReferralModal({
             />
           </div>
 
-          {state?.error && (
-            <p className="text-xs text-red-400">{state.error}</p>
-          )}
+          {error && <p className="text-xs text-red-400">{error}</p>}
 
           <div className="flex gap-3 justify-end pt-1">
             <button
