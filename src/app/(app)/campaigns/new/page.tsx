@@ -18,13 +18,16 @@ export default async function NewCampaignPage() {
     <div className="mx-auto max-w-2xl">
       <Link
         href="/dashboard"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+        className="mb-6 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-tertiary hover:text-[#ffb59a] transition-colors"
       >
-        <ArrowLeft className="h-4 w-4" /> Voltar
+        <ArrowLeft className="h-3.5 w-3.5" /> Voltar
       </Link>
-      <h1 className="text-2xl font-semibold tracking-tight">Nova campanha</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Crie uma nova caça de bounty. Você pode adicionar tarefas e anexos depois.
+      <p className="text-[10px] font-bold uppercase tracking-widest text-[#ff5c00] mb-1">Nova Campanha</p>
+      <h1 className="font-display text-[30px] font-semibold tracking-tight text-on-surface leading-tight">
+        Selecione o protocolo
+      </h1>
+      <p className="text-sm text-tertiary mt-1">
+        Escolha o protocolo e configure os detalhes da sua campanha de bounty.
       </p>
 
       <NewCampaignForm protocols={protocols ?? []} />
