@@ -4,15 +4,13 @@ import { useState } from "react";
 import { GlowCard } from "@/components/ui/glow-card";
 import { ProfilePanel } from "./profile-panel";
 import { BillingPanel } from "./billing-panel";
-import { DrivePanel, type AttachmentRow } from "./drive-panel";
 import { ActivationCodePanel } from "./activation-code-panel";
 
-type Tab = "settings" | "billing" | "drive";
+type Tab = "settings" | "billing";
 
 const TABS: { id: Tab; label: string; subtitle: string; icon: string }[] = [
   { id: "settings", label: "Settings", subtitle: "Perfil e segurança", icon: "manage_accounts" },
   { id: "billing", label: "Pagamento", subtitle: "Plano e faturamento", icon: "credit_card" },
-  { id: "drive", label: "Drive", subtitle: "Armazenamento", icon: "folder_open" },
 ];
 
 type SettingsTabsProps = {
@@ -33,12 +31,11 @@ type SettingsTabsProps = {
     paymentsEnabled: boolean;
     walletAddress: string | null;
   };
-  attachments: AttachmentRow[];
   appliedCode: string | null;
   trialEndsAt: string | null;
 };
 
-export function SettingsTabs({ profile, billing, attachments, appliedCode, trialEndsAt }: SettingsTabsProps) {
+export function SettingsTabs({ profile, billing, appliedCode, trialEndsAt }: SettingsTabsProps) {
   const [active, setActive] = useState<Tab>("settings");
 
   return (
@@ -122,7 +119,6 @@ export function SettingsTabs({ profile, billing, attachments, appliedCode, trial
           </div>
         )}
 
-        {active === "drive" && <DrivePanel attachments={attachments} />}
       </div>
     </div>
   );

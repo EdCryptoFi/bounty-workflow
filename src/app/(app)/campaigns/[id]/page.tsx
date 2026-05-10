@@ -8,7 +8,6 @@ import { TaskCard } from "@/components/campaigns/task-card";
 import { AddStepModal } from "@/components/campaigns/add-step-modal";
 import { FlowLeftPanel } from "@/components/campaigns/flow-left-panel";
 import { FlowNodes } from "@/components/campaigns/flow-nodes";
-import { AttachmentDropzone } from "@/components/campaigns/attachment-dropzone";
 import { CampaignStatusSelect } from "@/components/campaigns/campaign-status-select";
 import { GlowCard } from "@/components/ui/glow-card";
 
@@ -21,13 +20,12 @@ export default async function CampaignDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const { user } = await requireUser();
+  await requireUser();
   const data = await getCampaignById(id);
   if (!data) notFound();
 
   const { campaign, steps, attachments } = data;
   const links = attachments.filter((a) => a.type === "link");
-  const driveFiles = attachments.filter((a) => a.type !== "link");
   const daysLeft = daysUntil(campaign.deadline);
   const stepsDone = steps.filter((s) => s.status === "done").length;
   const efficiency =
@@ -140,7 +138,6 @@ export default async function CampaignDetailPage({
                 campaignId={campaign.id}
                 links={links}
                 steps={steps}
-                driveFiles={driveFiles}
               />
 
               {/* Right sub-col: flow nodes */}
@@ -243,16 +240,6 @@ export default async function CampaignDetailPage({
             </div>
           </GlowCard>
 
-          {/* File Dropzone */}
-          <GlowCard>
-            <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl rounded-[11px] p-5">
-              <AttachmentDropzone
-                campaignId={campaign.id}
-                userId={user.id}
-                initial={attachments}
-              />
-            </div>
-          </GlowCard>
         </div>
       </div>
     </div>

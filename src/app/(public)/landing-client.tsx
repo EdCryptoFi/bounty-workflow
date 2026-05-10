@@ -194,7 +194,7 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
               <img
                 src="/logo-horizontal.png"
                 alt="Bounty Workflow"
-                className="h-28 sm:h-36 object-contain relative z-10"
+                className="w-full max-w-2xl object-contain relative z-10"
                 style={{ filter: "drop-shadow(0 0 24px rgba(255,92,0,0.35))" }}
               />
             </div>
@@ -403,100 +403,6 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
           </motion.div>
         </section>
 
-        {/* ── Stats Bento ── */}
-        <section className="max-w-[1400px] mx-auto px-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:h-[600px]">
-            {/* 99.9% Uptime — large 2x2 */}
-            <GlowCard className="md:col-span-2 md:row-span-2 group">
-            <div
-              className="rounded-[11px] p-10 flex flex-col justify-end overflow-hidden relative h-full"
-              style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}
-            >
-              {/* Decorative bg */}
-              <div
-                className="absolute inset-0 opacity-20"
-                style={{
-                  background:
-                    "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,92,0,0.4) 0%, transparent 70%)",
-                }}
-              />
-              <div
-                className="absolute inset-0 opacity-10"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px)",
-                  backgroundSize: "24px 24px",
-                }}
-              />
-              {/* Circuit decoration */}
-              <div className="absolute top-8 left-8 right-8 flex gap-3 opacity-30">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="h-1 flex-1 rounded-full bg-[#ff5c00]" style={{ opacity: 0.3 + i * 0.1 }} />
-                ))}
-              </div>
-              <div className="relative z-10">
-                <h4 className="text-5xl font-bold text-on-surface mb-4">{t.statUptime}</h4>
-                <p className="text-base text-tertiary max-w-sm leading-relaxed">{t.statUptimeDesc}</p>
-              </div>
-            </div>
-            </GlowCard>
-
-            {/* 50k+ Orgs */}
-            <GlowCard className="md:col-span-2">
-            <div
-              className="rounded-[11px] p-8 flex items-center justify-between h-full"
-              style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}
-            >
-              <div>
-                <span className="text-5xl font-bold text-[#ff5c00]">{t.statOrgs}</span>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-[#e9c349] mt-2">
-                  {t.statOrgsLabel}
-                </p>
-              </div>
-              {/* Avatar stack */}
-              <div className="flex -space-x-3">
-                {["E","A","M","J"].map((initial, i) => (
-                  <div
-                    key={i}
-                    className="w-12 h-12 rounded-full border-2 border-[#131313] flex items-center justify-center text-xs font-bold text-white"
-                    style={{ background: ["#ff5c00","#e9c349","#ffb59a","#a73a00"][i] }}
-                  >
-                    {initial}
-                  </div>
-                ))}
-                <div className="w-12 h-12 rounded-full border-2 border-[#131313] bg-surface-container flex items-center justify-center text-[10px] font-bold text-on-surface">
-                  +12k
-                </div>
-              </div>
-            </div>
-            </GlowCard>
-
-            {/* Latency */}
-            <GlowCard className="md:col-span-1">
-            <div
-              className="rounded-[11px] p-8 text-center flex flex-col justify-center h-full"
-              style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}
-            >
-              <span className="material-symbols-outlined text-[40px] text-[#e9c349] mb-2 filled">bolt</span>
-              <span className="text-3xl font-bold text-on-surface">{t.statLatency}</span>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-tertiary mt-2">
-                {t.statLatencyLabel}
-              </p>
-            </div>
-            </GlowCard>
-
-            {/* Global Ready */}
-            <GlowCard className="md:col-span-1">
-            <div
-              className="rounded-[11px] p-8 flex flex-col justify-center items-center text-center text-white h-full hover:brightness-110 transition-all duration-300"
-              style={{ background: "#ff5c00", boxShadow: "0 0 20px rgba(255,92,0,0.3)" }}
-            >
-              <span className="material-symbols-outlined text-[40px] mb-2 filled">language</span>
-              <p className="text-xl font-bold">{t.statGlobal}</p>
-            </div>
-            </GlowCard>
-          </div>
-        </section>
       </main>
 
       {/* ── Footer ── */}

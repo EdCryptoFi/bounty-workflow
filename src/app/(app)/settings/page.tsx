@@ -3,7 +3,6 @@ import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { paymentsEnabled } from "@/lib/payments/config";
 import { SettingsTabs } from "@/components/settings/settings-tabs";
-import type { AttachmentRow } from "@/components/settings/drive-panel";
 
 export const metadata: Metadata = { title: "Settings" };
 export const dynamic = "force-dynamic";
@@ -17,7 +16,6 @@ export default async function SettingsPage() {
     { data: billing },
     { data: sub },
     { count: campaignCount },
-    { data: rawAttachments },
   ] = await Promise.all([
     supabase
       .from("users")
@@ -40,11 +38,6 @@ export default async function SettingsPage() {
       .select("id", { count: "exact", head: true })
       .eq("user_id", user.id)
       .is("archived_at", null),
-    supabase
-      .from("attachments")
-      .select("id, path, type, size_bytes, uploaded_at, campaign_id, campaign:campaigns(title)")
-      .eq("user_id", user.id)
-      .order("uploaded_at", { ascending: false }),
   ]);
 
   // Fetch applied activation code if exists
@@ -57,28 +50,6 @@ export default async function SettingsPage() {
       .maybeSingle();
     appliedCode = codeRow?.code ?? null;
   }
-
-  const attachments: AttachmentRow[] = (rawAttachments ?? []).map((a) => {
-    const row = a as unknown as {
-      id: string;
-      path: string;
-      type: string;
-      size_bytes: number | null;
-      uploaded_at: string;
-      campaign_id: string | null;
-      campaign: { title: string } | { title: string }[] | null;
-    };
-    const camp = Array.isArray(row.campaign) ? row.campaign[0] : row.campaign;
-    return {
-      id: row.id,
-      path: row.path,
-      type: row.type,
-      size_bytes: row.size_bytes,
-      uploaded_at: row.uploaded_at,
-      campaign_id: row.campaign_id,
-      campaign_title: camp?.title ?? null,
-    };
-  });
 
   return (
     <div className="max-w-[1200px] mx-auto flex flex-col gap-6">
@@ -109,7 +80,6 @@ export default async function SettingsPage() {
           paymentsEnabled,
           walletAddress: (profile as { wallet_address?: string | null } | null)?.wallet_address ?? null,
         }}
-        attachments={attachments}
         appliedCode={appliedCode}
         trialEndsAt={profile?.trial_ends_at ?? null}
       />

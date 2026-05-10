@@ -15,10 +15,6 @@ const nav = [
   { href: "/como-usar", label: "Como usar", icon: "school" },
 ];
 
-const bottomNav = [
-  { href: "/settings", label: "Settings", icon: "settings" },
-];
-
 export function SidebarNav({
   onNavigate,
   userSlot,
@@ -33,9 +29,21 @@ export function SidebarNav({
   return (
     <div className="flex h-full flex-col pt-24 pb-8">
       {/* Brand */}
-      <div className="px-6 mb-12">
+      <div className="px-4 mb-6">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-horizontal.png" alt="Bounty Workflow" className="h-10 w-auto object-contain" />
+        <img src="/logo-horizontal.png" alt="Bounty Workflow" className="w-full object-contain" />
+      </div>
+
+      {/* Nova Campanha button */}
+      <div className="px-4 mb-4">
+        <Link
+          href="/campaigns/new"
+          onClick={onNavigate}
+          className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-xs font-bold uppercase tracking-widest rounded transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,92,0,0.4)] active:scale-95"
+        >
+          <span className="material-symbols-outlined text-[16px]">add</span>
+          Nova Campanha
+        </Link>
       </div>
 
       {/* Nav links */}
@@ -87,27 +95,6 @@ export function SidebarNav({
               <span>Admin</span>
             </Link>
           )}
-          {bottomNav.map((item) => {
-            const active = pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onNavigate}
-                className={cn(
-                  "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200",
-                  active
-                    ? "text-[#ff5c00] bg-[rgba(255,92,0,0.08)] border-r-2 border-[#ff5c00]"
-                    : "text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/40",
-                )}
-              >
-                <span className="material-symbols-outlined text-[20px]">
-                  {item.icon}
-                </span>
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
         </div>
       </nav>
 
@@ -155,37 +142,31 @@ export function SidebarUserCard({
   }[tierVariant];
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-3 rounded-xl bg-surface-container border border-outline-variant/30 px-3 py-2">
-        {avatarUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={avatarUrl}
-            alt=""
-            className="h-9 w-9 shrink-0 rounded-full object-cover border border-secondary/30"
-          />
-        ) : (
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[rgba(255,92,0,0.15)] border border-[#ff5c00]/30 text-sm font-bold text-[#ffb59a]">
-            {initial}
-          </span>
-        )}
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-on-surface">
-            {display}
-          </div>
-          <div className={cn("truncate text-[10px] font-bold uppercase tracking-widest", tierColor)}>
-            {tierLabel}
-          </div>
+    <Link
+      href="/settings"
+      className="flex items-center gap-3 rounded-xl bg-surface-container border border-outline-variant/30 px-3 py-2 hover:border-[#ff5c00]/30 hover:bg-[rgba(255,92,0,0.05)] transition-all duration-200"
+    >
+      {avatarUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={avatarUrl}
+          alt=""
+          className="h-9 w-9 shrink-0 rounded-full object-cover border border-secondary/30"
+        />
+      ) : (
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[rgba(255,92,0,0.15)] border border-[#ff5c00]/30 text-sm font-bold text-[#ffb59a]">
+          {initial}
+        </span>
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-medium text-on-surface">
+          {display}
+        </div>
+        <div className={cn("truncate text-[10px] font-bold uppercase tracking-widest", tierColor)}>
+          {tierLabel}
         </div>
       </div>
-
-      <Link
-        href="/campaigns/new"
-        className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-xs font-bold uppercase tracking-widest rounded transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,92,0,0.4)] active:scale-95"
-      >
-        <span className="material-symbols-outlined text-[16px]">add</span>
-        Nova Campanha
-      </Link>
-    </div>
+      <span className="material-symbols-outlined text-[16px] text-tertiary shrink-0">settings</span>
+    </Link>
   );
 }

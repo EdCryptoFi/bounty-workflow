@@ -9,18 +9,15 @@ export function FlowLeftPanel({
   campaignId,
   links,
   steps,
-  driveFiles,
 }: {
   campaignId: string;
   links: Attachment[];
   steps: Step[];
-  driveFiles: Attachment[];
 }) {
   return (
     <div className="w-1/3 flex flex-col gap-4 h-full overflow-y-auto pr-1">
       <LinksBox campaignId={campaignId} links={links} />
       <PromptsBox campaignId={campaignId} steps={steps} />
-      <DriveBox campaignId={campaignId} driveFiles={driveFiles} />
     </div>
   );
 }
@@ -247,58 +244,3 @@ function PromptsBox({ campaignId, steps }: { campaignId: string; steps: Step[] }
   );
 }
 
-function DriveBox({
-  campaignId,
-  driveFiles,
-}: {
-  campaignId: string;
-  driveFiles: Attachment[];
-}) {
-  const [pending, startTransition] = useTransition();
-
-  function handleRemove(id: string) {
-    startTransition(async () => {
-      await removeAttachmentAction(id, campaignId);
-    });
-  }
-
-  return (
-    <div className="bg-[rgba(32,31,31,0.8)] border border-outline-variant/50 rounded-lg p-3 flex flex-col gap-3">
-      <h3 className="text-xs font-semibold text-on-surface flex items-center gap-2">
-        <span className="material-symbols-outlined text-tertiary text-[14px]">folder</span>
-        Drive
-      </h3>
-
-      {driveFiles.length > 0 ? (
-        <ul className="flex flex-col gap-2">
-          {driveFiles.map((a) => (
-            <li key={a.id} className="flex items-center gap-2 group">
-              <span className="material-symbols-outlined text-[12px] text-tertiary shrink-0">
-                {a.type === "pdf"
-                  ? "picture_as_pdf"
-                  : a.type === "image"
-                    ? "image"
-                    : "description"}
-              </span>
-              <span className="flex-1 text-[10px] text-tertiary font-bold uppercase tracking-widest truncate">
-                {a.path.split("/").pop()}
-              </span>
-              <button
-                type="button"
-                onClick={() => handleRemove(a.id)}
-                disabled={pending}
-                className="opacity-0 group-hover:opacity-100 text-tertiary hover:text-red-400 transition shrink-0"
-              >
-                <span className="material-symbols-outlined text-[12px]">remove</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-[10px] text-tertiary font-bold uppercase tracking-widest">
-          Nenhum arquivo
-        </p>
-      )}
-    </div>
-  );
-}
