@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { GlowCard } from "@/components/ui/glow-card";
 
 export const metadata: Metadata = { title: "Protocolos" };
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 function getFavicon(websiteUrl: string | null): string | null {
   if (!websiteUrl) return null;
