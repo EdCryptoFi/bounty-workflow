@@ -8,12 +8,12 @@ import { GlowCard } from "@/components/ui/glow-card";
 
 const COPY = {
   pt: {
-    badge: "NOVA EDIÇÃO COSMIC DISPONÍVEL",
+    badge: "FEITO PARA HUNTERS DE BOUNTY CRIPTO",
     heroGradient: "fluxo de trabalho",
     heroPre: "Domine seu",
     heroPost: "com precisão.",
     heroSub:
-      "A Bounty Workflow redefine a produtividade galáctica. Gerencie campanhas, protocolos e automações em uma interface de vidro imersiva feita para visionários.",
+      "Nunca mais perca um bounty por prazo vencido. Organize protocolos, gerencie campanhas e receba alertas automáticos — tudo em uma plataforma feita para hunters sérios.",
     cta: "Começar grátis",
     ctaDemo: "Ver Demonstração",
     login: "Entrar",
@@ -54,12 +54,12 @@ const COPY = {
     navProtocols: "Protocols",
   },
   en: {
-    badge: "NEW COSMIC EDITION AVAILABLE",
+    badge: "BUILT FOR CRYPTO BOUNTY HUNTERS",
     heroGradient: "workflow",
     heroPre: "Master your",
     heroPost: "with precision.",
     heroSub:
-      "Bounty Workflow redefines galactic productivity. Manage campaigns, protocols and automations in an immersive glass interface built for visionaries.",
+      "Never miss a bounty deadline again. Organize protocols, manage campaigns and receive automatic alerts — all in one platform built for serious hunters.",
     cta: "Start for free",
     ctaDemo: "See Demo",
     login: "Sign in",
@@ -278,6 +278,27 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
           </div>
         </section>
 
+        {/* ── Trust Bar ── */}
+        <div
+          className="relative z-10 mb-20 border-y"
+          style={{ borderColor: "rgba(255,92,0,0.08)", background: "rgba(255,92,0,0.03)" }}
+        >
+          <div className="max-w-[1400px] mx-auto px-12 py-8 flex flex-col sm:flex-row items-center justify-center gap-0 divide-y sm:divide-y-0 sm:divide-x divide-[rgba(255,92,0,0.1)]">
+            {[
+              { value: "500+", label: lang === "pt" ? "Hunters organizando bounties" : "Hunters organizing bounties", color: "#ff5c00" },
+              { value: "40+", label: lang === "pt" ? "Protocolos suportados" : "Supported protocols", color: "#e9c349" },
+              { value: "87%", label: lang === "pt" ? "Taxa de entrega no prazo" : "On-time delivery rate", color: "text-on-surface" },
+            ].map((stat) => (
+              <div key={stat.label} className="flex flex-col items-center gap-1 px-12 py-4 sm:py-0 text-center">
+                <span className="text-3xl font-bold" style={{ color: stat.color === "text-on-surface" ? undefined : stat.color, ...(stat.color === "text-on-surface" ? {} : {}) }}>
+                  {stat.value}
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* ── Features Bento ── */}
         <section className="mb-32 max-w-[1400px] mx-auto px-12">
           <div className="text-center mb-16">
@@ -369,11 +390,14 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             <div className="grid gap-5 md:grid-cols-3">
               <motion.div className="md:col-span-1" variants={fadeInUp}>
                 <MotionBentoCard
-                  title={lang === "pt" ? "Armazenamento" : "File Storage"}
+                  title={lang === "pt" ? "Organização Total" : "Total Organization"}
                   description={lang === "pt"
-                    ? "Anexe evidências, prints e documentos às suas campanhas via Google Drive ou DropBox."
-                    : "Attach evidence, screenshots and documents to campaigns via Google Drive or DropBox."}
-                  feature="storage"
+                    ? "Protocolos, steps, links e prazos em um só lugar. Zero planilha, zero caos."
+                    : "Protocols, steps, links and deadlines in one place. Zero spreadsheets, zero chaos."}
+                  feature="spotlight"
+                  spotlightItems={lang === "pt"
+                    ? ["Links de evidência por campanha", "Steps com status e prazos", "Histórico completo de submissões", "Protocolos organizados por categoria"]
+                    : ["Evidence links per campaign", "Steps with status and deadlines", "Complete submission history", "Protocols organized by category"]}
                   href="/auth/signup"
                 />
               </motion.div>
@@ -384,7 +408,7 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                     ? "Indique outros hunters e multiplique suas recompensas. Programa exclusivo para membros."
                     : "Invite hunters and multiply your rewards. Exclusive program for members."}
                   feature="counter"
-                  statistic={{ value: "2.4×", label: lang === "pt" ? "MULTIPLICADOR DE RECOMPENSA" : "REWARD MULTIPLIER", start: 0, end: 2.4, suffix: "×" }}
+                  statistic={{ value: "2.4×", label: lang === "pt" ? "MULTIPLICADOR DE RECOMPENSA" : "REWARD MULTIPLIER", start: 1.8, end: 2.4, suffix: "×" }}
                   href="/auth/signup"
                 />
               </motion.div>
@@ -395,12 +419,85 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                     ? "Uma tela infinita para mapear protocolos complexos e automações sem nenhum limite."
                     : "An infinite canvas to map complex protocols and automation flows without limits."}
                   feature="chart"
-                  statistic={{ value: "∞", label: lang === "pt" ? "NÓS NO CANVAS" : "CANVAS NODES", start: 0, end: 100, suffix: "+" }}
+                  statistic={{ value: "∞", label: lang === "pt" ? "NÓS NO CANVAS" : "CANVAS NODES", start: 70, end: 100, suffix: "+" }}
                   href="/auth/signup"
                 />
               </motion.div>
             </div>
           </motion.div>
+        </section>
+
+        {/* ── Pricing ── */}
+        <section className="mb-24 max-w-[1400px] mx-auto px-12">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-on-surface mb-3">
+              {lang === "pt" ? "Simples e direto" : "Simple and direct"}
+            </h2>
+            <p className="text-sm text-tertiary">
+              {lang === "pt" ? "Um plano. Sem surpresas." : "One plan. No surprises."}
+            </p>
+          </div>
+
+          <div className="flex justify-center">
+            <div
+              className="relative w-full max-w-md rounded-2xl p-8 flex flex-col gap-6"
+              style={{
+                background: "rgba(20,19,19,0.95)",
+                border: "1px solid rgba(255,92,0,0.35)",
+                boxShadow: "0 0 60px rgba(255,92,0,0.12), inset 0 0 30px rgba(255,92,0,0.04)",
+              }}
+            >
+              {/* Glow top */}
+              <div
+                className="pointer-events-none absolute inset-x-0 top-0 h-px"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(255,92,0,0.6), transparent)" }}
+              />
+
+              {/* Badge */}
+              <div className="flex items-center justify-between">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-[#ff5c00] border border-[#ff5c00]/40 bg-[rgba(255,92,0,0.08)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#ff5c00] shadow-[0_0_6px_#ff5c00]" />
+                  PRO
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#e9c349]">
+                  {lang === "pt" ? "14 DIAS GRÁTIS" : "14 DAYS FREE"}
+                </span>
+              </div>
+
+              {/* Price */}
+              <div className="flex items-end gap-2">
+                <span className="text-5xl font-bold text-on-surface">R$ 29,90</span>
+                <span className="text-sm text-tertiary mb-1.5">/{lang === "pt" ? "mês" : "month"}</span>
+              </div>
+
+              {/* Features */}
+              <ul className="flex flex-col gap-3">
+                {(lang === "pt"
+                  ? ["Campanhas ilimitadas", "Alertas automáticos de prazo", "Referral system completo", "Todos os protocolos suportados", "Suporte prioritário"]
+                  : ["Unlimited campaigns", "Automatic deadline alerts", "Full referral system", "All supported protocols", "Priority support"]
+                ).map((f) => (
+                  <li key={f} className="flex items-center gap-3 text-sm text-on-surface">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-[#ff5c00]" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <Link
+                href="/auth/signup"
+                className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-sm font-bold uppercase tracking-widest rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,92,0,0.4)] active:scale-95"
+              >
+                {lang === "pt" ? "Começar grátis" : "Start for free"}
+              </Link>
+
+              <p className="text-center text-[10px] text-tertiary">
+                {lang === "pt"
+                  ? "14 dias grátis. Cancele a qualquer momento."
+                  : "14 days free. Cancel anytime."}
+              </p>
+            </div>
+          </div>
         </section>
 
       </main>
@@ -585,27 +682,6 @@ function BentoProtocols() {
   );
 }
 
-function BentoStorage() {
-  return (
-    <div className="mt-6 flex gap-4">
-      {[
-        { name: "Google Drive", icon: <IconGoogleDrive /> },
-        { name: "DropBox", icon: <IconDropbox /> },
-      ].map((item) => (
-        <motion.div
-          key={item.name}
-          className="flex-1 flex flex-col items-center gap-2 rounded-xl p-4"
-          style={{ background: "rgba(255,92,0,0.06)", border: "1px solid rgba(255,92,0,0.12)" }}
-          whileHover={{ borderColor: "rgba(255,92,0,0.35)" }}
-        >
-          {item.icon}
-          <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">{item.name}</span>
-        </motion.div>
-      ))}
-    </div>
-  );
-}
-
 /* ── Main animated bento card ─────────────────────────────────────── */
 function MotionBentoCard({
   title,
@@ -619,7 +695,7 @@ function MotionBentoCard({
 }: {
   title: string;
   description: string;
-  feature: "spotlight" | "metrics" | "timeline" | "counter" | "chart" | "protocols" | "storage";
+  feature: "spotlight" | "metrics" | "timeline" | "counter" | "chart" | "protocols";
   spotlightItems?: string[];
   timeline?: Array<{ year: string; event: string }>;
   metrics?: Array<{ label: string; value: number; suffix?: string }>;
@@ -684,7 +760,6 @@ function MotionBentoCard({
           {feature === "metrics" && metrics && <BentoMetrics metrics={metrics} />}
           {feature === "timeline" && timeline && <BentoTimeline items={timeline} />}
           {feature === "protocols" && <BentoProtocols />}
-          {feature === "storage" && <BentoStorage />}
           {(feature === "counter" || feature === "chart") && statistic && (
             <div className="mt-auto pt-4">
               <BentoCounter start={statistic.start} end={statistic.end} suffix={statistic.suffix} />
@@ -694,40 +769,6 @@ function MotionBentoCard({
         </div>
       </Link>
     </motion.div>
-  );
-}
-
-/* ── Feature SVG Icons (used in BentoStorage) ──────────────────────── */
-function IconGoogleDrive() {
-  return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-      <defs>
-        <linearGradient id="ig-drive" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#ffb59a" />
-          <stop offset="1" stopColor="#ff5c00" />
-        </linearGradient>
-      </defs>
-      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
-      <polygon points="24,10 8,37 16,37" fill="url(#ig-drive)" fillOpacity="0.9" />
-      <polygon points="24,10 40,37 32,37" fill="url(#ig-drive)" fillOpacity="0.6" />
-      <polygon points="16,37 32,37 24,21" fill="url(#ig-drive)" fillOpacity="0.75" />
-    </svg>
-  );
-}
-
-function IconDropbox() {
-  return (
-    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-      <defs>
-        <linearGradient id="ig-dropbox" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#ffb59a" />
-          <stop offset="1" stopColor="#ff5c00" />
-        </linearGradient>
-      </defs>
-      <rect width="48" height="48" rx="12" fill="rgba(255,92,0,0.1)" />
-      <polygon points="24,11 10,20 24,29 38,20" fill="url(#ig-dropbox)" fillOpacity="0.9" />
-      <polygon points="10,29 24,38 38,29 24,20" fill="url(#ig-dropbox)" fillOpacity="0.55" />
-    </svg>
   );
 }
 
