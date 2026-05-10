@@ -177,6 +177,8 @@ function AddReferralModal({
 }) {
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [savedUrl, setSavedUrl] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -190,9 +192,18 @@ function AddReferralModal({
         return;
       }
       if (res?.data) {
-        onAdded(res.data as Referral);
+        const item = res.data as Referral;
+        setSavedUrl(item.url);
+        onAdded(item);
       }
     });
+  }
+
+  function copyUrl() {
+    if (!savedUrl) return;
+    navigator.clipboard.writeText(savedUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
@@ -206,68 +217,95 @@ function AddReferralModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Protocol */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">Protocolo</label>
-            <select
-              name="protocol_id"
-              className="rounded-lg border border-outline-variant/50 bg-[rgba(22,22,22,0.98)] px-3 py-2.5 text-sm text-on-surface outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40"
-            >
-              <option value="">— Selecione o protocolo —</option>
-              {protocols.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Label */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
-              Nome personalizado{" "}
-              <span className="normal-case text-[9px] text-tertiary/60 font-normal tracking-normal">— opcional</span>
-            </label>
-            <input
-              name="label"
-              maxLength={100}
-              placeholder="Ex: Meu link Arbitrum"
-              className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2.5 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40"
-            />
-          </div>
-
-          {/* URL */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
-              Link de referral <span className="text-[#ff5c00]">*</span>
-            </label>
-            <input
-              name="url"
-              type="url"
-              required
-              placeholder="https://..."
-              className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2.5 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40"
-            />
-          </div>
-
-          {error && <p className="text-xs text-red-400">{error}</p>}
-
-          <div className="flex gap-3 justify-end pt-1">
+        {savedUrl ? (
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3 rounded-xl border border-green-500/20 bg-green-500/5 px-4 py-3">
+              <span className="material-symbols-outlined text-green-400 text-[20px]">check_circle</span>
+              <p className="text-sm font-semibold text-green-400">Referral salvo!</p>
+            </div>
+            <div className="flex items-center gap-2 rounded-lg border border-outline-variant/40 bg-surface-container/30 px-3 py-2.5">
+              <p className="flex-1 text-[11px] text-tertiary font-mono truncate">{savedUrl}</p>
+              <button
+                type="button"
+                onClick={copyUrl}
+                className="shrink-0 flex items-center gap-1.5 rounded-lg border border-[#ff5c00]/30 bg-[rgba(255,92,0,0.08)] px-3 py-1.5 text-[11px] font-bold text-[#ff5c00] hover:bg-[rgba(255,92,0,0.15)] transition-all"
+              >
+                <span className="material-symbols-outlined text-[14px]">{copied ? "check" : "content_copy"}</span>
+                {copied ? "Copiado!" : "Copiar"}
+              </button>
+            </div>
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-sm text-tertiary hover:text-on-surface border border-outline-variant/50 transition"
+              className="w-full py-2 rounded-lg text-sm text-tertiary hover:text-on-surface border border-outline-variant/50 transition"
             >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={pending}
-              className="inline-flex items-center gap-2 rounded-lg bg-[#ff5c00] px-5 py-2 text-sm font-bold text-white transition hover:bg-[#ff7b33] hover:shadow-[0_0_15px_rgba(255,92,0,0.4)] disabled:opacity-60 active:scale-95"
-            >
-              {pending ? "Salvando..." : "Salvar"}
+              Fechar
             </button>
           </div>
-        </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {/* Protocol */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">Protocolo</label>
+              <select
+                name="protocol_id"
+                className="rounded-lg border border-outline-variant/50 bg-[rgba(22,22,22,0.98)] px-3 py-2.5 text-sm text-on-surface outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40"
+              >
+                <option value="">— Selecione o protocolo —</option>
+                {protocols.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Label */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
+                Nome personalizado{" "}
+                <span className="normal-case text-[9px] text-tertiary/60 font-normal tracking-normal">— opcional</span>
+              </label>
+              <input
+                name="label"
+                maxLength={100}
+                placeholder="Ex: Meu link Arbitrum"
+                className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2.5 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40"
+              />
+            </div>
+
+            {/* URL */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
+                Link de referral <span className="text-[#ff5c00]">*</span>
+              </label>
+              <input
+                name="url"
+                type="url"
+                required
+                placeholder="https://..."
+                className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2.5 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40"
+              />
+            </div>
+
+            {error && <p className="text-xs text-red-400">{error}</p>}
+
+            <div className="flex gap-3 justify-end pt-1">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 rounded-lg text-sm text-tertiary hover:text-on-surface border border-outline-variant/50 transition"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={pending}
+                className="inline-flex items-center gap-2 rounded-lg bg-[#ff5c00] px-5 py-2 text-sm font-bold text-white transition hover:bg-[#ff7b33] hover:shadow-[0_0_15px_rgba(255,92,0,0.4)] disabled:opacity-60 active:scale-95"
+              >
+                {pending ? "Salvando..." : "Salvar"}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
