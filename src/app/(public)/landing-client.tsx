@@ -28,12 +28,6 @@ const COPY = {
     f3Title: "Reminders",
     f3Desc: "Alertas inteligentes acionados por IA que garantem que nenhuma etapa crítica seja perdida.",
     f3Cta: "AGENDAR",
-    f4Title: "Google Drive",
-    f4Desc: "Conecte seu Drive e anexe evidências, prints e documentos direto às suas campanhas.",
-    f4Cta: "CONECTAR",
-    f5Title: "DropBox",
-    f5Desc: "Integração com DropBox para armazenar e compartilhar arquivos de bounty com segurança.",
-    f5Cta: "INTEGRAR",
     f6Title: "Referral System",
     f6Desc: "Indique outros hunters e acumule recompensas. Programa de indicação exclusivo para membros.",
     f6Cta: "INDICAR",
@@ -74,12 +68,6 @@ const COPY = {
     f3Title: "Reminders",
     f3Desc: "AI-triggered smart alerts that ensure no critical step is ever missed.",
     f3Cta: "SCHEDULE",
-    f4Title: "Google Drive",
-    f4Desc: "Connect your Drive and attach evidence, screenshots and documents directly to your campaigns.",
-    f4Cta: "CONNECT",
-    f5Title: "DropBox",
-    f5Desc: "DropBox integration to securely store and share bounty files with your team.",
-    f5Cta: "INTEGRATE",
     f6Title: "Referral System",
     f6Desc: "Invite other hunters and earn rewards. Exclusive referral program for members.",
     f6Cta: "REFER",
@@ -646,12 +634,12 @@ function BentoCounter({ start, end, suffix }: { start: number; end: number; suff
 
 function BentoProtocols() {
   const protocols = [
+    { name: "Nano Creators", domain: "nanoscreators.xyz" },
+    { name: "CryptokMe", domain: "cryptok.me" },
+    { name: "Earn", domain: "superteam.fun" },
+    { name: "CreatorVerse", domain: "thecreatorverse.xyz" },
     { name: "DRiP", domain: "drip.haus" },
-    { name: "MagicEden", domain: "magiceden.io" },
-    { name: "Rally", domain: "rally.io" },
-    { name: "P2P Kols", domain: "p2pkols.com" },
-    { name: "3Look", domain: "3look.io" },
-    { name: "More", domain: null },
+    { name: "40+", domain: null },
   ];
   return (
     <div className="mt-4 grid grid-cols-3 gap-3">
