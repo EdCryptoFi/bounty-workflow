@@ -109,3 +109,16 @@ export async function saveWalletAction(wallet: string) {
   revalidatePath("/settings");
   return { ok: true };
 }
+
+export async function requestPayoutAction(wallet: string, amount: number) {
+  const { user } = await requireUser();
+  const supabase = await createClient();
+  const { error } = await supabase.from("payout_requests").insert({
+    user_id: user.id,
+    amount,
+    wallet,
+  });
+  if (error) return { error: error.message };
+  revalidatePath("/settings");
+  return { ok: true };
+}

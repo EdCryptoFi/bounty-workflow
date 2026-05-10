@@ -19,7 +19,7 @@ export default async function SettingsPage() {
   ] = await Promise.all([
     supabase
       .from("users")
-      .select("full_name, handle, avatar_url, trial_ends_at, applied_code_id, wallet_address")
+      .select("full_name, handle, avatar_url, trial_ends_at, applied_code_id, wallet_address, referral_balance")
       .eq("id", user.id)
       .maybeSingle(),
     supabase
@@ -79,6 +79,7 @@ export default async function SettingsPage() {
           campaignCount: campaignCount ?? 0,
           paymentsEnabled,
           walletAddress: (profile as { wallet_address?: string | null } | null)?.wallet_address ?? null,
+          referralBalance: (profile as { referral_balance?: number | null } | null)?.referral_balance ?? 0,
         }}
         appliedCode={appliedCode}
         trialEndsAt={profile?.trial_ends_at ?? null}

@@ -58,10 +58,10 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Se já autenticado e tentando ver /auth/login, manda pra dashboard
+  // Se já autenticado e tentando ver /auth/login, manda pra dashboard (ou /admin)
   if ((pathname === "/auth/login" || pathname === "/auth/signup") && user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = user.email === "bountyworklow@proton.me" ? "/admin" : "/dashboard";
     return NextResponse.redirect(url);
   }
 

@@ -14,9 +14,10 @@ export async function requireUser() {
   return { supabase, user };
 }
 
-/** Checa admin (via função is_admin no DB, que lê user_roles — C3 fix). */
+const ADMIN_EMAIL = "bountyworklow@proton.me";
+
 export async function isAdmin() {
   const supabase = await createClient();
-  const { data } = await supabase.rpc("is_admin");
-  return data === true;
+  const { data: { user } } = await supabase.auth.getUser();
+  return user?.email === ADMIN_EMAIL;
 }

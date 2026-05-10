@@ -30,6 +30,7 @@ type SettingsTabsProps = {
     campaignCount: number;
     paymentsEnabled: boolean;
     walletAddress: string | null;
+    referralBalance: number;
   };
   appliedCode: string | null;
   trialEndsAt: string | null;
@@ -114,6 +115,7 @@ export function SettingsTabs({ profile, billing, appliedCode, trialEndsAt }: Set
               campaignCount={billing.campaignCount}
               paymentsEnabled={billing.paymentsEnabled}
               walletAddress={billing.walletAddress}
+              referralBalance={billing.referralBalance}
             />
             <ActivationCodePanel appliedCode={appliedCode} trialEndsAt={trialEndsAt} />
           </div>

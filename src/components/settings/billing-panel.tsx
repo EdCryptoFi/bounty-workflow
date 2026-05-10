@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { startCheckoutAction, saveWalletAction } from "@/lib/settings/actions";
+import { startCheckoutAction, saveWalletAction, requestPayoutAction } from "@/lib/settings/actions";
 
 type BillingPanelProps = {
   tier: string;
@@ -13,6 +13,7 @@ type BillingPanelProps = {
   campaignCount: number;
   paymentsEnabled: boolean;
   walletAddress: string | null;
+  referralBalance: number;
 };
 
 export function BillingPanel({
@@ -25,6 +26,7 @@ export function BillingPanel({
   campaignCount,
   paymentsEnabled,
   walletAddress,
+  referralBalance,
 }: BillingPanelProps) {
   const [pending, start] = useTransition();
   const isTrialing = status === "trialing";
@@ -234,17 +236,22 @@ export function BillingPanel({
           </div>
 
           {/* Resgate */}
-          <WalletPanel initial={walletAddress} />
+          <WalletPanel initial={walletAddress} balance={referralBalance} />
         </div>
       </div>
     </div>
   );
 }
 
-function WalletPanel({ initial }: { initial: string | null }) {
+function WalletPanel({ initial, balance }: { initial: string | null; balance: number }) {
   const [wallet, setWallet] = useState(initial ?? "");
   const [saved, setSaved] = useState(false);
+  const [requested, setRequested] = useState(false);
   const [walletPending, startWallet] = useTransition();
+  const [payoutPending, startPayout] = useTransition();
+
+  const hasBalance = balance > 0;
+  const canRequest = hasBalance && wallet.trim().length > 0;
 
   function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -255,12 +262,35 @@ function WalletPanel({ initial }: { initial: string | null }) {
     });
   }
 
+  function handlePayout() {
+    startPayout(async () => {
+      await requestPayoutAction(wallet.trim(), balance);
+      setRequested(true);
+    });
+  }
+
   return (
     <div className="bg-[rgba(42,42,42,0.7)] backdrop-blur-xl border border-outline-variant/50 rounded-xl p-5 shadow-[inset_0_0_20px_rgba(255,92,0,0.03)]">
       <h3 className="text-sm font-semibold text-on-surface mb-4 flex items-center gap-2">
         <span className="material-symbols-outlined text-[#e9c349] text-[16px]">savings</span>
         Resgate
       </h3>
+
+      {/* Saldo de referral */}
+      <div className="mb-4 p-3 rounded-lg border border-outline-variant/20 bg-surface-container/30 flex items-center justify-between">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-tertiary">Saldo de Referral</p>
+          <p className={`text-xl font-bold mt-0.5 ${hasBalance ? "text-[#e9c349]" : "text-tertiary"}`}>
+            R$ {balance.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          </p>
+        </div>
+        {!hasBalance && (
+          <span className="text-[9px] font-bold uppercase tracking-widest text-tertiary border border-outline-variant/30 rounded-full px-2 py-1">
+            Sem saldo
+          </span>
+        )}
+      </div>
+
       <form onSubmit={handleSave} className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
@@ -285,6 +315,24 @@ function WalletPanel({ initial }: { initial: string | null }) {
           {walletPending ? "Salvando..." : saved ? "Salvo!" : "Salvar Wallet"}
         </button>
       </form>
+
+      {/* Botão Resgatar — só aparece se houver saldo */}
+      {hasBalance && (
+        <button
+          type="button"
+          onClick={handlePayout}
+          disabled={!canRequest || payoutPending || requested}
+          className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#ff5c00] px-3 py-2.5 text-xs font-bold text-white transition hover:bg-[#ff7b33] hover:shadow-[0_0_15px_rgba(255,92,0,0.4)] disabled:opacity-60 active:scale-95"
+        >
+          <span className="material-symbols-outlined text-[14px]">
+            {requested ? "check_circle" : "redeem"}
+          </span>
+          {payoutPending ? "Enviando..." : requested ? "Pedido enviado!" : `Resgatar R$ ${balance.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+        </button>
+      )}
+      {hasBalance && !wallet.trim() && (
+        <p className="mt-2 text-[10px] text-amber-400 text-center">Salve uma carteira para resgatar.</p>
+      )}
     </div>
   );
 }
