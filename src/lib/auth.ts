@@ -14,7 +14,7 @@ export async function requireUser() {
   return { supabase, user };
 }
 
-const ADMIN_EMAIL = "bountyworklow@proton.me";
+const ADMIN_EMAIL = "bountyworkflow@proton.me";
 
 export async function isAdmin() {
   const supabase = await createClient();

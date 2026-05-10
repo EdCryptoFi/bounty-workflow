@@ -100,9 +100,6 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           {/* Trailing actions */}
           <div className="flex items-center gap-5">
             <NotifBell reminders={reminders} />
-            <button className="text-zinc-400 hover:text-[#ffb59a] transition-colors active:scale-95">
-              <span className="material-symbols-outlined text-[24px]">apps</span>
-            </button>
             {user ? (
               <UserMenu email={email} fullName={fullName} avatarUrl={avatarUrl} />
             ) : (

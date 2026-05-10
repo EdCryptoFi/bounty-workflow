@@ -61,7 +61,7 @@ export async function updateSession(request: NextRequest) {
   // Se já autenticado e tentando ver /auth/login, manda pra dashboard (ou /admin)
   if ((pathname === "/auth/login" || pathname === "/auth/signup") && user) {
     const url = request.nextUrl.clone();
-    url.pathname = user.email === "bountyworklow@proton.me" ? "/admin" : "/dashboard";
+    url.pathname = user.email === "bountyworkflow@proton.me" ? "/admin" : "/dashboard";
     return NextResponse.redirect(url);
   }
 
