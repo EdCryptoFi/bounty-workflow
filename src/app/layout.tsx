@@ -63,6 +63,9 @@ export const metadata: Metadata = {
     apple: "/icon.png",
   },
   manifest: "/manifest.json",
+  verification: {
+    google: "kaLlUTwxxd16fAoIeLlYUtWjgH_v08k5DFJBF7PLS7M",
+  },
 };
 
 const jsonLd = {
