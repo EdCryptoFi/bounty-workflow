@@ -1,0 +1,25 @@
+{
+  "name": "Bounty WorkFlow",
+  "short_name": "BountyWF",
+  "description": "Plataforma de gerenciamento de bounties cripto para hunters do Brasil.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#131313",
+  "theme_color": "#ff5c00",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["productivity", "finance", "business"],
+  "lang": "pt-BR"
+}

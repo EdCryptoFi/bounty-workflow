@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SignupForm } from "./signup-form";
 import { GoogleButton } from "@/components/auth/google-button";
-import { TwitterButton } from "@/components/auth/twitter-button";
 
 export const metadata: Metadata = { title: "Criar conta" };
 
@@ -31,13 +30,27 @@ export default async function SignupPage({
         </p>
       </div>
 
+      {/* Tabs Login | Registrar */}
+      <div className="flex justify-center mb-6">
+        <div className="luxury-glass rounded-full px-1 py-1 flex items-center gap-1 border border-outline-variant/20">
+          <Link
+            href={`/auth/login${next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""}`}
+            className="px-5 py-2 rounded-full text-tertiary text-xs font-bold uppercase tracking-widest hover:text-[#ffb59a] transition-colors"
+          >
+            Login
+          </Link>
+          <span className="px-5 py-2 rounded-full bg-[#ff5c00] text-white text-xs font-bold uppercase tracking-widest">
+            Registrar
+          </span>
+        </div>
+      </div>
+
       {/* Glass card */}
       <div className="luxury-glass rounded-xl p-10 shadow-[0_8px_32px_rgba(0,0,0,0.8)] glow-orange border border-outline-variant/20">
         {/* Social logins */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="mb-6">
           <Suspense>
             <GoogleButton />
-            <TwitterButton />
           </Suspense>
         </div>
 
@@ -61,16 +74,6 @@ export default async function SignupPage({
           </Link>
           .
         </p>
-
-        <div className="mt-6 text-center text-sm text-tertiary">
-          Já tem conta?{" "}
-          <Link
-            href={`/auth/login${next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""}`}
-            className="text-[#ffb59a] font-semibold hover:text-[#ff5c00] transition-colors"
-          >
-            Entrar
-          </Link>
-        </div>
       </div>
     </>
   );

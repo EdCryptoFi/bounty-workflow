@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { verifyStripeSignature } from "@/lib/payments/stripe";
 import { claimEvent, finalizeEvent } from "@/lib/payments/idempotency";
 import { paymentsEnabled } from "@/lib/payments/config";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -139,7 +140,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ status: "ok", event_id: event.id });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "handler failed";
-    console.error("[webhooks/stripe] handler error", err);
+    log.error("[webhooks/stripe] handler error", err, { eventId: event.id });
     await finalizeEvent(supabase, "stripe", event.id, { ok: false, error: msg });
     return NextResponse.json({ error: msg }, { status: 500 });
   }

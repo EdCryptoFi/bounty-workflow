@@ -122,6 +122,20 @@ export default async function AdminDashboardPage() {
         </div>
         <div className="flex gap-3">
           <Link
+            href="/admin/analytics"
+            className="flex items-center gap-2 px-4 py-2.5 rounded border border-[rgba(255,92,0,0.3)] text-[#ffb59a] text-xs font-bold uppercase tracking-widest hover:bg-[rgba(255,92,0,0.08)] transition-all"
+          >
+            <span className="material-symbols-outlined text-[16px]">analytics</span>
+            Analytics
+          </Link>
+          <Link
+            href="/admin/users"
+            className="flex items-center gap-2 px-4 py-2.5 rounded border border-[rgba(255,92,0,0.3)] text-[#ffb59a] text-xs font-bold uppercase tracking-widest hover:bg-[rgba(255,92,0,0.08)] transition-all"
+          >
+            <span className="material-symbols-outlined text-[16px]">group</span>
+            Usuários
+          </Link>
+          <Link
             href="/admin/codes"
             className="flex items-center gap-2 px-4 py-2.5 rounded border border-[rgba(255,92,0,0.3)] text-[#ffb59a] text-xs font-bold uppercase tracking-widest hover:bg-[rgba(255,92,0,0.08)] transition-all"
           >
@@ -256,6 +270,18 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           {
+            href: "/admin/analytics",
+            icon: "analytics",
+            label: "Analytics Completo",
+            desc: "Gráficos de crescimento, atividade e receita da plataforma.",
+          },
+          {
+            href: "/admin/users",
+            icon: "group",
+            label: "Gerenciar Usuários",
+            desc: "Ver todos os usuários, banir ou desbanir contas.",
+          },
+          {
             href: "/admin/protocols",
             icon: "hub",
             label: "Gerenciar Protocolos",
@@ -269,7 +295,7 @@ export default async function AdminDashboardPage() {
           },
           {
             href: "/dashboard",
-            icon: "analytics",
+            icon: "dashboard",
             label: "Dashboard do Usuário",
             desc: "Ver a plataforma como um usuário comum.",
           },

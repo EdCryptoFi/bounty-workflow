@@ -14,6 +14,7 @@ type BillingPanelProps = {
   paymentsEnabled: boolean;
   walletAddress: string | null;
   referralBalance: number;
+  referralEarned?: number;
 };
 
 export function BillingPanel({
@@ -27,6 +28,7 @@ export function BillingPanel({
   paymentsEnabled,
   walletAddress,
   referralBalance,
+  referralEarned = 0,
 }: BillingPanelProps) {
   const [pending, start] = useTransition();
   const isTrialing = status === "trialing";
@@ -135,8 +137,16 @@ export function BillingPanel({
             <div className="grid grid-cols-3 gap-3">
               {[
                 { label: "Campanhas Ativas", value: String(campaignCount), color: "text-[#e9c349]" },
-                { label: "Recompensas Earned", value: "R$ —", color: "text-[#ff5c00]" },
-                { label: "Saldo Pendente", value: "R$ —", color: "text-tertiary" },
+                {
+                  label: "Recompensas Totais",
+                  value: `R$ ${referralEarned.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
+                  color: "text-[#ff5c00]",
+                },
+                {
+                  label: "Saldo Disponível",
+                  value: `R$ ${referralBalance.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
+                  color: referralBalance > 0 ? "text-[#e9c349]" : "text-tertiary",
+                },
               ].map((m) => (
                 <div
                   key={m.label}
@@ -166,29 +176,25 @@ export function BillingPanel({
                 Exportar CSV
               </button>
             </div>
-            {periodEnd ? (
+            {status === "active" && periodEnd ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="text-[10px] font-bold uppercase tracking-widest text-tertiary border-b border-outline-variant/30">
-                      <th className="text-left pb-2 pr-4">ID da Fatura</th>
-                      <th className="text-left pb-2 pr-4">Data</th>
+                      <th className="text-left pb-2 pr-4">Período</th>
                       <th className="text-left pb-2 pr-4">Plano</th>
                       <th className="text-right pb-2">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="border-b border-outline-variant/10">
-                      <td className="py-2.5 pr-4 text-tertiary font-mono">INV-2024-001</td>
                       <td className="py-2.5 pr-4 text-tertiary">
-                        {periodEnd.toLocaleDateString("pt-BR")}
+                        até {periodEnd.toLocaleDateString("pt-BR")}
                       </td>
-                      <td className="py-2.5 pr-4 text-on-surface capitalize">
-                        {tier} Pro Monthly
-                      </td>
+                      <td className="py-2.5 pr-4 text-on-surface capitalize">{tier} Pro</td>
                       <td className="py-2.5 text-right">
                         <span className="px-2 py-0.5 rounded-full bg-[#e9c349]/10 border border-[#e9c349]/30 text-[9px] font-bold uppercase tracking-widest text-[#e9c349]">
-                          Pago
+                          Ativo
                         </span>
                       </td>
                     </tr>

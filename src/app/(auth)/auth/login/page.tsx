@@ -9,9 +9,9 @@ export const metadata: Metadata = { title: "Entrar" };
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string; verified?: string }>;
+  searchParams: Promise<{ next?: string; verified?: string; error?: string }>;
 }) {
-  const { next = "/dashboard", verified } = await searchParams;
+  const { next = "/dashboard", verified, error } = await searchParams;
 
   return (
     <>
@@ -30,8 +30,28 @@ export default async function LoginPage({
         </p>
       </div>
 
+      {/* Tabs Login | Registrar */}
+      <div className="flex justify-center mb-6">
+        <div className="luxury-glass rounded-full px-1 py-1 flex items-center gap-1 border border-outline-variant/20">
+          <span className="px-5 py-2 rounded-full bg-[#ff5c00] text-white text-xs font-bold uppercase tracking-widest">
+            Login
+          </span>
+          <Link
+            href={`/auth/signup${next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""}`}
+            className="px-5 py-2 rounded-full text-tertiary text-xs font-bold uppercase tracking-widest hover:text-[#ffb59a] transition-colors"
+          >
+            Registrar
+          </Link>
+        </div>
+      </div>
+
       {/* Glass card */}
       <div className="luxury-glass rounded-xl p-10 shadow-[0_8px_32px_rgba(0,0,0,0.8)] glow-orange border border-outline-variant/20">
+        {error && (
+          <div className="mb-6 rounded border border-red-900/40 bg-red-900/20 px-4 py-3 text-sm text-red-300">
+            {error}
+          </div>
+        )}
         {verified === "1" && (
           <div className="mb-6 rounded border border-secondary/30 bg-secondary/10 px-4 py-3 text-sm text-secondary">
             Email confirmado. Faça login pra continuar.
@@ -53,35 +73,6 @@ export default async function LoginPage({
         </div>
 
         <LoginForm next={next} />
-
-        <div className="mt-6 text-center text-sm text-tertiary">
-          Ainda não tem acesso?{" "}
-          <Link
-            href={`/auth/signup${next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""}`}
-            className="text-[#ffb59a] font-semibold hover:text-[#ff5c00] transition-colors"
-          >
-            Solicitar Convite
-          </Link>
-        </div>
-      </div>
-
-      {/* Referral badge */}
-      <div className="mt-6 flex justify-center">
-        <div className="luxury-glass rounded-full px-6 py-2 flex items-center gap-3 border border-outline-variant/30">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
-            Indicado por:
-          </span>
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-[rgba(255,92,0,0.15)] border border-[#ff5c00]/30 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[14px] text-[#ffb59a]">
-                person
-              </span>
-            </div>
-            <span className="text-sm font-medium text-on-surface">
-              Agente Solaris
-            </span>
-          </div>
-        </div>
       </div>
 
       {/* Footer links */}

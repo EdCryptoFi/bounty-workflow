@@ -18,9 +18,11 @@ const serverSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: optStr(20),
   NEXT_PUBLIC_APP_URL: optStr(),
   CRON_SECRET: optStr(16),
+  ADMIN_EMAIL: optStr(),
   RESEND_API_KEY: optStr(),
   RESEND_FROM: optStr(),
   NEXT_PUBLIC_PAYMENTS_ENABLED: z.enum(["true", "false"]).default("false"),
+  NEXT_PUBLIC_GA_ID: optStr(),
   STRIPE_SECRET_KEY: optStr(),
   STRIPE_WEBHOOK_SECRET: optStr(),
   STRIPE_PRICE_ID_MONTHLY: optStr(),
@@ -35,6 +37,7 @@ const clientSchema = z.object({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(20),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
   NEXT_PUBLIC_PAYMENTS_ENABLED: z.enum(["true", "false"]).default("false"),
+  NEXT_PUBLIC_GA_ID: z.string().optional(),
 });
 
 const isServer = typeof window === "undefined";
@@ -46,6 +49,7 @@ const parsed = isServer
       NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
       NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
       NEXT_PUBLIC_PAYMENTS_ENABLED: process.env.NEXT_PUBLIC_PAYMENTS_ENABLED,
+      NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
     });
 
 if (!parsed.success) {

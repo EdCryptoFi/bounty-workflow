@@ -58,10 +58,29 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Check if user is banned (non-admin routes only)
+  if (isAppRoute && user && !pathname.startsWith("/admin")) {
+    const { data: profile } = await supabase
+      .from("users")
+      .select("banned_at")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.banned_at) {
+      // Sign them out and redirect to login with banned message
+      await supabase.auth.signOut();
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/login";
+      url.searchParams.set("error", "Sua conta foi suspensa. Entre em contato com o suporte.");
+      return NextResponse.redirect(url);
+    }
+  }
+
   // Se já autenticado e tentando ver /auth/login, manda pra dashboard (ou /admin)
   if ((pathname === "/auth/login" || pathname === "/auth/signup") && user) {
+    const adminEmail = process.env.ADMIN_EMAIL ?? "bountyworkflow@proton.me";
     const url = request.nextUrl.clone();
-    url.pathname = user.email === "bountyworkflow@proton.me" ? "/admin" : "/dashboard";
+    url.pathname = user.email === adminEmail ? "/admin" : "/dashboard";
     return NextResponse.redirect(url);
   }
 

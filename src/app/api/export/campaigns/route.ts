@@ -2,19 +2,32 @@ import { NextResponse, type NextRequest } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { toCsv } from "@/lib/export/csv";
+import { rateLimit, tooManyRequests } from "@/lib/rate-limit";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+
+const VALID_SCOPES = ["all", "active", "archived"] as const;
+type Scope = (typeof VALID_SCOPES)[number];
 
 /**
  * GET /api/export/campaigns[?scope=archived|all|active]
  *
  * Exporta as campanhas do usuário como CSV com escape anti-fórmula (A4).
- * RLS garante que só as campanhas do próprio usuário vêm (never trust input).
+ * RLS garante que só as campanhas do próprio usuário vêm.
+ * Rate limited: 10 exports per hour per user.
  */
 export async function GET(request: NextRequest) {
   const { user } = await requireUser();
-  const scope = request.nextUrl.searchParams.get("scope") ?? "all";
+
+  const limit = rateLimit(`export:${user.id}`, 10, 60 * 60_000);
+  if (!limit.ok) return tooManyRequests(limit.retryAfterMs);
+
+  const rawScope = request.nextUrl.searchParams.get("scope") ?? "all";
+  const scope: Scope = (VALID_SCOPES as readonly string[]).includes(rawScope)
+    ? (rawScope as Scope)
+    : "all";
 
   const supabase = await createClient();
 
@@ -37,8 +50,8 @@ export async function GET(request: NextRequest) {
 
   const { data, error } = await query;
   if (error) {
-    console.error("[export/campaigns] query error", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    log.error("[export/campaigns] query error", error, { userId: user.id, scope });
+    return NextResponse.json({ error: "Falha ao exportar campanhas." }, { status: 500 });
   }
 
   const header = [

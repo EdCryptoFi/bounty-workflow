@@ -3,6 +3,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { verifyMercadoPagoSignature, getPreapproval } from "@/lib/payments/mercadopago";
 import { claimEvent, finalizeEvent } from "@/lib/payments/idempotency";
 import { paymentsEnabled } from "@/lib/payments/config";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -159,7 +160,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ status: "ok", event_id: eventId });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "handler failed";
-    console.error("[webhooks/mercadopago] handler error", err);
+    log.error("[webhooks/mercadopago] handler error", err, { eventId });
     await finalizeEvent(supabase, "mercadopago", eventId, { ok: false, error: msg });
     return NextResponse.json({ error: msg }, { status: 500 });
   }

@@ -1,5 +1,6 @@
 "use server";
 
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
@@ -8,14 +9,53 @@ import { createCheckoutSession } from "@/lib/payments/stripe";
 import { createPreapproval } from "@/lib/payments/mercadopago";
 import { env } from "@/lib/env";
 
+const profileSchema = z.object({
+  full_name: z
+    .string()
+    .trim()
+    .max(80, "Nome máximo 80 caracteres")
+    .nullable()
+    .optional()
+    .transform((v) => v || null),
+  handle: z
+    .string()
+    .trim()
+    .max(40, "Handle máximo 40 caracteres")
+    .regex(/^[a-z0-9_-]*$/, "Handle: apenas letras minúsculas, números, _ e -")
+    .nullable()
+    .optional()
+    .transform((v) => v || null),
+});
+
+const passwordSchema = z
+  .string()
+  .min(8, "Senha mínima 8 caracteres")
+  .regex(/[A-Z]/, "Pelo menos 1 letra maiúscula")
+  .regex(/[0-9]/, "Pelo menos 1 número");
+
+const walletSchema = z
+  .string()
+  .trim()
+  .max(100, "Endereço muito longo")
+  .optional()
+  .transform((v) => v || null);
+
+const payoutSchema = z.object({
+  wallet: z.string().trim().min(32, "Endereço de wallet inválido").max(64),
+  amount: z.number().positive("Saldo deve ser positivo").finite(),
+});
+
 export async function updateProfileAction(formData: FormData) {
   const { user } = await requireUser();
   const supabase = await createClient();
-  const full_name = (formData.get("full_name") as string)?.trim() || null;
-  const handle = (formData.get("handle") as string)?.trim() || null;
+  const parsed = profileSchema.safeParse({
+    full_name: formData.get("full_name"),
+    handle: formData.get("handle"),
+  });
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   const { error } = await supabase
     .from("users")
-    .update({ full_name, handle })
+    .update({ full_name: parsed.data.full_name, handle: parsed.data.handle })
     .eq("id", user.id);
   if (error) return { error: error.message };
   revalidatePath("/settings");
@@ -54,8 +94,9 @@ export async function updatePasswordAction(formData: FormData) {
   await requireUser();
   const supabase = await createClient();
   const newPassword = (formData.get("new_password") as string) ?? "";
-  if (newPassword.length < 6) return { error: "Senha mínima: 6 caracteres." };
-  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  const parsed = passwordSchema.safeParse(newPassword);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Senha inválida." };
+  const { error } = await supabase.auth.updateUser({ password: parsed.data });
   if (error) return { error: error.message };
   return { ok: true };
 }
@@ -101,9 +142,11 @@ export async function startCheckoutAction(): Promise<CheckoutResult> {
 export async function saveWalletAction(wallet: string) {
   const { user } = await requireUser();
   const supabase = await createClient();
+  const parsed = walletSchema.safeParse(wallet);
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Endereço inválido." };
   const { error } = await supabase
     .from("users")
-    .update({ wallet_address: wallet.trim() || null })
+    .update({ wallet_address: parsed.data })
     .eq("id", user.id);
   if (error) return { error: error.message };
   revalidatePath("/settings");
@@ -112,11 +155,13 @@ export async function saveWalletAction(wallet: string) {
 
 export async function requestPayoutAction(wallet: string, amount: number) {
   const { user } = await requireUser();
+  const parsed = payoutSchema.safeParse({ wallet, amount });
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Dados inválidos." };
   const supabase = await createClient();
   const { error } = await supabase.from("payout_requests").insert({
     user_id: user.id,
-    amount,
-    wallet,
+    amount: parsed.data.amount,
+    wallet: parsed.data.wallet,
   });
   if (error) return { error: error.message };
   revalidatePath("/settings");

@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email/resend";
+import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -40,8 +41,8 @@ export async function GET(request: NextRequest) {
     .limit(50);
 
   if (error) {
-    console.error("[cron/reminders] query error", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    log.error("[cron/reminders] query error", error);
+    return NextResponse.json({ error: "Falha ao buscar lembretes." }, { status: 500 });
   }
 
   if (!pending || pending.length === 0) {
@@ -125,11 +126,11 @@ export async function GET(request: NextRequest) {
       }
     } catch (err) {
       failed += 1;
-      const msg = err instanceof Error ? err.message : "erro desconhecido";
-      console.error("[cron/reminders] processing error", r.id, msg);
+      const errMsg = err instanceof Error ? err.message : "erro desconhecido";
+      log.error("[cron/reminders] processing error", err, { reminderId: r.id });
       await supabase
         .from("reminders")
-        .update({ status: "failed", error_message: msg })
+        .update({ status: "failed", error_message: errMsg })
         .eq("id", r.id);
     }
   }

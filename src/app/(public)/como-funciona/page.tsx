@@ -2,9 +2,18 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "How it works — Bounty WorkFlow",
+  title: "Como Funciona — Bounty WorkFlow",
   description:
-    "Discover how Bounty WorkFlow helps crypto bounty hunters organize campaigns, never miss a deadline, and maximize rewards.",
+    "Veja como o Bounty WorkFlow ajuda hunters cripto a organizar campanhas, nunca perder um deadline e maximizar recompensas. Simples, direto e feito para o Brasil.",
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_APP_URL ?? "https://bountywork.xyz"}/como-funciona`,
+  },
+  openGraph: {
+    title: "Como Funciona o Bounty WorkFlow",
+    description:
+      "Organize protocolos, crie campanhas, receba alertas antes dos deadlines. Tudo em um só lugar.",
+    url: `${process.env.NEXT_PUBLIC_APP_URL ?? "https://bountywork.xyz"}/como-funciona`,
+  },
 };
 
 export default function ComoFuncionaPage() {

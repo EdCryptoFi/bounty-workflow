@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(git push *)",
-      "Bash(mkdir -p \"/Users/fabioalves/Desktop/VibeCode/Bounty WorkFlow/src/app/\\(app\\)/dicas\" \"/Users/fabioalves/Desktop/VibeCode/Bounty WorkFlow/src/app/\\(app\\)/como-usar\")"
+      "Bash(mkdir -p \"/Users/fabioalves/Desktop/VibeCode/Bounty WorkFlow/src/app/\\(app\\)/dicas\" \"/Users/fabioalves/Desktop/VibeCode/Bounty WorkFlow/src/app/\\(app\\)/como-usar\")",
+      "Bash(vercel --prod)",
+      "Bash(vercel ls *)",
+      "Bash(curl -s \"https://bounty-workflow.vercel.app\")"
     ],
     "additionalDirectories": [
       "/Users/fabioalves/Desktop/VibeCode/Bounty WorkFlow/src/app/(app)"
