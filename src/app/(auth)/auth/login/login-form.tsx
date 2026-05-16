@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useFormStatus, useFormState } from "react-dom";
 import { loginAction, magicLinkAction, type LoginState } from "./actions";
+import { createClient } from "@/lib/supabase/client";
 
 export function LoginForm({ next }: { next: string }) {
   const [mode, setMode] = useState<"password" | "magic">("password");
@@ -11,6 +12,16 @@ export function LoginForm({ next }: { next: string }) {
     magicLinkAction,
     null,
   );
+
+  async function handleTwitterLogin() {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: "twitter",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+      },
+    });
+  }
 
   return (
     <div className="space-y-6">
@@ -83,6 +94,25 @@ export function LoginForm({ next }: { next: string }) {
           </SubmitButton>
         </form>
       )}
+
+      {/* Divider */}
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-px bg-zinc-800" />
+        <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">ou</span>
+        <div className="flex-1 h-px bg-zinc-800" />
+      </div>
+
+      {/* Twitter/X OAuth */}
+      <button
+        type="button"
+        onClick={handleTwitterLogin}
+        className="w-full flex items-center justify-center gap-3 py-3 rounded border border-zinc-700/60 bg-zinc-900/60 hover:bg-zinc-800/80 text-white text-xs font-bold uppercase tracking-widest transition-all duration-200 hover:border-zinc-600"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.261 5.635 5.903-5.635Zm-1.161 17.52h1.833L7.084 4.126H5.117Z" />
+        </svg>
+        Entrar com X (Twitter)
+      </button>
 
       <div className="text-center">
         <button

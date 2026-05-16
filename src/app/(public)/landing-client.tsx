@@ -116,12 +116,31 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         style={{ background: "rgba(9,9,9,0.70)", backdropFilter: "blur(24px)" }}
       >
         <Link href="/" className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="Bounty Workflow" className="h-10 w-10 object-contain" />
+          <div className="relative w-10 h-10 shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-final.png" alt="Bounty Workflow" className="h-10 w-10 object-contain rounded-xl" />
+            <div
+              className="absolute inset-0 rounded-xl pointer-events-none"
+              style={{
+                background: "linear-gradient(110deg, transparent 20%, rgba(233,195,73,0.55) 50%, transparent 80%)",
+                backgroundSize: "200% 100%",
+                animation: "goldShimmerLanding 5s ease-in-out infinite",
+              }}
+            />
+          </div>
           <span className="text-xl font-black tracking-tighter text-[#ff5c00]">
             Bounty Workflow
           </span>
         </Link>
+        <style>{`
+          @keyframes goldShimmerLanding {
+            0% { background-position: 200% center; opacity: 0; }
+            20% { opacity: 1; }
+            50% { background-position: -200% center; opacity: 0.6; }
+            80% { opacity: 0; }
+            100% { background-position: -200% center; opacity: 0; }
+          }
+        `}</style>
 
         <nav className="hidden md:flex items-center gap-8">
           <Link href="/como-funciona" className="text-[#ff7b33] text-sm font-medium hover:text-[#ffb59a] transition-colors">

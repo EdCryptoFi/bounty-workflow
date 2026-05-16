@@ -6,7 +6,7 @@ import {
   type CreateCampaignState,
 } from "@/lib/campaigns/actions";
 
-type ProtocolOption = { id: string; name: string };
+type ProtocolOption = { id: string; name: string; slug?: string };
 
 export function NewCampaignForm({ protocols }: { protocols: ProtocolOption[] }) {
   const [state, action] = useFormState<CreateCampaignState, FormData>(
@@ -28,11 +28,14 @@ export function NewCampaignForm({ protocols }: { protocols: ProtocolOption[] }) 
           style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center" }}
         >
           <option value="">— Selecione o protocolo —</option>
-          {protocols.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
+          {protocols.map((p) => {
+            const isPersonal = p.slug === "arquivo-pessoal" || p.slug === "generico";
+            return (
+              <option key={p.id} value={p.id} style={isPersonal ? { fontWeight: "bold" } : undefined}>
+                {isPersonal ? `⭐ ${p.name}` : p.name}
+              </option>
+            );
+          })}
         </select>
       </Field>
 

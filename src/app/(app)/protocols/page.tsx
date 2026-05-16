@@ -21,6 +21,8 @@ export default async function ProtocolsPage() {
     .from("protocols")
     .select("id, slug, name, website_url, logo_url")
     .eq("is_active", true)
+    .neq("slug", "arquivo-pessoal")
+    .neq("slug", "generico")
     .order("name");
 
   return (

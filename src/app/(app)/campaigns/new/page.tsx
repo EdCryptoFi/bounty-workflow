@@ -8,11 +8,20 @@ export const metadata: Metadata = { title: "Nova campanha" };
 
 export default async function NewCampaignPage() {
   const supabase = await createClient();
-  const { data: protocols } = await supabase
+  const { data: rawProtocols } = await supabase
     .from("protocols")
-    .select("id, name")
+    .select("id, name, slug")
     .eq("is_active", true)
     .order("name");
+
+  // Pin "Arquivo Pessoal" first
+  const protocols = [...(rawProtocols ?? [])].sort((a, b) => {
+    const aIsPersonal = a.slug === "arquivo-pessoal" || a.slug === "generico";
+    const bIsPersonal = b.slug === "arquivo-pessoal" || b.slug === "generico";
+    if (aIsPersonal) return -1;
+    if (bIsPersonal) return 1;
+    return 0;
+  });
 
   return (
     <div className="mx-auto max-w-2xl">

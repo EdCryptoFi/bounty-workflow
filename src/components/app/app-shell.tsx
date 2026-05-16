@@ -112,11 +112,21 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Info banner */}
-        <div className="shrink-0 flex items-center gap-3 px-8 py-2.5 border-b border-zinc-800/40" style={{ background: "rgba(233,195,73,0.05)" }}>
-          <span className="material-symbols-outlined text-[15px] text-[#e9c349] shrink-0">tips_and_updates</span>
-          <p className="text-[11px] text-[#e9c349]/80 leading-tight">
-            Para criar seu próprio Workflow, utilize o campo <span className="font-bold text-[#e9c349]">Descrição</span> ao criar uma nova campanha — descreva etapas, links e instruções específicas.
-          </p>
+        <div
+          className="shrink-0 flex items-start gap-4 px-8 py-3 border-b border-[rgba(233,195,73,0.15)]"
+          style={{ background: "rgba(233,195,73,0.07)", borderTop: "1px solid rgba(233,195,73,0.1)" }}
+        >
+          <span className="material-symbols-outlined text-[18px] text-[#e9c349] shrink-0 mt-0.5">tips_and_updates</span>
+          <div className="flex flex-col gap-1">
+            <p className="text-[11px] text-[#e9c349]/90 leading-tight">
+              <span className="font-bold text-[#e9c349]">Dica Workflow:</span>{" "}
+              Ao criar uma campanha, preencha o campo <span className="font-bold text-[#e9c349]">Descrição</span> com etapas, links e instruções — isso vira seu Workflow pessoal para aquele protocolo.
+            </p>
+            <p className="text-[11px] text-[#e9c349]/70 leading-tight">
+              <span className="font-bold text-[#e9c349]/90">Arquivo Pessoal:</span>{" "}
+              Use o protocolo <span className="font-bold text-[#e9c349]/90">⭐ Arquivo Pessoal</span> para campanhas que não pertencem a nenhum protocolo específico — ideal para tracking de trades, metas e tarefas avulsas.
+            </p>
+          </div>
         </div>
 
         {/* Page content */}

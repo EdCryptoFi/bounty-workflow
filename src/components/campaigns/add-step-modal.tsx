@@ -104,7 +104,7 @@ export function AddStepModal({
             onClick={handleClose}
           />
 
-          <div className="relative z-10 w-full max-w-md bg-[rgba(22,22,22,0.98)] border border-outline-variant/50 rounded-2xl p-6 shadow-[0_0_60px_rgba(255,92,0,0.2)] flex flex-col gap-5">
+          <div className="relative z-10 w-full max-w-md bg-[rgba(22,22,22,0.98)] border border-outline-variant/50 rounded-2xl p-6 shadow-[0_0_60px_rgba(255,92,0,0.2)] flex flex-col gap-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-semibold text-on-surface">Nova Tarefa</h3>
               <button
@@ -138,10 +138,16 @@ export function AddStepModal({
                 </label>
                 <textarea
                   name="description"
-                  rows={3}
+                  rows={7}
                   maxLength={1000}
                   placeholder="Detalhes opcionais..."
-                  className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40 resize-none"
+                  className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40 resize-none overflow-hidden"
+                  style={{ minHeight: "112px" }}
+                  onInput={(e) => {
+                    const el = e.currentTarget;
+                    el.style.height = "auto";
+                    el.style.height = `${el.scrollHeight}px`;
+                  }}
                 />
               </div>
 
