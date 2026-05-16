@@ -33,8 +33,10 @@ export function CreateCodeForm() {
           value={customCode}
           onChange={(e) => setCustomCode(e.target.value.toUpperCase())}
           placeholder="AUTO-GERADO"
+          minLength={3}
           maxLength={20}
-          pattern="[A-Z0-9\-]*"
+          pattern="[A-Z0-9\-]{3,20}"
+          title="Mínimo 3 caracteres (letras, números e hífens)"
           className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-mono outline-none focus:border-[#ff5c00] w-44"
         />
       </div>

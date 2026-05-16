@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/server";
 import { PageHeader, buttonClasses } from "@/components/ui";
 import { CreateCodeForm } from "./create-code-form";
 import { DeleteCodeButton } from "./delete-code-button";
@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Admin · Códigos de Ativação" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminCodesPage() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   const { data: codes } = await supabase
     .from("activation_codes")
     .select("id, code, days_free, created_at, used_by, used_at")

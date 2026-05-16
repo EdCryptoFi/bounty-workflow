@@ -1,0 +1,5 @@
+# Modelo Phoenix — artefatos ~3GB, não necessários no deploy
+X Algo/
+
+# Temp files
+_tmp_*

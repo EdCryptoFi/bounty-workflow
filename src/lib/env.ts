@@ -30,6 +30,9 @@ const serverSchema = z.object({
   MERCADOPAGO_ACCESS_TOKEN: optStr(),
   MERCADOPAGO_WEBHOOK_SECRET: optStr(),
   MERCADOPAGO_PRICE_MONTHLY_BRL: optStr(),
+  GROQ_API_KEY: optStr(),
+  GEMINI_API_KEY: optStr(),
+  MISTRAL_API_KEY: optStr(),
 });
 
 const clientSchema = z.object({

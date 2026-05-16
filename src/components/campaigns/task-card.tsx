@@ -1,8 +1,9 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { cn } from "@/lib/utils";
 import { toggleStepAction } from "@/lib/campaigns/actions";
+import { XContentAnalyzer } from "@/components/x-analyzer/x-content-analyzer";
 import type { Step } from "@/lib/types";
 
 const STATUS_ICON: Record<Step["status"], string> = {
@@ -23,6 +24,7 @@ const STATUS_TEXT: Record<Step["status"], string> = {
 
 export function TaskCard({ step }: { step: Step }) {
   const [pending, startTransition] = useTransition();
+  const [analyzerOpen, setAnalyzerOpen] = useState(false);
 
   function cycle() {
     const next: Step["status"] =
@@ -63,13 +65,29 @@ export function TaskCard({ step }: { step: Step }) {
         <p className={cn("text-sm font-medium", STATUS_TEXT[step.status])}>
           {step.title}
         </p>
-        {step.due_date && (
-          <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-tertiary">
-            <span className="material-symbols-outlined text-[12px]">calendar_today</span>
-            {new Date(step.due_date).toLocaleDateString("pt-BR", {
-              day: "2-digit",
-              month: "short",
-            })}
+        <div className="mt-1.5 flex items-center gap-3 flex-wrap">
+          {step.due_date && (
+            <div className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-tertiary">
+              <span className="material-symbols-outlined text-[12px]">calendar_today</span>
+              {new Date(step.due_date).toLocaleDateString("pt-BR", {
+                day: "2-digit",
+                month: "short",
+              })}
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setAnalyzerOpen((v) => !v); }}
+            className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest transition-colors"
+            style={{ color: analyzerOpen ? "#ff5c00" : "var(--color-tertiary)" }}
+          >
+            <span className="material-symbols-outlined text-[12px]">bolt</span>
+            Analisar no X
+          </button>
+        </div>
+        {analyzerOpen && (
+          <div className="mt-3">
+            <XContentAnalyzer initialContent={step.title} />
           </div>
         )}
       </div>

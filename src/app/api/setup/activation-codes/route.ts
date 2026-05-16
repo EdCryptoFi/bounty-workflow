@@ -1,7 +1,4 @@
-"use server";
-
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/server";
 
 /**
  * POST /api/setup/activation-codes

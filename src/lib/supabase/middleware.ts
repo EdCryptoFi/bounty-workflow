@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 /**
  * Refresh de sessão em cada request. Obrigatório pro Supabase SSR.
- * Rodado via src/proxy.ts — NUNCA remover.
+ * Rodado via src/middleware.ts — NUNCA remover.
  */
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
