@@ -7,7 +7,12 @@ import { CampaignCard } from "@/components/campaigns/campaign-card";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
   const [campaigns, supabase] = await Promise.all([
     listCampaignsForTimeline(),
     createClient(),
@@ -18,7 +23,17 @@ export default async function DashboardPage() {
     .select("*")
     .maybeSingle();
 
-  const running = campaigns.filter((c) => !c.archived_at).slice(0, 3);
+  const query = q?.toLowerCase().trim() ?? "";
+  const filtered = query
+    ? campaigns.filter(
+        (c) =>
+          c.title.toLowerCase().includes(query) ||
+          c.description?.toLowerCase().includes(query) ||
+          c.protocol_slug?.toLowerCase().includes(query),
+      )
+    : campaigns;
+
+  const running = filtered.filter((c) => !c.archived_at).slice(0, 6);
 
   return (
     <div className="max-w-[1600px] mx-auto flex flex-col gap-6">
@@ -26,10 +41,12 @@ export default async function DashboardPage() {
       <div className="flex justify-between items-end">
         <div>
           <h2 className="font-display text-[30px] font-semibold tracking-tight text-on-surface leading-tight">
-            Visão Geral
+            {query ? `Resultados para "${q}"` : "Visão Geral"}
           </h2>
           <p className="text-sm text-tertiary mt-1">
-            Acompanhe suas campanhas e protocolos de workflow em tempo real.
+            {query
+              ? `${filtered.length} campanha${filtered.length !== 1 ? "s" : ""} encontrada${filtered.length !== 1 ? "s" : ""}`
+              : "Acompanhe suas campanhas e protocolos de workflow em tempo real."}
           </p>
         </div>
         <Link

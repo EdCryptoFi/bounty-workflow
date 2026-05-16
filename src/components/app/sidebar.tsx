@@ -8,10 +8,9 @@ const nav = [
   { href: "/protocols", label: "Protocols", icon: "description" },
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/campaigns", label: "Campaigns", icon: "rocket_launch" },
-  { href: "/archive", label: "Archive", icon: "inventory_2" },
   { href: "/reminders", label: "Reminders", icon: "notifications_active" },
   { href: "/referrals", label: "Referrals", icon: "redeem" },
-  { href: "/dicas", label: "Dicas", icon: "tips_and_updates" },
+  { href: "/dicas", label: "Bounty AI", icon: "bolt" },
   { href: "/como-usar", label: "Como usar", icon: "school" },
 ];
 
@@ -30,8 +29,22 @@ export function SidebarNav({
     <div className="flex h-full flex-col pt-24 pb-8">
       {/* Brand */}
       <div className="px-4 mb-6">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-horizontal.png" alt="Bounty Workflow" className="w-full object-contain" />
+        <Link href="/dashboard" onClick={onNavigate} className="block relative overflow-hidden rounded-xl group">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-final.png" alt="Bounty Workflow" className="w-full object-contain rounded-xl" />
+          <span className="logo-gold-shimmer pointer-events-none absolute inset-0 rounded-xl" />
+        </Link>
+        <style>{`
+          @keyframes goldShimmer {
+            0%, 80% { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+            85% { opacity: 1; }
+            100% { transform: translateX(250%) skewX(-20deg); opacity: 0; }
+          }
+          .logo-gold-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(233,195,73,0.55), rgba(255,220,100,0.7), rgba(233,195,73,0.55), transparent);
+            animation: goldShimmer 5s ease-in-out infinite;
+          }
+        `}</style>
       </div>
 
       {/* Nova Campanha button */}
@@ -98,8 +111,27 @@ export function SidebarNav({
         </div>
       </nav>
 
+      {/* Archive — above settings */}
+      <div className="px-2 mt-2 border-t border-zinc-800/60 pt-2">
+        <Link
+          href="/archive"
+          onClick={onNavigate}
+          className={cn(
+            "flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all duration-200 rounded-lg",
+            pathname.startsWith("/archive")
+              ? "text-[#ff5c00] bg-[rgba(255,92,0,0.08)]"
+              : "text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/40",
+          )}
+        >
+          <span className={cn("material-symbols-outlined text-[20px]", pathname.startsWith("/archive") ? "filled" : "")}>
+            inventory_2
+          </span>
+          <span>Archive</span>
+        </Link>
+      </div>
+
       {userSlot && (
-        <div className="px-4 mt-4">{userSlot}</div>
+        <div className="px-4 mt-2">{userSlot}</div>
       )}
 
       {/* Logout */}

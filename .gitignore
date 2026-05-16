@@ -53,3 +53,10 @@ next-env.d.ts
 # Design reference files (large, local only)
 /design/
 /mockups/
+
+# X Algorithm artifacts (large model files, local only)
+"X Algo/"
+X Algo/
+
+# Temp files
+_tmp_*

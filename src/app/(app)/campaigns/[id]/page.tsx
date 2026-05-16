@@ -172,10 +172,8 @@ export default async function CampaignDetailPage({
                       Valor Est.
                     </span>
                     <span className="text-xs font-semibold text-[#e9c349]">
-                      R${" "}
-                      {Number(campaign.estimated_value_brl).toLocaleString(
-                        "pt-BR",
-                        { minimumFractionDigits: 2 },
+                      {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
+                        Number(campaign.estimated_value_brl),
                       )}
                     </span>
                   </div>

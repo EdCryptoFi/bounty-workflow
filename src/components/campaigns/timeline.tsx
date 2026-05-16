@@ -257,8 +257,8 @@ function formatBRL(value: string | null): string | null {
   if (!value) return null;
   const n = parseFloat(value);
   if (!isFinite(n) || n <= 0) return null;
-  return new Intl.NumberFormat("pt-BR", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "BRL",
+    currency: "USD",
   }).format(n);
 }

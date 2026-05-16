@@ -100,9 +100,9 @@ export function XContentAnalyzer({ initialContent = "" }: { initialContent?: str
           </span>
         </div>
         <div>
-          <h2 className="text-base font-semibold text-on-surface">Analisador X — Phoenix 2026</h2>
+          <h2 className="text-base font-semibold text-on-surface">Bounty AI — Algoritmo do X</h2>
           <p className="text-[11px] text-tertiary">
-            Baseado no algoritmo oficial do X (xAI, maio 2026)
+            Baseado no algoritmo oficial Phoenix do X (xAI, maio 2026)
           </p>
         </div>
       </div>

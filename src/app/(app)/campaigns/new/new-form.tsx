@@ -59,10 +59,10 @@ export function NewCampaignForm({ protocols }: { protocols: ProtocolOption[] }) 
         <textarea
           id="description"
           name="description"
-          rows={3}
+          rows={7}
           maxLength={2000}
-          placeholder="O que precisa ser feito? Dicas, links..."
-          className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2.5 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40 resize-none"
+          placeholder="O que precisa ser feito? Descreva etapas, links, instruções... (seu Workflow personalizado)"
+          className="rounded-lg border border-outline-variant/50 bg-surface-container/50 px-3 py-2.5 text-sm text-on-surface placeholder:text-tertiary outline-none transition focus:border-[#ff5c00]/60 focus:ring-1 focus:ring-[#ff5c00]/40 resize-y min-h-[112px]"
         />
       </Field>
 

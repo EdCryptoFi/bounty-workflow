@@ -70,6 +70,17 @@ const steps = [
     cta: "Ver Arquivo",
     visual: <VisualFinish />,
   },
+  {
+    number: "07",
+    title: "Otimize seu Conteúdo com Bounty AI",
+    description:
+      "Use o Bounty AI para analisar seus posts antes de publicar no X. O analisador segue as regras do algoritmo Phoenix (xAI, 2026) e pontua seu conteúdo de 0 a 100, identificando problemas que reduzem o alcance.",
+    tip: "Posts com links no corpo têm alcance zero para contas não-Premium. O Bounty AI detecta isso e sugere mover o link para a primeira reply.",
+    icon: "bolt",
+    href: "/dicas",
+    cta: "Abrir Bounty AI",
+    visual: <VisualBountyAI />,
+  },
 ];
 
 export default function ComoUsarPage() {
@@ -439,6 +450,47 @@ function VisualReminders() {
       >
         <span className="material-symbols-outlined text-[14px] text-[#ff5c00]">add</span>
         <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">Novo Lembrete</span>
+      </div>
+    </div>
+  );
+}
+
+function VisualBountyAI() {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-2 mb-1">
+        <span className="material-symbols-outlined text-[14px] text-[#ff5c00]">bolt</span>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">Bounty AI — Algoritmo do X</span>
+      </div>
+      <div className="flex flex-col gap-2">
+        {/* Score bar mock */}
+        <div className="rounded-xl p-3" style={{ background: "rgba(42,42,42,0.6)", border: "1px solid rgba(71,71,70,0.4)" }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-tertiary">Score Phoenix</span>
+            <span className="text-base font-bold" style={{ color: "#ff5c00" }}>78<span className="text-[10px] text-tertiary">/100</span></span>
+          </div>
+          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+            <div className="h-full rounded-full" style={{ width: "78%", background: "#ff5c00" }} />
+          </div>
+        </div>
+        {/* Issues mock */}
+        <div className="rounded-lg px-3 py-2.5 flex items-start gap-2" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}>
+          <span className="material-symbols-outlined text-[14px] shrink-0 mt-0.5" style={{ color: "#ef4444" }}>error</span>
+          <div>
+            <p className="text-[10px] font-semibold text-on-surface">Link no post principal</p>
+            <p className="text-[9px] text-tertiary">-20 pts — mova o link para a reply</p>
+          </div>
+        </div>
+        {/* Suggestion mock */}
+        <div className="rounded-lg px-3 py-2.5 flex items-start gap-2" style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)" }}>
+          <span className="material-symbols-outlined text-[14px] shrink-0 mt-0.5" style={{ color: "#22c55e" }}>check_circle</span>
+          <p className="text-[10px] text-on-surface">Thread detectada — alcance dobrado ✅</p>
+        </div>
+        {/* Rewrite button mock */}
+        <div className="flex items-center justify-center gap-2 rounded-xl py-2.5 text-[10px] font-bold uppercase tracking-widest" style={{ background: "rgba(255,92,0,0.06)", border: "1px solid rgba(255,92,0,0.3)", color: "#ff5c00" }}>
+          <span className="material-symbols-outlined text-[14px]">auto_fix_high</span>
+          Gerar versão otimizada com IA
+        </div>
       </div>
     </div>
   );

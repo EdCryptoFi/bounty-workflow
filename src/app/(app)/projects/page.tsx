@@ -29,7 +29,7 @@ function protocolGradient(name: string): string {
 
 function formatBRL(value: number): string {
   if (value <= 0) return "—";
-  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
 }
 
 export default async function ProjectsPage() {

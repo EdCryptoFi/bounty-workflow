@@ -2,6 +2,7 @@ import { SidebarNav, SidebarUserCard } from "./sidebar";
 import { MobileDrawer } from "./mobile-drawer";
 import { UserMenu } from "./user-menu";
 import { NotifBell, type ReminderAlert } from "./notif-bell";
+import { SearchBar } from "./search-bar";
 import { createClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/auth";
 
@@ -95,7 +96,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Search */}
-          <SearchBarInline />
+          <SearchBar />
 
           {/* Trailing actions */}
           <div className="flex items-center gap-5">
@@ -110,28 +111,18 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
+        {/* Info banner */}
+        <div className="shrink-0 flex items-center gap-3 px-8 py-2.5 border-b border-zinc-800/40" style={{ background: "rgba(233,195,73,0.05)" }}>
+          <span className="material-symbols-outlined text-[15px] text-[#e9c349] shrink-0">tips_and_updates</span>
+          <p className="text-[11px] text-[#e9c349]/80 leading-tight">
+            Para criar seu próprio Workflow, utilize o campo <span className="font-bold text-[#e9c349]">Descrição</span> ao criar uma nova campanha — descreva etapas, links e instruções específicas.
+          </p>
+        </div>
+
         {/* Page content */}
         <main className="flex-1 overflow-y-auto custom-scrollbar px-12 py-10">
           {children}
         </main>
-      </div>
-    </div>
-  );
-}
-
-function SearchBarInline() {
-  return (
-    <div className="flex items-center w-96">
-      <div className="relative w-full group">
-        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-tertiary text-[20px] group-focus-within:text-[#ffb59a] transition-colors">
-          search
-        </span>
-        <input
-          className="w-full bg-transparent border-0 border-b border-secondary/30 pl-10 pr-4 py-2 text-on-surface focus:ring-0 focus:border-[#ff5c00] focus:outline-none text-sm placeholder:text-tertiary/50 transition-all"
-          placeholder="Pesquisar operações..."
-          type="search"
-        />
-        <div className="absolute bottom-0 left-0 h-[1px] w-full bg-[#ffb59a] opacity-0 group-focus-within:opacity-100 group-focus-within:shadow-[0_0_10px_rgba(255,92,0,0.5)] transition-all" />
       </div>
     </div>
   );
