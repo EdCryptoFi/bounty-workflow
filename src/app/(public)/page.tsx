@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { LandingClient } from "./landing-client";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://bountywork.xyz";
@@ -18,10 +17,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function LandingPage() {
-  const hdrs = await headers();
-  const acceptLang = hdrs.get("accept-language") ?? "";
-  const defaultLang: "pt" | "en" = acceptLang.toLowerCase().startsWith("pt") ? "pt" : "en";
-
-  return <LandingClient defaultLang={defaultLang} />;
+export default function LandingPage() {
+  return <LandingClient />;
 }

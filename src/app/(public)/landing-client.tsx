@@ -2,98 +2,22 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { CheckCircle2, ArrowUpRight } from "lucide-react";
-import { motion, useMotionValue, useTransform, type Variants } from "motion/react";
+import { CheckCircle2, ArrowUpRight, X } from "lucide-react";
+import { motion, AnimatePresence, useMotionValue, useTransform, type Variants } from "motion/react";
 import { GlowCard } from "@/components/ui/glow-card";
 
-const COPY = {
-  pt: {
-    badge: "FEITO PARA HUNTERS DE BOUNTY CRIPTO",
-    heroGradient: "fluxo de trabalho",
-    heroPre: "Domine seu",
-    heroPost: "com precisão.",
-    heroSub:
-      "Nunca mais perca um bounty por prazo vencido. Organize protocolos, gerencie campanhas e receba alertas automáticos — tudo em uma plataforma feita para hunters sérios.",
-    cta: "Começar grátis",
-    ctaDemo: "Ver Demonstração",
-    login: "Entrar",
-    featuresTitle: "Ferramentas de Próxima Geração",
-    featuresSub: "Arquitetura modular para escalabilidade infinita.",
-    f1Title: "Timeline",
-    f1Desc: "Visualize o ciclo de vida completo de seus projetos com precisão temporal absoluta.",
-    f1Cta: "EXPLORAR",
-    f2Title: "Canvas",
-    f2Desc: "Uma tela infinita para mapear protocolos complexos e fluxos de automação sem limites.",
-    f2Cta: "CONFIGURAR",
-    f3Title: "Reminders",
-    f3Desc: "Alertas inteligentes acionados por IA que garantem que nenhuma etapa crítica seja perdida.",
-    f3Cta: "AGENDAR",
-    f6Title: "Referral System",
-    f6Desc: "Indique outros hunters e acumule recompensas. Programa de indicação exclusivo para membros.",
-    f6Cta: "INDICAR",
-    statUptime: "99.9% Up-time",
-    statUptimeDesc:
-      "Nossa infraestrutura distribuída garante que sua equipe nunca pare, não importa onde estejam.",
-    statOrgs: "50k+",
-    statOrgsLabel: "ORGANIZAÇÕES ATIVAS",
-    statLatency: "2.4s",
-    statLatencyLabel: "LATÊNCIA MÉDIA",
-    statGlobal: "Global Ready",
-    footerCopy: "BOUNTY WORKFLOW. TODOS OS DIREITOS RESERVADOS.",
-    footerPrivacy: "Privacidade",
-    footerTerms: "Termos de Uso",
-    footerStatus: "Status do Sistema",
-    navHow: "Como funciona",
-    navCampaigns: "Campaigns",
-    navProtocols: "Protocols",
-  },
-  en: {
-    badge: "BUILT FOR CRYPTO BOUNTY HUNTERS",
-    heroGradient: "workflow",
-    heroPre: "Master your",
-    heroPost: "with precision.",
-    heroSub:
-      "Never miss a bounty deadline again. Organize protocols, manage campaigns and receive automatic alerts — all in one platform built for serious hunters.",
-    cta: "Start for free",
-    ctaDemo: "See Demo",
-    login: "Sign in",
-    featuresTitle: "Next Generation Tools",
-    featuresSub: "Modular architecture for infinite scalability.",
-    f1Title: "Timeline",
-    f1Desc: "Visualize the complete lifecycle of your projects with absolute temporal precision.",
-    f1Cta: "EXPLORE",
-    f2Title: "Canvas",
-    f2Desc: "An infinite canvas to map complex protocols and automation flows without limits.",
-    f2Cta: "CONFIGURE",
-    f3Title: "Reminders",
-    f3Desc: "AI-triggered smart alerts that ensure no critical step is ever missed.",
-    f3Cta: "SCHEDULE",
-    f6Title: "Referral System",
-    f6Desc: "Invite other hunters and earn rewards. Exclusive referral program for members.",
-    f6Cta: "REFER",
-    statUptime: "99.9% Up-time",
-    statUptimeDesc:
-      "Our distributed infrastructure ensures your team never stops, no matter where in the universe they are.",
-    statOrgs: "50k+",
-    statOrgsLabel: "ACTIVE ORGANIZATIONS",
-    statLatency: "2.4s",
-    statLatencyLabel: "AVERAGE LATENCY",
-    statGlobal: "Global Ready",
-    footerCopy: "BOUNTY WORKFLOW. ALL RIGHTS RESERVED.",
-    footerPrivacy: "Privacy Policy",
-    footerTerms: "Terms of Service",
-    footerStatus: "System Status",
-    navHow: "How it works",
-    navCampaigns: "Campaigns",
-    navProtocols: "Protocols",
-  },
-} as const;
+export function LandingClient() {
+  const [showDemo, setShowDemo] = useState(false);
+  const [cookieAccepted, setCookieAccepted] = useState(true);
 
-type Lang = "pt" | "en";
+  useEffect(() => {
+    setCookieAccepted(localStorage.getItem("cookie_consent") === "1");
+  }, []);
 
-export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
-  const [lang, setLang] = useState<Lang>(defaultLang);
-  const t = COPY[lang];
+  function acceptCookies() {
+    localStorage.setItem("cookie_consent", "1");
+    setCookieAccepted(true);
+  }
 
   return (
     <div
@@ -132,6 +56,7 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             Bounty Workflow
           </span>
         </Link>
+
         <style>{`
           @keyframes goldShimmerLanding {
             0% { background-position: 200% center; opacity: 0; }
@@ -140,47 +65,36 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             80% { opacity: 0; }
             100% { background-position: -200% center; opacity: 0; }
           }
+          @keyframes heroGoldShimmer {
+            0% { background-position: 200% center; opacity: 0; }
+            15% { opacity: 1; }
+            50% { background-position: -200% center; opacity: 0.7; }
+            85% { opacity: 0; }
+            100% { background-position: -200% center; opacity: 0; }
+          }
         `}</style>
 
         <nav className="hidden md:flex items-center gap-8">
           <Link href="/como-funciona" className="text-[#ff7b33] text-sm font-medium hover:text-[#ffb59a] transition-colors">
-            {t.navHow}
+            Como funciona
           </Link>
           <Link href="/campaigns" className="text-zinc-400 text-sm hover:text-[#ff7b33] transition-colors">
-            {t.navCampaigns}
+            Campaigns
           </Link>
           <Link href="/protocols" className="text-zinc-400 text-sm hover:text-[#ff7b33] transition-colors">
-            {t.navProtocols}
+            Protocols
           </Link>
         </nav>
 
         <div className="flex items-center gap-3">
-          {/* Language switcher — PT-BR | EN */}
-          <div className="flex items-center rounded border border-zinc-700/60 bg-zinc-900/40 overflow-hidden text-[10px] font-bold uppercase tracking-widest">
-            <button
-              type="button"
-              onClick={() => setLang("pt")}
-              className={`px-2.5 py-1.5 transition-all ${lang === "pt" ? "bg-[#e9c349] text-zinc-900" : "text-zinc-500 hover:text-[#e9c349]"}`}
-            >
-              PT-BR
-            </button>
-            <span className="text-zinc-700">|</span>
-            <button
-              type="button"
-              onClick={() => setLang("en")}
-              className={`px-2.5 py-1.5 transition-all ${lang === "en" ? "bg-[#e9c349] text-zinc-900" : "text-zinc-500 hover:text-[#e9c349]"}`}
-            >
-              EN
-            </button>
-          </div>
           <Link href="/auth/login" className="text-zinc-400 text-sm hover:text-[#ff7b33] transition-colors">
-            {t.login}
+            Entrar
           </Link>
           <Link
             href="/auth/signup"
             className="px-5 py-2 bg-[#ff5c00] text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-[#ff7b33] hover:shadow-[0_0_20px_rgba(255,92,0,0.4)] transition-all duration-300 active:scale-95"
           >
-            {t.cta}
+            Começar grátis
           </Link>
         </div>
       </header>
@@ -191,19 +105,46 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         {/* ── Hero ── */}
         <section className="relative px-6 mb-32 max-w-[1400px] mx-auto w-full">
           <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-            {/* Hero logo */}
-            <div className="mb-10 relative">
+
+            {/* Hero logo — featured with golden shimmer */}
+            <div className="mb-12 relative flex flex-col items-center">
+              {/* Glow radial behind the logo */}
               <div
-                className="absolute inset-0 blur-3xl opacity-30 pointer-events-none"
-                style={{ background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255,92,0,0.4) 0%, transparent 70%)" }}
+                className="absolute pointer-events-none"
+                style={{
+                  width: "340px",
+                  height: "340px",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  background: "radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255,92,0,0.28) 0%, rgba(233,195,73,0.10) 50%, transparent 75%)",
+                  filter: "blur(20px)",
+                }}
               />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo-horizontal.png"
-                alt="Bounty Workflow"
-                className="w-full max-w-2xl object-contain relative z-10"
-                style={{ filter: "drop-shadow(0 0 24px rgba(255,92,0,0.35))" }}
-              />
+              <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo-final.png"
+                  alt="Bounty Workflow"
+                  className="relative z-10 rounded-[28px]"
+                  style={{
+                    width: "160px",
+                    height: "160px",
+                    objectFit: "contain",
+                    filter: "drop-shadow(0 0 28px rgba(255,92,0,0.45)) drop-shadow(0 0 8px rgba(233,195,73,0.3))",
+                    boxShadow: "0 0 0 1px rgba(233,195,73,0.18), 0 8px 40px rgba(0,0,0,0.7)",
+                  }}
+                />
+                {/* Golden shimmer overlay */}
+                <div
+                  className="absolute inset-0 rounded-[28px] pointer-events-none z-20"
+                  style={{
+                    background: "linear-gradient(110deg, transparent 15%, rgba(233,195,73,0.65) 50%, transparent 85%)",
+                    backgroundSize: "200% 100%",
+                    animation: "heroGoldShimmer 4s ease-in-out infinite",
+                  }}
+                />
+              </div>
             </div>
 
             {/* Badge */}
@@ -214,13 +155,13 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                 style={{ boxShadow: "0 0 8px #ff5c00" }}
               />
               <span className="text-[11px] font-bold uppercase tracking-widest text-[#e9c349]">
-                {t.badge}
+                FEITO PARA HUNTERS DE BOUNTY CRIPTO
               </span>
             </div>
 
             {/* Headline */}
             <h1 className="text-[52px] sm:text-[64px] font-bold tracking-tight leading-[1.1] text-on-surface mb-6">
-              {t.heroPre}{" "}
+              Domine seu{" "}
               <span
                 style={{
                   background: "linear-gradient(135deg, #ffb59a 0%, #ff5c00 100%)",
@@ -228,13 +169,13 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                {t.heroGradient}
+                fluxo de trabalho
               </span>{" "}
-              {t.heroPost}
+              com precisão.
             </h1>
 
             <p className="text-base text-tertiary max-w-2xl leading-relaxed mb-12">
-              {t.heroSub}
+              Nunca mais perca um bounty por prazo vencido. Organize protocolos, gerencie campanhas e receba alertas automáticos — tudo em uma plataforma feita para hunters sérios.
             </p>
 
             {/* CTAs */}
@@ -243,15 +184,17 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                 href="/auth/signup"
                 className="px-8 py-4 bg-[#ff5c00] text-white text-xs font-bold uppercase tracking-widest rounded hover:brightness-110 hover:shadow-[0_0_30px_rgba(255,92,0,0.4)] transition-all duration-300 active:scale-95"
               >
-                {t.cta}
+                Começar grátis
               </Link>
-              <Link
-                href="/como-funciona"
-                className="px-8 py-4 text-on-surface text-xs font-bold uppercase tracking-widest rounded border border-[#e9c349]/30 hover:bg-surface-container-highest transition-all duration-300"
+              <button
+                type="button"
+                onClick={() => setShowDemo(true)}
+                className="px-8 py-4 text-on-surface text-xs font-bold uppercase tracking-widest rounded border border-[#e9c349]/30 hover:bg-surface-container-highest transition-all duration-300 flex items-center gap-2"
                 style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}
               >
-                {t.ctaDemo}
-              </Link>
+                <span className="material-symbols-outlined text-[16px] text-[#e9c349]">play_circle</span>
+                Ver Demonstração
+              </button>
             </div>
 
             {/* Hero dashboard mockup */}
@@ -267,7 +210,6 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                 }}
               >
                 <DashboardMockup />
-                {/* Animated orange gradient overlay */}
                 <div
                   className="pointer-events-none absolute inset-0 rounded-xl animate-dash-glow"
                   style={{
@@ -292,14 +234,12 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         >
           <div className="max-w-[1400px] mx-auto px-12 py-8 flex flex-col sm:flex-row items-center justify-center gap-0 divide-y sm:divide-y-0 sm:divide-x divide-[rgba(255,92,0,0.1)]">
             {[
-              { value: "500+", label: lang === "pt" ? "Hunters organizando bounties" : "Hunters organizing bounties", color: "#ff5c00" },
-              { value: "40+", label: lang === "pt" ? "Protocolos suportados" : "Supported protocols", color: "#e9c349" },
-              { value: "87%", label: lang === "pt" ? "Taxa de entrega no prazo" : "On-time delivery rate", color: "text-on-surface" },
+              { value: "500+", label: "Hunters organizando bounties", color: "#ff5c00" },
+              { value: "40+", label: "Protocolos suportados", color: "#e9c349" },
+              { value: "87%", label: "Taxa de entrega no prazo", color: "#ffb59a" },
             ].map((stat) => (
               <div key={stat.label} className="flex flex-col items-center gap-1 px-12 py-4 sm:py-0 text-center">
-                <span className="text-3xl font-bold" style={{ color: stat.color === "text-on-surface" ? undefined : stat.color, ...(stat.color === "text-on-surface" ? {} : {}) }}>
-                  {stat.value}
-                </span>
+                <span className="text-3xl font-bold" style={{ color: stat.color }}>{stat.value}</span>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">{stat.label}</span>
               </div>
             ))}
@@ -309,7 +249,7 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         {/* ── Features Bento ── */}
         <section className="mb-32 max-w-[1400px] mx-auto px-12">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-on-surface mb-3">{t.featuresTitle}</h2>
+            <h2 className="text-4xl font-bold text-on-surface mb-3">Ferramentas de Próxima Geração</h2>
             <p
               className="text-xl font-semibold mb-3"
               style={{
@@ -320,7 +260,7 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             >
               Orchestrate Work. Ship Faster.
             </p>
-            <p className="text-sm text-tertiary">{t.featuresSub}</p>
+            <p className="text-sm text-tertiary">Arquitetura modular para escalabilidade infinita.</p>
           </div>
 
           <motion.div
@@ -334,24 +274,18 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             <div className="grid gap-5 md:grid-cols-3">
               <motion.div className="md:col-span-1" variants={fadeInUp}>
                 <MotionBentoCard
-                  title={lang === "pt" ? "Rede de Protocolos" : "Protocol Network"}
-                  description={lang === "pt"
-                    ? "Conectado aos maiores protocolos DeFi e NFT do ecossistema. Um catálogo vivo, sempre atualizado."
-                    : "Connected to the leading DeFi and NFT protocols in the ecosystem. A living catalog, always up to date."}
+                  title="Rede de Protocolos"
+                  description="Conectado aos maiores protocolos DeFi e NFT do ecossistema. Um catálogo vivo, sempre atualizado."
                   feature="protocols"
                   href="/auth/signup"
                 />
               </motion.div>
               <motion.div className="md:col-span-2" variants={fadeInUp}>
                 <MotionBentoCard
-                  title={lang === "pt" ? "Gestão de Campanhas" : "Campaign Management"}
-                  description={lang === "pt"
-                    ? "Orquestre cada campanha de bounty do início ao fim com total visibilidade e controle."
-                    : "Orchestrate every bounty campaign from start to finish with full visibility and control."}
+                  title="Gestão de Campanhas"
+                  description="Orquestre cada campanha de bounty do início ao fim com total visibilidade e controle."
                   feature="spotlight"
-                  spotlightItems={lang === "pt"
-                    ? ["Reordenação de etapas por drag & drop", "Fluxo multi-status (Todo → Em Progresso → Concluído)", "Campanhas vinculadas a protocolos", "Rastreamento de prazo com alertas", "Progresso visual por etapa"]
-                    : ["Drag & drop step reordering", "Multi-status flow (Todo → In Progress → Done)", "Protocol-linked campaigns", "Deadline proximity tracking", "Visual progress per step"]}
+                  spotlightItems={["Reordenação de etapas por drag & drop", "Fluxo multi-status (Todo → Em Progresso → Concluído)", "Campanhas vinculadas a protocolos", "Rastreamento de prazo com alertas", "Progresso visual por etapa"]}
                   href="/auth/signup"
                 />
               </motion.div>
@@ -361,32 +295,28 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             <div className="grid gap-5 md:grid-cols-3">
               <motion.div className="md:col-span-2" variants={fadeInUp}>
                 <MotionBentoCard
-                  title={lang === "pt" ? "Alertas Inteligentes" : "Smart Reminders"}
-                  description={lang === "pt"
-                    ? "Sistema de alertas ciente de prazos que mantém sua equipe sempre no ritmo certo."
-                    : "Deadline-aware alert system that keeps your team consistently on track."}
+                  title="Alertas Inteligentes"
+                  description="Sistema de alertas ciente de prazos que mantém sua equipe sempre no ritmo certo."
                   feature="metrics"
                   metrics={[
-                    { label: lang === "pt" ? "Cobertura de prazos" : "Deadline coverage", value: 95, suffix: "%" },
-                    { label: lang === "pt" ? "Entrega no prazo" : "On-time delivery", value: 87, suffix: "%" },
-                    { label: lang === "pt" ? "Resposta a alertas" : "Alert response rate", value: 78, suffix: "%" },
+                    { label: "Cobertura de prazos", value: 95, suffix: "%" },
+                    { label: "Entrega no prazo", value: 87, suffix: "%" },
+                    { label: "Resposta a alertas", value: 78, suffix: "%" },
                   ]}
                   href="/auth/signup"
                 />
               </motion.div>
               <motion.div className="md:col-span-1" variants={fadeInUp}>
                 <MotionBentoCard
-                  title={lang === "pt" ? "Ciclo do Bounty" : "Bounty Lifecycle"}
-                  description={lang === "pt"
-                    ? "Da descoberta ao pagamento, cada etapa rastreada em tempo real."
-                    : "From discovery to payout, every stage tracked in real time."}
+                  title="Ciclo do Bounty"
+                  description="Da descoberta ao pagamento, cada etapa rastreada em tempo real."
                   feature="timeline"
                   timeline={[
-                    { year: "01", event: lang === "pt" ? "Protocolo atribuído & campanha criada" : "Protocol assigned & campaign created" },
-                    { year: "02", event: lang === "pt" ? "Etapas definidas com prazos" : "Steps defined with deadlines" },
-                    { year: "03", event: lang === "pt" ? "Em execução — alertas ativos" : "In progress — alerts active" },
-                    { year: "04", event: lang === "pt" ? "Revisão & submissão" : "Review & submission" },
-                    { year: "05", event: lang === "pt" ? "Pagamento confirmado" : "Payout confirmed" },
+                    { year: "01", event: "Protocolo atribuído & campanha criada" },
+                    { year: "02", event: "Etapas definidas com prazos" },
+                    { year: "03", event: "Em execução — alertas ativos" },
+                    { year: "04", event: "Revisão & submissão" },
+                    { year: "05", event: "Pagamento confirmado" },
                   ]}
                   href="/auth/signup"
                 />
@@ -397,36 +327,27 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
             <div className="grid gap-5 md:grid-cols-3">
               <motion.div className="md:col-span-1" variants={fadeInUp}>
                 <MotionBentoCard
-                  title={lang === "pt" ? "Organização Total" : "Total Organization"}
-                  description={lang === "pt"
-                    ? "Protocolos, steps, links e prazos em um só lugar. Zero planilha, zero caos."
-                    : "Protocols, steps, links and deadlines in one place. Zero spreadsheets, zero chaos."}
+                  title="Organização Total"
+                  description="Protocolos, steps, links e prazos em um só lugar. Zero planilha, zero caos."
                   feature="spotlight"
-                  spotlightItems={lang === "pt"
-                    ? ["Links de evidência por campanha", "Steps com status e prazos", "Histórico completo de submissões", "Protocolos organizados por categoria"]
-                    : ["Evidence links per campaign", "Steps with status and deadlines", "Complete submission history", "Protocols organized by category"]}
+                  spotlightItems={["Links de evidência por campanha", "Steps com status e prazos", "Histórico completo de submissões", "Protocolos organizados por categoria"]}
                   href="/auth/signup"
                 />
               </motion.div>
               <motion.div className="md:col-span-1" variants={fadeInUp}>
                 <MotionBentoCard
-                  title={lang === "pt" ? "Sistema de Indicação" : "Referral System"}
-                  description={lang === "pt"
-                    ? "Indique outros hunters e multiplique suas recompensas. Programa exclusivo para membros."
-                    : "Invite hunters and multiply your rewards. Exclusive program for members."}
+                  title="Sistema de Indicação"
+                  description="Indique outros hunters e multiplique suas recompensas. Programa exclusivo para membros."
                   feature="counter"
-                  statistic={{ value: "2.4×", label: lang === "pt" ? "MULTIPLICADOR DE RECOMPENSA" : "REWARD MULTIPLIER", start: 1.8, end: 2.4, suffix: "×" }}
+                  statistic={{ value: "2.4×", label: "MULTIPLICADOR DE RECOMPENSA", start: 1.8, end: 2.4, suffix: "×" }}
                   href="/auth/signup"
                 />
               </motion.div>
               <motion.div className="md:col-span-1" variants={fadeInUp}>
                 <MotionBentoCard
-                  title={lang === "pt" ? "Canvas Infinito" : "Infinite Canvas"}
-                  description={lang === "pt"
-                    ? "Uma tela infinita para mapear protocolos complexos e automações sem nenhum limite."
-                    : "An infinite canvas to map complex protocols and automation flows without limits."}
-                  feature="chart"
-                  statistic={{ value: "∞", label: lang === "pt" ? "NÓS NO CANVAS" : "CANVAS NODES", start: 70, end: 100, suffix: "+" }}
+                  title="Bounty AI — Algoritmo X"
+                  description="Analise seus posts com o algoritmo Phoenix (xAI 2026) antes de publicar. Score 0-100 em tempo real."
+                  feature="bountyai"
                   href="/auth/signup"
                 />
               </motion.div>
@@ -437,12 +358,8 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         {/* ── Pricing ── */}
         <section className="mb-24 max-w-[1400px] mx-auto px-12">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-on-surface mb-3">
-              {lang === "pt" ? "Simples e direto" : "Simple and direct"}
-            </h2>
-            <p className="text-sm text-tertiary">
-              {lang === "pt" ? "Um plano. Sem surpresas." : "One plan. No surprises."}
-            </p>
+            <h2 className="text-4xl font-bold text-on-surface mb-3">Simples e direto</h2>
+            <p className="text-sm text-tertiary">Um plano. Sem surpresas.</p>
           </div>
 
           <div className="flex justify-center">
@@ -454,35 +371,28 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                 boxShadow: "0 0 60px rgba(255,92,0,0.12), inset 0 0 30px rgba(255,92,0,0.04)",
               }}
             >
-              {/* Glow top */}
               <div
                 className="pointer-events-none absolute inset-x-0 top-0 h-px"
                 style={{ background: "linear-gradient(90deg, transparent, rgba(255,92,0,0.6), transparent)" }}
               />
 
-              {/* Badge */}
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-[#ff5c00] border border-[#ff5c00]/40 bg-[rgba(255,92,0,0.08)]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#ff5c00] shadow-[0_0_6px_#ff5c00]" />
                   PRO
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-[#e9c349]">
-                  {lang === "pt" ? "14 DIAS GRÁTIS" : "14 DAYS FREE"}
+                  14 DIAS GRÁTIS
                 </span>
               </div>
 
-              {/* Price */}
               <div className="flex items-end gap-2">
                 <span className="text-5xl font-bold text-on-surface">R$ 29,90</span>
-                <span className="text-sm text-tertiary mb-1.5">/{lang === "pt" ? "mês" : "month"}</span>
+                <span className="text-sm text-tertiary mb-1.5">/mês</span>
               </div>
 
-              {/* Features */}
               <ul className="flex flex-col gap-3">
-                {(lang === "pt"
-                  ? ["Campanhas ilimitadas", "Alertas automáticos de prazo", "Referral system completo", "Todos os protocolos suportados", "Suporte prioritário"]
-                  : ["Unlimited campaigns", "Automatic deadline alerts", "Full referral system", "All supported protocols", "Priority support"]
-                ).map((f) => (
+                {["Campanhas ilimitadas", "Alertas automáticos de prazo", "Bounty AI — Análise de Conteúdo", "Referral system completo", "Todos os protocolos suportados", "Suporte prioritário"].map((f) => (
                   <li key={f} className="flex items-center gap-3 text-sm text-on-surface">
                     <CheckCircle2 className="h-4 w-4 shrink-0 text-[#ff5c00]" />
                     {f}
@@ -490,18 +400,15 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
                 ))}
               </ul>
 
-              {/* CTA */}
               <Link
                 href="/auth/signup"
                 className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-sm font-bold uppercase tracking-widest rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,92,0,0.4)] active:scale-95"
               >
-                {lang === "pt" ? "Começar grátis" : "Start for free"}
+                Começar grátis
               </Link>
 
               <p className="text-center text-[10px] text-tertiary">
-                {lang === "pt"
-                  ? "14 dias grátis. Cancele a qualquer momento."
-                  : "14 days free. Cancel anytime."}
+                14 dias grátis. Cancele a qualquer momento.
               </p>
             </div>
           </div>
@@ -520,22 +427,294 @@ export function LandingClient({ defaultLang }: { defaultLang: Lang }) {
         }}
       >
         <p className="text-zinc-400 text-[10px] uppercase tracking-[0.2em] font-semibold">
-          © {new Date().getFullYear()} {t.footerCopy}
+          © {new Date().getFullYear()} BOUNTY WORKFLOW. TODOS OS DIREITOS RESERVADOS.
         </p>
         <div className="flex gap-8">
           <Link href="/legal/privacidade" className="text-zinc-600 text-[10px] uppercase tracking-[0.2em] font-semibold hover:text-[#e9c349] transition-colors">
-            {t.footerPrivacy}
+            Privacidade
           </Link>
           <Link href="/legal/termos" className="text-zinc-600 text-[10px] uppercase tracking-[0.2em] font-semibold hover:text-[#e9c349] transition-colors">
-            {t.footerTerms}
+            Termos de Uso
           </Link>
           <span className="text-zinc-600 text-[10px] uppercase tracking-[0.2em] font-semibold flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#ff5c00]" />
-            {t.footerStatus}
+            Status do Sistema
           </span>
         </div>
       </footer>
+
+      {/* ── Cookie Consent ── */}
+      <AnimatePresence>
+        {!cookieAccepted && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="fixed bottom-0 left-0 right-0 z-[100] px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 border-t border-zinc-800"
+            style={{ background: "rgba(10,10,10,0.97)", backdropFilter: "blur(20px)" }}
+          >
+            <div className="flex items-start gap-3 flex-1">
+              <span className="material-symbols-outlined text-[20px] text-[#e9c349] shrink-0 mt-0.5">cookie</span>
+              <p className="text-[12px] text-zinc-400 leading-relaxed">
+                Usamos cookies essenciais para autenticação e cookies analíticos para melhorar a plataforma. Ao continuar, você concorda com nossa{" "}
+                <Link href="/legal/privacidade" className="text-[#e9c349] hover:underline">
+                  Política de Privacidade
+                </Link>
+                .
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <Link
+                href="/legal/privacidade"
+                className="text-[11px] font-bold uppercase tracking-widest text-zinc-500 hover:text-zinc-300 transition-colors"
+              >
+                Saiba mais
+              </Link>
+              <button
+                type="button"
+                onClick={acceptCookies}
+                className="px-5 py-2 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-[11px] font-bold uppercase tracking-widest rounded transition-all"
+              >
+                Aceitar
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Demo Pipeline Modal ── */}
+      <AnimatePresence>
+        {showDemo && <DemoPipelineModal onClose={() => setShowDemo(false)} />}
+      </AnimatePresence>
     </div>
+  );
+}
+
+/* ── Demo Pipeline Modal ──────────────────────────────────────────── */
+const PIPELINE_STEPS = [
+  {
+    number: "01",
+    icon: "hub",
+    title: "Escolha um Protocolo",
+    desc: "Acesse o Catálogo e selecione o protocolo do bounty — cada um com logo e link oficial.",
+    highlight: false,
+  },
+  {
+    number: "02",
+    icon: "add_circle",
+    title: "Crie uma Campanha",
+    desc: "Nome claro, protocolo selecionado e prazo final definido. Sua campanha nasce organizada.",
+    highlight: false,
+  },
+  {
+    number: "03",
+    icon: "account_tree",
+    title: "Monte o Fluxo de Etapas",
+    desc: "Adicione steps dentro da campanha — cada um com título, data e status independente.",
+    highlight: false,
+  },
+  {
+    number: "04",
+    icon: "edit_note",
+    title: "Gerencie o Status",
+    desc: "Todo → Em Progresso → Concluído. Mude rapidamente sem abrir modais.",
+    highlight: false,
+  },
+  {
+    number: "05",
+    icon: "notifications_active",
+    title: "Configure Lembretes",
+    desc: "Alertas automáticos 48h antes dos prazos. Nunca perca uma entrega crítica.",
+    highlight: false,
+  },
+  {
+    number: "06",
+    icon: "inventory_2",
+    title: "Finalize e Arquive",
+    desc: "Campanha entregue? Arquive com um clique. Histórico completo como portfólio.",
+    highlight: false,
+  },
+  {
+    number: "07",
+    icon: "bolt",
+    title: "Bounty AI — Algoritmo X",
+    desc: "Analise cada post antes de publicar. Score 0-100 baseado no algoritmo Phoenix (xAI, 2026). Detecta links, hashtags, threads e sugere reescrita com IA.",
+    highlight: true,
+  },
+];
+
+function DemoPipelineModal({ onClose }: { onClose: () => void }) {
+  return (
+    <motion.div
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <motion.div
+        className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl"
+        initial={{ scale: 0.95, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.95, y: 20 }}
+        style={{
+          background: "rgba(14,13,13,0.98)",
+          border: "1px solid rgba(255,92,0,0.25)",
+          boxShadow: "0 0 80px rgba(255,92,0,0.15)",
+        }}
+      >
+        {/* Modal header */}
+        <div
+          className="sticky top-0 z-10 flex items-center justify-between px-8 py-5 border-b border-zinc-800/60"
+          style={{ background: "rgba(14,13,13,0.98)", backdropFilter: "blur(20px)" }}
+        >
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#ff5c00] mb-0.5">Pipeline completo</p>
+            <h2 className="text-xl font-bold text-on-surface">Do protocolo ao Bounty AI — 7 passos</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-tertiary hover:text-on-surface hover:bg-zinc-800 transition"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Pipeline */}
+        <div className="px-8 py-8">
+          {/* Connector line */}
+          <div className="relative">
+            <div
+              className="absolute left-[27px] top-0 bottom-0 w-[2px]"
+              style={{ background: "linear-gradient(to bottom, rgba(255,92,0,0.5), rgba(233,195,73,0.6))" }}
+            />
+
+            <div className="flex flex-col gap-0">
+              {PIPELINE_STEPS.map((step, i) => (
+                <motion.div
+                  key={step.number}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.06 * i, duration: 0.35 }}
+                  className={`relative flex gap-5 pb-6 ${step.highlight ? "pb-4" : ""}`}
+                >
+                  {/* Icon node */}
+                  <div
+                    className="relative z-10 shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
+                    style={
+                      step.highlight
+                        ? {
+                            background: "linear-gradient(135deg, rgba(255,92,0,0.2), rgba(233,195,73,0.15))",
+                            border: "2px solid rgba(233,195,73,0.5)",
+                            boxShadow: "0 0 24px rgba(233,195,73,0.2)",
+                          }
+                        : {
+                            background: "rgba(255,92,0,0.08)",
+                            border: "1px solid rgba(255,92,0,0.2)",
+                          }
+                    }
+                  >
+                    <span
+                      className="material-symbols-outlined text-[24px]"
+                      style={{ color: step.highlight ? "#e9c349" : "#ff5c00" }}
+                    >
+                      {step.icon}
+                    </span>
+                  </div>
+
+                  {/* Content */}
+                  <div
+                    className={`flex-1 rounded-xl p-4 ${step.highlight ? "relative overflow-hidden" : ""}`}
+                    style={
+                      step.highlight
+                        ? {
+                            background: "linear-gradient(135deg, rgba(255,92,0,0.07), rgba(233,195,73,0.05))",
+                            border: "1px solid rgba(233,195,73,0.3)",
+                            boxShadow: "0 0 30px rgba(233,195,73,0.06)",
+                          }
+                        : {
+                            background: "rgba(255,255,255,0.02)",
+                            border: "1px solid rgba(255,255,255,0.05)",
+                          }
+                    }
+                  >
+                    {step.highlight && (
+                      <div
+                        className="absolute inset-x-0 top-0 h-[1px]"
+                        style={{ background: "linear-gradient(90deg, transparent, rgba(233,195,73,0.6), transparent)" }}
+                      />
+                    )}
+                    <div className="flex items-center gap-2 mb-1">
+                      <span
+                        className="text-[10px] font-black tracking-widest px-2 py-0.5 rounded-full"
+                        style={
+                          step.highlight
+                            ? { background: "rgba(233,195,73,0.15)", color: "#e9c349", border: "1px solid rgba(233,195,73,0.3)" }
+                            : { background: "rgba(255,92,0,0.1)", color: "#ff5c00", border: "1px solid rgba(255,92,0,0.2)" }
+                        }
+                      >
+                        STEP {step.number}
+                      </span>
+                      {step.highlight && (
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#e9c349] flex items-center gap-1">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#e9c349] animate-pulse" />
+                          Destaque
+                        </span>
+                      )}
+                    </div>
+                    <h3
+                      className="font-semibold text-base mb-1"
+                      style={{ color: step.highlight ? "#e9c349" : "var(--color-on-surface)" }}
+                    >
+                      {step.title}
+                    </h3>
+                    <p className="text-sm text-tertiary leading-relaxed">{step.desc}</p>
+                    {step.highlight && (
+                      <div className="mt-3 flex gap-3">
+                        <div className="flex items-center gap-1.5 rounded-lg px-3 py-1.5" style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}>
+                          <span className="w-2 h-2 rounded-full bg-[#22c55e]" />
+                          <span className="text-[10px] font-bold text-[#22c55e] uppercase tracking-widest">Score A — 90/100</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 rounded-lg px-3 py-1.5" style={{ background: "rgba(255,92,0,0.08)", border: "1px solid rgba(255,92,0,0.2)" }}>
+                          <span className="material-symbols-outlined text-[12px] text-[#ff5c00]">auto_fix_high</span>
+                          <span className="text-[10px] font-bold text-[#ff5c00] uppercase tracking-widest">Reescrita com IA</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* CTA bottom */}
+        <div className="px-8 pb-8 flex gap-4">
+          <Link
+            href="/auth/signup"
+            onClick={onClose}
+            className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-sm font-bold uppercase tracking-widest rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,92,0,0.4)]"
+          >
+            Começar grátis — 14 dias
+          </Link>
+          <Link
+            href="/como-usar"
+            onClick={onClose}
+            className="px-6 py-3.5 text-sm font-bold uppercase tracking-widest rounded-lg border border-zinc-700 text-tertiary hover:text-on-surface hover:border-zinc-500 transition-all"
+          >
+            Tutorial completo
+          </Link>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -689,6 +868,44 @@ function BentoProtocols() {
   );
 }
 
+function BentoAI() {
+  return (
+    <div className="mt-4 flex flex-col gap-2">
+      {/* Score bar mock */}
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">Score Phoenix</span>
+        <span className="text-lg font-bold" style={{ color: "#22c55e" }}>82<span className="text-xs text-tertiary font-normal">/100</span></span>
+      </div>
+      <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+        <motion.div
+          className="h-full rounded-full"
+          style={{ background: "#22c55e" }}
+          initial={{ width: 0 }}
+          animate={{ width: "82%" }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-1.5 mt-1">
+        {[
+          { label: "Thread", ok: true },
+          { label: "Sem links", ok: true },
+          { label: "Hashtags 2", ok: true },
+          { label: "3 Emojis", ok: true },
+        ].map((h) => (
+          <div key={h.label} className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5" style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.15)" }}>
+            <span className="material-symbols-outlined text-[11px] text-[#22c55e]">check_circle</span>
+            <span className="text-[10px] font-semibold text-[#22c55e]">{h.label}</span>
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center gap-1.5 mt-1 rounded-lg px-3 py-2" style={{ background: "rgba(255,92,0,0.07)", border: "1px solid rgba(255,92,0,0.2)" }}>
+        <span className="material-symbols-outlined text-[13px] text-[#ff5c00]">auto_fix_high</span>
+        <span className="text-[10px] font-bold text-[#ff5c00] uppercase tracking-widest">Versão otimizada disponível</span>
+      </div>
+    </div>
+  );
+}
+
 /* ── Main animated bento card ─────────────────────────────────────── */
 function MotionBentoCard({
   title,
@@ -702,7 +919,7 @@ function MotionBentoCard({
 }: {
   title: string;
   description: string;
-  feature: "spotlight" | "metrics" | "timeline" | "counter" | "chart" | "protocols";
+  feature: "spotlight" | "metrics" | "timeline" | "counter" | "chart" | "protocols" | "bountyai";
   spotlightItems?: string[];
   timeline?: Array<{ year: string; event: string }>;
   metrics?: Array<{ label: string; value: number; suffix?: string }>;
@@ -713,6 +930,8 @@ function MotionBentoCard({
   const y = useMotionValue(0);
   const rotateX = useTransform(y, [-100, 100], [2, -2]);
   const rotateY = useTransform(x, [-100, 100], [-2, 2]);
+
+  const isBountyAI = feature === "bountyai";
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const r = e.currentTarget.getBoundingClientRect();
@@ -734,31 +953,67 @@ function MotionBentoCard({
       <Link
         href={href}
         className="group relative flex h-full min-h-[22rem] flex-col gap-3 rounded-2xl p-6 transition-all duration-500"
-        style={{
-          background: "rgba(20,19,19,0.9)",
-          backdropFilter: "blur(20px)",
-          border: "1px solid rgba(255,92,0,0.14)",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-          transform: "translateZ(0)",
-        }}
+        style={
+          isBountyAI
+            ? {
+                background: "linear-gradient(135deg, rgba(20,19,19,0.95), rgba(30,25,18,0.95))",
+                backdropFilter: "blur(20px)",
+                border: "1px solid rgba(233,195,73,0.25)",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.4), inset 0 0 20px rgba(233,195,73,0.03)",
+                transform: "translateZ(0)",
+              }
+            : {
+                background: "rgba(20,19,19,0.9)",
+                backdropFilter: "blur(20px)",
+                border: "1px solid rgba(255,92,0,0.14)",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+                transform: "translateZ(0)",
+              }
+        }
         onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.border = "1px solid rgba(255,92,0,0.35)";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(255,92,0,0.12)";
+          (e.currentTarget as HTMLElement).style.border = isBountyAI
+            ? "1px solid rgba(233,195,73,0.5)"
+            : "1px solid rgba(255,92,0,0.35)";
+          (e.currentTarget as HTMLElement).style.boxShadow = isBountyAI
+            ? "0 8px 32px rgba(233,195,73,0.1)"
+            : "0 8px 32px rgba(255,92,0,0.12)";
         }}
         onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.border = "1px solid rgba(255,92,0,0.14)";
-          (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(0,0,0,0.4)";
+          (e.currentTarget as HTMLElement).style.border = isBountyAI
+            ? "1px solid rgba(233,195,73,0.25)"
+            : "1px solid rgba(255,92,0,0.14)";
+          (e.currentTarget as HTMLElement).style.boxShadow = isBountyAI
+            ? "0 4px 20px rgba(0,0,0,0.4), inset 0 0 20px rgba(233,195,73,0.03)"
+            : "0 4px 20px rgba(0,0,0,0.4)";
         }}
       >
-        {/* Subtle top gradient sheen */}
+        {/* Top gradient sheen */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-[1px] rounded-t-2xl"
+          style={{
+            background: isBountyAI
+              ? "linear-gradient(90deg, transparent, rgba(233,195,73,0.5), transparent)"
+              : "linear-gradient(90deg, transparent, rgba(255,92,0,0.2), transparent)",
+          }}
+        />
         <div
           className="pointer-events-none absolute inset-0 rounded-2xl"
-          style={{ background: "linear-gradient(to bottom, rgba(255,92,0,0.04) 0%, transparent 40%)" }}
+          style={{ background: isBountyAI ? "linear-gradient(to bottom, rgba(233,195,73,0.04) 0%, transparent 40%)" : "linear-gradient(to bottom, rgba(255,92,0,0.04) 0%, transparent 40%)" }}
         />
 
         <div className="relative z-10 flex h-full flex-col" style={{ transform: "translateZ(20px)" }}>
           <div className="flex items-start justify-between mb-1">
-            <h3 className="font-semibold text-xl tracking-tight text-on-surface">{title}</h3>
+            <div className="flex items-center gap-2">
+              {isBountyAI && (
+                <span className="material-symbols-outlined text-[18px] text-[#e9c349]">bolt</span>
+              )}
+              <h3
+                className="font-semibold text-xl tracking-tight"
+                style={{ color: isBountyAI ? "#e9c349" : "var(--color-on-surface)" }}
+              >
+                {title}
+              </h3>
+            </div>
             <ArrowUpRight className="h-5 w-5 text-tertiary opacity-0 transition-opacity duration-200 group-hover:opacity-100 shrink-0 mt-0.5" />
           </div>
           <p className="text-sm text-tertiary leading-relaxed">{description}</p>
@@ -767,6 +1022,7 @@ function MotionBentoCard({
           {feature === "metrics" && metrics && <BentoMetrics metrics={metrics} />}
           {feature === "timeline" && timeline && <BentoTimeline items={timeline} />}
           {feature === "protocols" && <BentoProtocols />}
+          {feature === "bountyai" && <BentoAI />}
           {(feature === "counter" || feature === "chart") && statistic && (
             <div className="mt-auto pt-4">
               <BentoCounter start={statistic.start} end={statistic.end} suffix={statistic.suffix} />
@@ -793,7 +1049,7 @@ function DashboardMockup() {
           <div className="w-2.5 h-2.5 rounded-full bg-zinc-600" />
         </div>
         <div className="flex gap-6">
-          {["Timeline","Campaigns","Protocols","Reminders"].map(label => (
+          {["Timeline","Campaigns","Protocols","Bounty AI"].map(label => (
             <span key={label} className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">{label}</span>
           ))}
         </div>
@@ -808,18 +1064,21 @@ function DashboardMockup() {
             { label: "Protocols", active: false },
             { label: "Dashboard", active: true },
             { label: "Campaigns", active: false },
+            { label: "Bounty AI", active: false, gold: true },
             { label: "Archive", active: false },
             { label: "Reminders", active: false },
-          ].map(({ label, active }) => (
+          ].map(({ label, active, gold }) => (
             <div
               key={label}
               className={`flex items-center gap-2 px-3 py-2 rounded text-[10px] font-bold uppercase tracking-widest ${
                 active
                   ? "text-[#ff5c00] bg-[rgba(255,92,0,0.08)] border-r-2 border-[#ff5c00]"
+                  : gold
+                  ? "text-[#e9c349]"
                   : "text-zinc-600"
               }`}
             >
-              <div className={`w-1.5 h-1.5 rounded-full ${active ? "bg-[#ff5c00]" : "bg-zinc-700"}`} />
+              <div className={`w-1.5 h-1.5 rounded-full ${active ? "bg-[#ff5c00]" : gold ? "bg-[#e9c349]" : "bg-zinc-700"}`} />
               {label}
             </div>
           ))}
