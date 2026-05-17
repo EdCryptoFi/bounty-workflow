@@ -55,6 +55,19 @@ export default function ComoFuncionaPage() {
           <Link href="/como-funciona" className="text-[#ff7b33] text-xs font-medium hover:text-[#ffb59a] transition-colors">
             Como funciona
           </Link>
+          <Link
+            href="/roadmap"
+            className="flex items-center gap-1 text-xs font-medium transition-colors"
+            style={{ color: "#ff5c00" }}
+          >
+            <span
+              className="material-symbols-outlined text-[14px]"
+              style={{ animation: "fireGlowCF 1.5s ease-in-out infinite" }}
+            >
+              local_fire_department
+            </span>
+            Roadmap
+          </Link>
           <Link href="/auth/login" className="text-zinc-400 text-xs hover:text-[#ff7b33] transition-colors">
             Entrar
           </Link>
@@ -65,6 +78,13 @@ export default function ComoFuncionaPage() {
             Começar grátis
           </Link>
         </nav>
+
+        <style>{`
+          @keyframes fireGlowCF {
+            0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 4px rgba(255,92,0,0.3)); }
+            50% { opacity: 1; filter: drop-shadow(0 0 8px rgba(255,92,0,0.7)); }
+          }
+        `}</style>
       </header>
 
       <main className="flex-grow pt-32 pb-24 relative z-10">

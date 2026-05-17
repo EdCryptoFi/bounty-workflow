@@ -72,11 +72,28 @@ export function LandingClient() {
             85% { opacity: 0; }
             100% { background-position: -200% center; opacity: 0; }
           }
+          @keyframes fireGlowNav {
+            0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 4px rgba(255,92,0,0.3)); }
+            50% { opacity: 1; filter: drop-shadow(0 0 8px rgba(255,92,0,0.7)); }
+          }
         `}</style>
 
         <nav className="hidden md:flex items-center gap-8">
           <Link href="/como-funciona" className="text-[#ff7b33] text-sm font-medium hover:text-[#ffb59a] transition-colors">
             Como funciona
+          </Link>
+          <Link
+            href="/roadmap"
+            className="flex items-center gap-1.5 text-sm font-medium transition-colors"
+            style={{ color: "#ff5c00" }}
+          >
+            <span
+              className="material-symbols-outlined text-[18px]"
+              style={{ animation: "fireGlowNav 1.5s ease-in-out infinite" }}
+            >
+              local_fire_department
+            </span>
+            Roadmap
           </Link>
           <Link href="/campaigns" className="text-zinc-400 text-sm hover:text-[#ff7b33] transition-colors">
             Campaigns
