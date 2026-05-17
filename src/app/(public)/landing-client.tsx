@@ -685,46 +685,163 @@ export function LandingClient() {
         </section>
 
         {/* ── Pricing ── */}
-        <section className="max-w-[1400px] mx-auto px-6 lg:px-12" style={{ paddingBottom: 80 }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
+        <section className="max-w-[1400px] mx-auto px-6 lg:px-12" style={{ paddingBottom: 96 }}>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
             <div style={{ fontFamily: "monospace", fontSize: 11, letterSpacing: ".32em", textTransform: "uppercase", color: "#ff8a3a", marginBottom: 12 }}>PLANOS</div>
-            <h2 style={{ fontFamily: "'SF Pro Display','Inter',sans-serif", fontSize: 40, fontWeight: 700, letterSpacing: "-0.03em", margin: "0 0 8px" }}>Simples e direto</h2>
-            <p style={{ fontSize: 14, color: "#9d978d" }}>Um plano. Sem surpresas.</p>
+            <h2 style={{ fontFamily: "'SF Pro Display','Inter',sans-serif", fontSize: 40, fontWeight: 700, letterSpacing: "-0.03em", margin: "0 0 8px" }}>Escolha o seu plano</h2>
+            <p style={{ fontSize: 14, color: "#9d978d" }}>Comece grátis. Escale quando quiser.</p>
           </div>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <GlassCard dark style={{ width: "100%", maxWidth: 440, padding: 32, borderRadius: 28 }}>
-              {/* top gradient line */}
-              <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 1, background: "linear-gradient(90deg, transparent, rgba(255,92,0,0.7), transparent)" }}/>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, height: 26, padding: "0 12px", borderRadius: 999, fontSize: 10, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#ff5c00", background: "rgba(255,92,0,0.08)", border: "1px solid rgba(255,92,0,0.4)" }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff5c00", boxShadow: "0 0 6px #ff5c00", display: "inline-block" }}/>PRO
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, maxWidth: 1000, margin: "0 auto", alignItems: "start" }}>
+
+            {/* ─ Trial ─ */}
+            <GlassCard dark style={{ padding: 28, borderRadius: 24 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, height: 26, padding: "0 12px", borderRadius: 999, fontSize: 10, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#9d978d", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.14)" }}>
+                  TRIAL
                 </span>
-                <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#e9c349" }}>14 DIAS GRÁTIS</span>
               </div>
-              <div style={{ display: "flex", alignItems: "flex-end", gap: 8, marginBottom: 24 }}>
-                <span style={{ fontSize: 48, fontWeight: 700, color: "#fff", letterSpacing: "-.02em" }}>R$ 29,90</span>
-                <span style={{ fontSize: 14, color: "#9d978d", marginBottom: 10 }}>/mês</span>
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 8, marginBottom: 6 }}>
+                <span style={{ fontSize: 42, fontWeight: 700, color: "#fff", letterSpacing: "-.02em" }}>Grátis</span>
               </div>
-              <ul style={{ listStyle: "none", margin: "0 0 24px", padding: 0, display: "flex", flexDirection: "column", gap: 12 }}>
-                {["Campanhas ilimitadas","Alertas automáticos de prazo","Bounty AI — Análise de Conteúdo","Referral system completo","Todos os protocolos suportados","Suporte prioritário"].map((f) => (
-                  <li key={f} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 14, color: "#e7e3dd" }}>
-                    <CheckCircle2 style={{ width: 16, height: 16, flexShrink: 0, color: "#ff5c00" }}/>{f}
+              <p style={{ fontSize: 12, color: "#9d978d", marginBottom: 20 }}>14 dias. Sem cartão de crédito.</p>
+              <ul style={{ listStyle: "none", margin: "0 0 24px", padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+                {[
+                  "Acesso completo ao PRO por 14 dias",
+                  "Campanhas ilimitadas no período",
+                  "Bounty AI incluso no trial",
+                  "Todos os protocolos disponíveis",
+                  "Sem cobrança até o prazo encerrar",
+                ].map((f) => (
+                  <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: "#b0aaa2" }}>
+                    <CheckCircle2 style={{ width: 14, height: 14, flexShrink: 0, color: "#9d978d", marginTop: 2 }}/>{f}
                   </li>
                 ))}
               </ul>
               <Link href="/auth/signup" style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
-                width: "100%", height: 52, borderRadius: 999,
+                width: "100%", height: 46, borderRadius: 999,
+                background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.18)",
+                color: "#e7e3dd", fontSize: 12, fontWeight: 700, textTransform: "uppercase",
+                letterSpacing: ".08em", textDecoration: "none",
+              }}>
+                Começar trial gratuito
+              </Link>
+            </GlassCard>
+
+            {/* ─ PRO ─ */}
+            <GlassCard dark style={{ padding: 28, borderRadius: 24 }}>
+              <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 1, background: "linear-gradient(90deg, transparent, rgba(255,92,0,0.7), transparent)" }}/>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, height: 26, padding: "0 12px", borderRadius: 999, fontSize: 10, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#ff5c00", background: "rgba(255,92,0,0.08)", border: "1px solid rgba(255,92,0,0.4)" }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff5c00", boxShadow: "0 0 6px #ff5c00", display: "inline-block" }}/>PRO
+                </span>
+                <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".08em", color: "#e9c349" }}>MENSAL</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "flex-end", gap: 8, marginBottom: 6 }}>
+                <span style={{ fontSize: 42, fontWeight: 700, color: "#fff", letterSpacing: "-.02em" }}>R$ 39,90</span>
+                <span style={{ fontSize: 13, color: "#9d978d", marginBottom: 9 }}>/mês</span>
+              </div>
+              <p style={{ fontSize: 12, color: "#9d978d", marginBottom: 20 }}>Faturado mensalmente. Cancele quando quiser.</p>
+              <ul style={{ listStyle: "none", margin: "0 0 24px", padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+                {[
+                  "Campanhas ilimitadas",
+                  "Alertas automáticos de prazo",
+                  "Bounty AI — Análise de Conteúdo",
+                  "Referral system completo",
+                  "Todos os protocolos suportados",
+                  "Suporte prioritário",
+                ].map((f) => (
+                  <li key={f} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: "#e7e3dd" }}>
+                    <CheckCircle2 style={{ width: 14, height: 14, flexShrink: 0, color: "#ff5c00", marginTop: 2 }}/>{f}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/auth/signup" style={{
+                display: "flex", alignItems: "center", justifyContent: "center",
+                width: "100%", height: 46, borderRadius: 999,
                 background: "linear-gradient(180deg, #ff9b50 0%, #ff6a14 38%, #d44600 100%)",
-                boxShadow: "0 1px 0 rgba(255,255,255,0.65) inset, 0 8px 22px -6px rgba(255,92,0,0.65)",
-                color: "#fff", fontSize: 13, fontWeight: 700, textTransform: "uppercase",
+                boxShadow: "0 1px 0 rgba(255,255,255,0.55) inset, 0 6px 18px -4px rgba(255,92,0,0.55)",
+                color: "#fff", fontSize: 12, fontWeight: 700, textTransform: "uppercase",
                 letterSpacing: ".08em", textDecoration: "none", position: "relative", overflow: "hidden",
               }}>
-                <span style={{ position: "absolute", left: "6%", right: "6%", top: 3, height: "38%", borderRadius: 999, background: "linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.05))", filter: "blur(.4px)" }}/>
-                <span style={{ position: "relative" }}>Começar grátis</span>
+                <span style={{ position: "absolute", left: "6%", right: "6%", top: 3, height: "36%", borderRadius: 999, background: "linear-gradient(180deg, rgba(255,255,255,0.65), transparent)", filter: "blur(.4px)" }}/>
+                <span style={{ position: "relative" }}>Assinar PRO</span>
               </Link>
-              <p style={{ textAlign: "center", fontSize: 10, color: "#9d978d", marginTop: 12 }}>14 dias grátis. Cancele a qualquer momento.</p>
+              <p style={{ textAlign: "center", fontSize: 10, color: "#9d978d", marginTop: 10 }}>Após 14 dias de trial gratuito.</p>
             </GlassCard>
+
+            {/* ─ Hunter (Anual) ─ */}
+            <div style={{ position: "relative" }}>
+              {/* Glow ring behind card */}
+              <div style={{ position: "absolute", inset: -2, borderRadius: 26, background: "linear-gradient(135deg, #ff5c00, #ff9b50, #ff5c00)", opacity: 0.5, filter: "blur(12px)", zIndex: 0, pointerEvents: "none" }}/>
+              <GlassCard dark style={{ padding: 28, borderRadius: 24, position: "relative", zIndex: 1, border: "1px solid rgba(255,140,60,0.45)" }}>
+                <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 1, background: "linear-gradient(90deg, transparent, rgba(255,160,80,0.9), transparent)" }}/>
+
+                {/* Recomendado badge */}
+                <div style={{ position: "absolute", top: -13, left: "50%", transform: "translateX(-50%)", zIndex: 2 }}>
+                  <span style={{
+                    display: "inline-flex", alignItems: "center", gap: 5,
+                    padding: "4px 14px", borderRadius: 999, fontSize: 9, fontWeight: 800,
+                    letterSpacing: ".14em", textTransform: "uppercase",
+                    background: "linear-gradient(90deg, #ff6a14, #ff9b50)",
+                    color: "#fff", boxShadow: "0 4px 14px rgba(255,92,0,0.55)",
+                  }}>
+                    ★ RECOMENDADO
+                  </span>
+                </div>
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, marginTop: 8 }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, height: 26, padding: "0 12px", borderRadius: 999, fontSize: 10, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#ffb059", background: "rgba(255,140,60,0.12)", border: "1px solid rgba(255,140,60,0.45)" }}>
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ff9b50", boxShadow: "0 0 6px #ff9b50", display: "inline-block" }}/>HUNTER
+                  </span>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".06em", color: "#4ade80", background: "rgba(74,222,128,0.10)", border: "1px solid rgba(74,222,128,0.28)", padding: "2px 8px", borderRadius: 999 }}>
+                    −16% desc.
+                  </span>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "flex-end", gap: 8, marginBottom: 4 }}>
+                  <span style={{ fontSize: 42, fontWeight: 700, color: "#fff", letterSpacing: "-.02em" }}>R$ 400</span>
+                  <span style={{ fontSize: 13, color: "#9d978d", marginBottom: 9 }}>/ano</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                  <span style={{ fontSize: 12, color: "#ffb059", fontWeight: 600 }}>≈ R$ 33,33/mês</span>
+                  <span style={{ fontSize: 11, color: "#9d978d" }}>·</span>
+                  <span style={{ fontSize: 11, color: "#4ade80" }}>Economize R$ 78,80</span>
+                </div>
+                <p style={{ fontSize: 12, color: "#9d978d", marginBottom: 20 }}>Faturado anualmente. Equivale a ~2 meses grátis.</p>
+
+                <ul style={{ listStyle: "none", margin: "0 0 24px", padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+                  {[
+                    { text: "Tudo do PRO mensal incluso", highlight: false },
+                    { text: "Early access — novas features antes de todos", highlight: true },
+                    { text: "Acesso antecipado a protocolos beta", highlight: true },
+                    { text: "Badge exclusivo \"Hunter Verificado\" no perfil", highlight: true },
+                    { text: "Relatórios avançados de performance anual", highlight: false },
+                    { text: "Exportação CSV + JSON das campanhas", highlight: false },
+                    { text: "Suporte VIP — resposta em até 4h", highlight: true },
+                  ].map(({ text, highlight }) => (
+                    <li key={text} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: highlight ? "#ffd9a8" : "#e7e3dd" }}>
+                      <CheckCircle2 style={{ width: 14, height: 14, flexShrink: 0, color: "#ff9b50", marginTop: 2 }}/>{text}
+                    </li>
+                  ))}
+                </ul>
+
+                <Link href="/auth/signup" style={{
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  width: "100%", height: 46, borderRadius: 999,
+                  background: "linear-gradient(180deg, #ffb870 0%, #ff7a1f 38%, #c93e00 100%)",
+                  boxShadow: "0 1px 0 rgba(255,255,255,0.60) inset, 0 8px 24px -4px rgba(255,92,0,0.70)",
+                  color: "#fff", fontSize: 12, fontWeight: 700, textTransform: "uppercase",
+                  letterSpacing: ".08em", textDecoration: "none", position: "relative", overflow: "hidden",
+                }}>
+                  <span style={{ position: "absolute", left: "6%", right: "6%", top: 3, height: "36%", borderRadius: 999, background: "linear-gradient(180deg, rgba(255,255,255,0.70), transparent)", filter: "blur(.4px)" }}/>
+                  <span style={{ position: "relative" }}>Assinar Hunter →</span>
+                </Link>
+                <p style={{ textAlign: "center", fontSize: 10, color: "#9d978d", marginTop: 10 }}>14 dias de trial. Cobrado anualmente.</p>
+              </GlassCard>
+            </div>
+
           </div>
         </section>
       </main>
