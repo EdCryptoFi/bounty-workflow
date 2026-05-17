@@ -106,40 +106,23 @@ export function LandingClient() {
         <section className="relative px-6 mb-32 max-w-[1400px] mx-auto w-full">
           <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
 
-            {/* Hero logo — featured with golden shimmer */}
-            <div className="mb-12 relative flex flex-col items-center">
-              {/* Glow radial behind the logo */}
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  width: "340px",
-                  height: "340px",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  background: "radial-gradient(ellipse 60% 60% at 50% 50%, rgba(255,92,0,0.28) 0%, rgba(233,195,73,0.10) 50%, transparent 75%)",
-                  filter: "blur(20px)",
-                }}
-              />
-              <div className="relative">
+            {/* Hero logo — full-width, no card */}
+            <div className="mb-10 relative flex flex-col items-center w-full">
+              <div className="relative w-full max-w-3xl mx-auto">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/logo-final.png"
                   alt="Bounty Workflow"
-                  className="relative z-10 rounded-[28px]"
+                  className="relative z-10 w-full h-auto object-contain"
                   style={{
-                    width: "160px",
-                    height: "160px",
-                    objectFit: "contain",
-                    filter: "drop-shadow(0 0 28px rgba(255,92,0,0.45)) drop-shadow(0 0 8px rgba(233,195,73,0.3))",
-                    boxShadow: "0 0 0 1px rgba(233,195,73,0.18), 0 8px 40px rgba(0,0,0,0.7)",
+                    filter: "drop-shadow(0 0 40px rgba(255,92,0,0.35)) drop-shadow(0 0 12px rgba(233,195,73,0.2))",
                   }}
                 />
                 {/* Golden shimmer overlay */}
                 <div
-                  className="absolute inset-0 rounded-[28px] pointer-events-none z-20"
+                  className="absolute inset-0 pointer-events-none z-20"
                   style={{
-                    background: "linear-gradient(110deg, transparent 15%, rgba(233,195,73,0.65) 50%, transparent 85%)",
+                    background: "linear-gradient(110deg, transparent 15%, rgba(233,195,73,0.45) 50%, transparent 85%)",
                     backgroundSize: "200% 100%",
                     animation: "heroGoldShimmer 4s ease-in-out infinite",
                   }}
