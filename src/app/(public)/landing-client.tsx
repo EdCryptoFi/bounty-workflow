@@ -809,7 +809,7 @@ export function LandingClient() {
                   <span style={{ fontSize: 11, color: "#9d978d" }}>·</span>
                   <span style={{ fontSize: 11, color: "#4ade80" }}>Economize R$ 78,80</span>
                 </div>
-                <p style={{ fontSize: 12, color: "#9d978d", marginBottom: 20 }}>Faturado anualmente. Equivale a ~2 meses grátis.</p>
+                <p style={{ fontSize: 12, color: "#9d978d", marginBottom: 20 }}>Pagamento único anual.</p>
 
                 <ul style={{ listStyle: "none", margin: "0 0 24px", padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
                   {[

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { LoginForm } from "./login-form";
 import { GoogleButton } from "@/components/auth/google-button";
+import { TwitterButton } from "@/components/auth/twitter-button";
 
 export const metadata: Metadata = { title: "Entrar" };
 
@@ -87,10 +88,13 @@ export default async function LoginPage({
           </div>
         )}
 
-        {/* Social logins */}
+        {/* Social logins — lado a lado */}
         <div className="mb-6">
-          <Suspense>
-            <GoogleButton />
+          <Suspense fallback={<div className="grid grid-cols-2 gap-3 h-10" />}>
+            <div className="grid grid-cols-2 gap-3">
+              <GoogleButton />
+              <TwitterButton />
+            </div>
           </Suspense>
         </div>
 

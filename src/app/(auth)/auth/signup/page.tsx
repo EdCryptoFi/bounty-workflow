@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SignupForm } from "./signup-form";
 import { GoogleButton } from "@/components/auth/google-button";
+import { TwitterButton } from "@/components/auth/twitter-button";
 
 export const metadata: Metadata = { title: "Criar conta" };
 
@@ -71,10 +72,13 @@ export default async function SignupPage({
 
       {/* Glass card */}
       <div className="glass rounded-2xl p-10 shadow-[0_8px_48px_rgba(0,0,0,0.8)]" style={{ borderColor: "rgba(255,92,0,0.18)" }}>
-        {/* Social logins */}
+        {/* Social logins — lado a lado */}
         <div className="mb-6">
-          <Suspense>
-            <GoogleButton />
+          <Suspense fallback={<div className="grid grid-cols-2 gap-3 h-10" />}>
+            <div className="grid grid-cols-2 gap-3">
+              <GoogleButton />
+              <TwitterButton />
+            </div>
           </Suspense>
         </div>
 
