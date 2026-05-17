@@ -342,4 +342,157 @@
   .material-symbols-outlined.filled {
     font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 0, "opsz" 24;
   }
+
+  /* ─── Aqua / Liquid-Glass design system ─── */
+
+  /* Glass surface — light variant */
+  .glass {
+    background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.20) inset, 0 8px 32px -8px rgba(0,0,0,0.60);
+    position: relative;
+    overflow: hidden;
+  }
+  .glass::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 8%; right: 8%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.50), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+  /* Glass surface — dark variant */
+  .glass--dark {
+    background: linear-gradient(180deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%);
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  /* Aqua animated blobs */
+  .aqua-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    pointer-events: none;
+    animation: aquaBlobKf 12s ease-in-out infinite alternate;
+  }
+  .aqua-blob--2 {
+    animation-duration: 16s;
+    animation-delay: -6s;
+    animation-direction: alternate-reverse;
+  }
+
+  /* Live pulse dot */
+  .dot-live {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: aquaPulseKf 2s ease-in-out infinite;
+  }
+
+  /* Glow progress bar */
+  .glow-bar {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ff5c00, #ffaa54);
+    position: relative;
+    overflow: hidden;
+  }
+  .glow-bar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: aquaShimmerKf 2s linear infinite;
+  }
+
+  /* Ticker animation track */
+  .ticker-track {
+    display: flex;
+    white-space: nowrap;
+    animation: aquaTickerKf 32s linear infinite;
+  }
+
+  /* Aqua pill button */
+  .aqua-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ff8c4a 0%, #ff5c00 55%, #c93e00 100%);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.35) inset, 0 -1px 0 rgba(0,0,0,0.35) inset, 0 8px 24px -6px rgba(255,92,0,0.55);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.2s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .aqua-pill-btn::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 40%;
+    border-radius: 0 0 50% 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.30) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .aqua-pill-btn:hover { filter: brightness(1.08); }
+  .aqua-pill-btn:active { transform: scale(0.97); }
+
+  /* Ghost pill button */
+  .aqua-ghost-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: rgba(255,255,255,0.82);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .aqua-ghost-btn:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.35);
+  }
+
+  /* Keyframes */
+  @keyframes aquaBlobKf {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(40px, -30px) scale(1.08); }
+    66%  { transform: translate(-20px, 20px) scale(0.95); }
+    100% { transform: translate(30px, 10px) scale(1.04); }
+  }
+  @keyframes aquaPulseKf {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.82); }
+  }
+  @keyframes aquaShimmerKf {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes aquaTickerKf {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes aquaNavPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,92,0,0); }
+    50% { box-shadow: 0 0 18px 4px rgba(255,92,0,0.18); }
+  }
 }

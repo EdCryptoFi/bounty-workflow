@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { PublicHeader } from "@/components/public/public-header";
 
 export const metadata: Metadata = {
   title: "Como Funciona — Bounty WorkFlow",
@@ -32,67 +33,17 @@ export default function ComoFuncionaPage() {
         }}
       />
 
-      {/* Ambient glow */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 60% 40% at 15% 20%, rgba(255,92,0,0.08) 0%, transparent 60%), radial-gradient(ellipse 50% 30% at 85% 80%, rgba(233,195,73,0.06) 0%, transparent 60%)",
-        }}
-      />
+      {/* Animated blobs */}
+      <div className="aqua-blob pointer-events-none fixed" style={{ width: 600, height: 600, background: "#ff5c00", top: -150, right: -100, zIndex: 0 }} />
+      <div className="aqua-blob aqua-blob--2 pointer-events-none fixed" style={{ width: 500, height: 500, background: "#ff8a3a", bottom: -80, left: -60, zIndex: 0 }} />
 
-      {/* ── Fixed Header ── */}
-      <header
-        className="fixed z-50 top-0 left-0 right-0 flex justify-between items-center px-12 h-20 border-b border-zinc-800/50 shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
-        style={{ background: "rgba(9,9,9,0.70)", backdropFilter: "blur(24px)" }}
-      >
-        <Link href="/">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-horizontal.png" alt="Bounty Workflow" className="h-9 object-contain" />
-        </Link>
-
-        <nav className="flex items-center gap-6">
-          <Link href="/como-funciona" className="text-[#ff7b33] text-xs font-medium hover:text-[#ffb59a] transition-colors">
-            Como funciona
-          </Link>
-          <Link
-            href="/roadmap"
-            className="flex items-center gap-1 text-xs font-medium transition-colors"
-            style={{ color: "#ff5c00" }}
-          >
-            <span
-              className="material-symbols-outlined text-[14px]"
-              style={{ animation: "fireGlowCF 1.5s ease-in-out infinite" }}
-            >
-              local_fire_department
-            </span>
-            Roadmap
-          </Link>
-          <Link href="/auth/login" className="text-zinc-400 text-xs hover:text-[#ff7b33] transition-colors">
-            Entrar
-          </Link>
-          <Link
-            href="/auth/signup"
-            className="px-5 py-2 bg-[#ff5c00] text-white text-xs font-bold uppercase tracking-widest rounded hover:bg-[#ff7b33] hover:shadow-[0_0_20px_rgba(255,92,0,0.4)] transition-all duration-300 active:scale-95"
-          >
-            Começar grátis
-          </Link>
-        </nav>
-
-        <style>{`
-          @keyframes fireGlowCF {
-            0%, 100% { opacity: 0.7; filter: drop-shadow(0 0 4px rgba(255,92,0,0.3)); }
-            50% { opacity: 1; filter: drop-shadow(0 0 8px rgba(255,92,0,0.7)); }
-          }
-        `}</style>
-      </header>
+      <PublicHeader />
 
       <main className="flex-grow pt-32 pb-24 relative z-10">
 
         {/* ── Hero ── */}
         <section className="max-w-4xl mx-auto px-6 py-16 text-center sm:py-24">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#e9c349]/30 mb-8"
-            style={{ background: "rgba(32,31,31,0.7)", backdropFilter: "blur(20px)" }}>
+          <div className="glass inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ borderColor: "rgba(255,92,0,0.28)" }}>
             <span className="material-symbols-outlined text-[#e9c349] text-[14px] filled">timer</span>
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#e9c349]">
               Tour de 3 minutos
@@ -173,16 +124,7 @@ export default function ComoFuncionaPage() {
 
         {/* ── CTA ── */}
         <section className="max-w-3xl mx-auto px-6 pb-16">
-          <div
-            className="rounded-2xl p-10 text-center relative overflow-hidden"
-            style={{
-              background: "rgba(32,31,31,0.7)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid transparent",
-              borderImage: "linear-gradient(to bottom right, rgba(233,195,73,0.4), rgba(233,195,73,0.1)) 1",
-              boxShadow: "inset 0 0 30px rgba(255,92,0,0.06)",
-            }}
-          >
+          <div className="glass rounded-2xl p-10 text-center relative overflow-hidden" style={{ borderColor: "rgba(255,92,0,0.22)", boxShadow: "0 1px 0 rgba(255,255,255,0.10) inset, 0 0 60px rgba(255,92,0,0.06)" }}>
             {/* Glow top */}
             <div
               className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px"
@@ -209,18 +151,10 @@ export default function ComoFuncionaPage() {
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link
-                href="/auth/signup"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-xs font-bold uppercase tracking-widest rounded transition-all duration-300 hover:shadow-[0_0_25px_rgba(255,92,0,0.5)] active:scale-95"
-              >
-                Começar agora
-                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              <Link href="/auth/signup" className="aqua-pill-btn" style={{ borderRadius: 999, fontSize: 12, padding: "11px 28px" }}>
+                Começar agora →
               </Link>
-              <Link
-                href="/auth/login"
-                className="inline-flex items-center gap-2 px-8 py-3.5 text-on-surface text-xs font-bold uppercase tracking-widest rounded border border-outline-variant/40 hover:border-[#e9c349]/40 transition-all duration-300"
-                style={{ background: "rgba(42,42,42,0.5)" }}
-              >
+              <Link href="/auth/login" className="aqua-ghost-btn" style={{ fontSize: 12, padding: "11px 28px" }}>
                 Já tenho conta
               </Link>
             </div>
@@ -270,23 +204,16 @@ function StepCard({
   description: string;
 }) {
   return (
-    <div
-      className="relative p-8 rounded-xl flex flex-col gap-4 group hover:shadow-[inset_0_0_20px_rgba(255,92,0,0.08)] transition-all duration-500"
-      style={{
-        background: "rgba(32,31,31,0.7)",
-        backdropFilter: "blur(20px)",
-        border: "1px solid transparent",
-        borderImage: "linear-gradient(to bottom right, rgba(233,195,73,0.3), rgba(233,195,73,0.08)) 1",
-      }}
-    >
+    <div className="glass glass--dark relative p-8 rounded-xl flex flex-col gap-4 group transition-all duration-500" style={{ borderColor: "rgba(255,255,255,0.12)" }}>
       {/* Step number */}
-      <span className="absolute right-6 top-6 text-3xl font-bold text-[#e9c349]/15 select-none">
+      <span className="absolute right-6 top-6 text-3xl font-bold text-[#ff5c00]/10 select-none font-display">
         {number}
       </span>
 
-      {/* Icon */}
-      <div className="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center border border-[#e9c349]/20 group-hover:border-[#ff5c00]/40 transition-colors">
-        <span className="material-symbols-outlined text-[#e9c349] text-[22px] group-hover:text-[#ff5c00] transition-colors filled">
+      {/* Aqua icon */}
+      <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors"
+        style={{ background: "linear-gradient(135deg, rgba(255,92,0,0.18) 0%, rgba(255,92,0,0.06) 100%)", border: "1px solid rgba(255,92,0,0.28)" }}>
+        <span className="material-symbols-outlined text-[#ff7b33] text-[22px] group-hover:text-[#ffb59a] transition-colors filled">
           {icon}
         </span>
       </div>
@@ -301,15 +228,8 @@ function StepCard({
 
 function BulletCard({ text }: { text: string }) {
   return (
-    <div
-      className="flex items-start gap-4 px-5 py-4 rounded-lg hover:bg-surface-container-high/20 transition-colors"
-      style={{
-        background: "rgba(32,31,31,0.5)",
-        backdropFilter: "blur(12px)",
-        border: "1px solid rgba(91,65,55,0.3)",
-      }}
-    >
-      <span className="material-symbols-outlined text-[#e9c349] text-[18px] shrink-0 mt-0.5 filled">
+    <div className="glass flex items-start gap-4 px-5 py-4 rounded-lg transition-all duration-200" style={{ borderColor: "rgba(255,255,255,0.10)" }}>
+      <span className="material-symbols-outlined text-[#ff5c00] text-[18px] shrink-0 mt-0.5 filled">
         check_circle
       </span>
       <p className="text-sm text-on-surface leading-relaxed">{text}</p>

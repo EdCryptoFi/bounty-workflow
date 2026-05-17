@@ -71,9 +71,19 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden relative bg-surface-container-lowest">
+      {/* Animated orange blob — top-right */}
+      <div
+        className="aqua-blob"
+        style={{ width: 600, height: 600, background: "#ff5c00", top: -160, right: -100 }}
+      />
+      {/* Animated orange blob — bottom-left */}
+      <div
+        className="aqua-blob aqua-blob--2"
+        style={{ width: 500, height: 500, background: "#ff8a3a", bottom: -120, left: 180 }}
+      />
       {/* Grid texture background */}
       <div
-        className="absolute inset-0 z-0 pointer-events-none opacity-20"
+        className="absolute inset-0 z-0 pointer-events-none opacity-[0.14]"
         style={{
           backgroundImage:
             "linear-gradient(to right, #474746 1px, transparent 1px), linear-gradient(to bottom, #474746 1px, transparent 1px)",
@@ -82,14 +92,22 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
       />
 
       {/* Sidebar — desktop */}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 flex-col border-r border-zinc-800/60 bg-zinc-950/80 backdrop-blur-[40px] z-50">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 flex-col border-r border-[rgba(255,255,255,0.07)] z-50" style={{ background: "rgba(10,10,10,0.82)", backdropFilter: "blur(40px)" }}>
         <SidebarNav userSlot={userCard} showAdmin={adminFlag} />
       </aside>
 
       {/* Main workspace */}
       <div className="lg:ml-64 flex flex-col flex-1 h-full overflow-hidden relative z-10">
         {/* TopAppBar */}
-        <header className="flex justify-between items-center w-full px-8 h-20 bg-zinc-950/70 backdrop-blur-2xl border-b border-zinc-800/50 shadow-[0_4px_30px_rgba(0,0,0,0.5)] z-40 shrink-0">
+        <header
+          className="flex justify-between items-center w-full px-8 h-20 border-b shadow-[0_4px_30px_rgba(0,0,0,0.5)] z-40 shrink-0"
+          style={{
+            background: "rgba(10,10,10,0.78)",
+            backdropFilter: "blur(32px)",
+            borderColor: "rgba(255,255,255,0.07)",
+            boxShadow: "0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 30px rgba(0,0,0,0.5)",
+          }}
+        >
           {/* Mobile drawer */}
           <div className="lg:hidden mr-3">
             <MobileDrawer userSlot={userCard} showAdmin={adminFlag} />

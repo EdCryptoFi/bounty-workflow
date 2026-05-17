@@ -16,12 +16,12 @@ export interface CardProps extends React.HTMLAttributes<HTMLElement> {
 function variantClasses(variant: CardVariant): string {
   switch (variant) {
     case "muted":
-      return "border border-outline-variant/20 bg-surface-container/60 backdrop-blur-xl";
+      return "glass glass--dark";
     case "dashed":
-      return "border border-dashed border-outline-variant/30 bg-surface-container/40";
+      return "border border-dashed border-white/10 bg-white/[0.03] backdrop-blur-xl";
     case "default":
     default:
-      return "border border-outline-variant/30 bg-surface-container-highest/70 backdrop-blur-xl";
+      return "glass";
   }
 }
 

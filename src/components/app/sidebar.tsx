@@ -52,9 +52,9 @@ export function SidebarNav({
         <Link
           href="/campaigns/new"
           onClick={onNavigate}
-          className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-xs font-bold uppercase tracking-widest rounded transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,92,0,0.4)] active:scale-95"
+          className="aqua-pill-btn w-full text-xs uppercase tracking-widest"
         >
-          <span className="material-symbols-outlined text-[16px]">add</span>
+          <span className="material-symbols-outlined text-[15px]">add</span>
           Nova Campanha
         </Link>
       </div>
@@ -73,11 +73,15 @@ export function SidebarNav({
               href={item.href}
               onClick={onNavigate}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200",
+                "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200 rounded-lg mx-1",
                 active
-                  ? "text-[#ff5c00] bg-[rgba(255,92,0,0.08)] border-r-2 border-[#ff5c00] shadow-[0_0_15px_rgba(255,92,0,0.08)]"
-                  : "text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/40",
+                  ? "text-[#ff5c00] border border-[rgba(255,92,0,0.25)]"
+                  : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5 border border-transparent",
               )}
+              style={active ? {
+                background: "linear-gradient(135deg, rgba(255,92,0,0.14) 0%, rgba(255,92,0,0.05) 100%)",
+                boxShadow: "0 1px 0 rgba(255,255,255,0.06) inset",
+              } : undefined}
             >
               <span
                 className={cn(
@@ -98,11 +102,12 @@ export function SidebarNav({
               href="/admin"
               onClick={onNavigate}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200 mb-1",
+                "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200 mb-1 rounded-lg mx-1 border border-transparent",
                 pathname.startsWith("/admin")
-                  ? "text-[#e9c349] bg-[rgba(233,195,73,0.08)] border-r-2 border-[#e9c349]"
-                  : "text-zinc-500 hover:text-[#e9c349] hover:bg-zinc-800/40",
+                  ? "text-[#e9c349] border-[rgba(233,195,73,0.25)]"
+                  : "text-zinc-500 hover:text-[#e9c349] hover:bg-white/5",
               )}
+              style={pathname.startsWith("/admin") ? { background: "linear-gradient(135deg, rgba(233,195,73,0.12) 0%, rgba(233,195,73,0.04) 100%)" } : undefined}
             >
               <span className="material-symbols-outlined text-[20px]">admin_panel_settings</span>
               <span>Admin</span>
@@ -117,11 +122,12 @@ export function SidebarNav({
           href="/archive"
           onClick={onNavigate}
           className={cn(
-            "flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all duration-200 rounded-lg",
+            "flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all duration-200 rounded-lg border border-transparent",
             pathname.startsWith("/archive")
-              ? "text-[#ff5c00] bg-[rgba(255,92,0,0.08)]"
-              : "text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800/40",
+              ? "text-[#ff5c00] border-[rgba(255,92,0,0.22)]"
+              : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5",
           )}
+          style={pathname.startsWith("/archive") ? { background: "linear-gradient(135deg, rgba(255,92,0,0.12) 0%, rgba(255,92,0,0.04) 100%)" } : undefined}
         >
           <span className={cn("material-symbols-outlined text-[20px]", pathname.startsWith("/archive") ? "filled" : "")}>
             inventory_2
@@ -139,7 +145,8 @@ export function SidebarNav({
         <form action="/auth/signout" method="post">
           <button
             type="submit"
-            className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-500 hover:text-zinc-300 text-xs font-bold uppercase tracking-widest transition-all duration-200"
+            className="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg border border-white/6 text-zinc-500 hover:text-zinc-300 text-xs font-bold uppercase tracking-widest transition-all duration-200"
+            style={{ background: "rgba(255,255,255,0.04)" }}
           >
             <span className="material-symbols-outlined text-[18px]">logout</span>
             Logout
