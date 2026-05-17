@@ -178,15 +178,13 @@ export function RoadmapTimeline() {
           return (
             <div
               key={phase.id}
-              className="relative flex flex-col gap-6 rounded-2xl border p-6 md:p-8 transition-all duration-300 hover:translate-y-[-2px]"
+              className="glass relative flex flex-col gap-6 rounded-2xl p-6 md:p-8 transition-all duration-300 hover:translate-y-[-2px]"
               style={{
-                background: "rgba(24,23,23,0.9)",
                 borderColor: phase.status === "completed"
                   ? "rgba(34,197,94,0.15)"
                   : phase.status === "in_progress"
                     ? "rgba(255,92,0,0.2)"
                     : "rgba(167,139,250,0.1)",
-                backdropFilter: "blur(20px)",
                 boxShadow: phase.status === "in_progress"
                   ? "0 0 30px rgba(255,92,0,0.08)"
                   : "none",
@@ -261,12 +259,8 @@ export function RoadmapTimeline() {
 
       {/* CTA final */}
       <div
-        className="rounded-2xl border p-8 md:p-12 flex flex-col items-center text-center gap-5"
-        style={{
-          borderColor: "rgba(255,92,0,0.2)",
-          background: "rgba(24,23,23,0.95)",
-          backdropFilter: "blur(20px)",
-        }}
+        className="glass rounded-2xl p-8 md:p-12 flex flex-col items-center text-center gap-5"
+        style={{ borderColor: "rgba(255,92,0,0.2)" }}
       >
         <span
           className="material-symbols-outlined text-[40px]"

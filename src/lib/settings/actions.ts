@@ -103,7 +103,7 @@ export async function updatePasswordAction(formData: FormData) {
 
 export type CheckoutResult = { ok: true; url: string } | { ok: false; error: string };
 
-export async function startCheckoutAction(): Promise<CheckoutResult> {
+export async function startCheckoutAction(plan: "monthly" | "annual" = "monthly"): Promise<CheckoutResult> {
   if (!paymentsEnabled) return { ok: false, error: "Pagamentos ainda não estão ativados." };
   const { user } = await requireUser();
   const provider = getActiveProvider();
@@ -111,22 +111,27 @@ export async function startCheckoutAction(): Promise<CheckoutResult> {
   const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://bounty-workflow.vercel.app";
 
   if (provider === "mercadopago") {
-    const price = Number(process.env.MERCADOPAGO_PRICE_MONTHLY_BRL ?? "29.90");
+    const priceRaw = plan === "annual"
+      ? (process.env.MERCADOPAGO_PRICE_ANNUAL_BRL ?? "400")
+      : (process.env.MERCADOPAGO_PRICE_MONTHLY_BRL ?? "39.90");
+    const price = Number(priceRaw);
     if (!Number.isFinite(price) || price <= 0) return { ok: false, error: "Preço inválido." };
     const res = await createPreapproval({
       userId: user.id,
       userEmail: user.email ?? "",
       amountBrl: price,
-      reason: "Bounty WorkFlow Pro — mensal",
-      frequency: "monthly",
+      reason: plan === "annual" ? "Bounty WorkFlow Hunter — anual" : "Bounty WorkFlow Pro — mensal",
+      frequency: plan === "annual" ? "yearly" : "monthly",
       backUrl: `${appUrl}/settings?success=1`,
     });
     if (!res.ok) return { ok: false, error: res.error };
     return { ok: true, url: res.url };
   }
 
-  const priceId = process.env.STRIPE_PRICE_ID_MONTHLY;
-  if (!priceId) return { ok: false, error: "STRIPE_PRICE_ID_MONTHLY não configurado." };
+  const priceId = plan === "annual"
+    ? process.env.STRIPE_PRICE_ID_ANNUAL
+    : process.env.STRIPE_PRICE_ID_MONTHLY;
+  if (!priceId) return { ok: false, error: `STRIPE_PRICE_ID_${plan.toUpperCase()} não configurado.` };
   const res = await createCheckoutSession({
     userId: user.id,
     userEmail: user.email ?? "",

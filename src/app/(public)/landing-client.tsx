@@ -297,7 +297,9 @@ function AquaCube({ size = 440 }: { size?: number }) {
 /* ─────────────────────────────────────────────────────────────────────────────
    LandingClient — main page component
 ───────────────────────────────────────────────────────────────────────────── */
-export function LandingClient() {
+const FALLBACK_PROTOCOLS = ["CLASHO","KREATORS","MAGVERSE","RALLY","STARKNET","ARBITRUM","OPTIMISM","BASE","SCROLL","ZKSYNC","MODE"];
+
+export function LandingClient({ protocols: protocolsProp }: { protocols?: string[] }) {
   const [showDemo, setShowDemo] = useState(false);
   const [cookieAccepted, setCookieAccepted] = useState(true);
 
@@ -310,7 +312,7 @@ export function LandingClient() {
     setCookieAccepted(true);
   }
 
-  const PROTOCOLS = ["CLASHO","KREATORS","MAGVERSE","RALLY","STARKNET","ARBITRUM","OPTIMISM","BASE","SCROLL","ZKSYNC","MODE"];
+  const PROTOCOLS = protocolsProp && protocolsProp.length > 0 ? protocolsProp : FALLBACK_PROTOCOLS;
 
   return (
     <div style={{

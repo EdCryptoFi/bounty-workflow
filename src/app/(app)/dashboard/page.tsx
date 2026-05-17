@@ -205,7 +205,7 @@ function GlassCard({
 }) {
   return (
     <GlowCard className="shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)]">
-      <div className="bg-surface-container-highest/70 backdrop-blur-xl rounded-[11px] p-6 h-full">
+      <div className="glass rounded-[11px] p-6 h-full">
         {children}
       </div>
     </GlowCard>

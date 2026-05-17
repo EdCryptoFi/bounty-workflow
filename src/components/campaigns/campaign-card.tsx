@@ -43,7 +43,7 @@ export function CampaignCard({ campaign: c }: { campaign: CampaignWithCounts }) 
 
   return (
     <GlowCard className="group shadow-[0_10px_30px_-15px_rgba(0,0,0,0.8)] transition-all hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.9)]">
-      <div className="bg-surface-container-highest/80 backdrop-blur-xl rounded-[11px] p-6 relative overflow-hidden">
+      <div className="glass rounded-[11px] p-6 relative overflow-hidden">
         {!isPaused && (
           <div className="absolute -right-10 -top-10 h-40 w-40 bg-[rgba(255,181,154,0.06)] blur-[80px] group-hover:bg-[rgba(255,181,154,0.1)] transition-all pointer-events-none" />
         )}

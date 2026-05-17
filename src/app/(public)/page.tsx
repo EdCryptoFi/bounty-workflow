@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LandingClient } from "./landing-client";
+import { createClient } from "@/lib/supabase/server";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://bountywork.xyz";
 
@@ -17,6 +18,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LandingPage() {
-  return <LandingClient />;
+export default async function LandingPage() {
+  const supabase = await createClient();
+  const { data: protocols } = await supabase
+    .from("protocols")
+    .select("name, slug")
+    .order("name");
+
+  const protocolNames = protocols
+    ?.map((p) => ((p.name as string) || (p.slug as string)).toUpperCase())
+    .filter(Boolean) ?? [];
+
+  return <LandingClient protocols={protocolNames.length > 0 ? protocolNames : undefined} />;
 }

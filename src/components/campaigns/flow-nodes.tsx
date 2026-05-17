@@ -46,6 +46,16 @@ function EditModal({ step, onClose }: { step: Step; onClose: () => void }) {
   const [status, setStatus] = useState<StepStatus>(step.status);
   const [saving, startSave] = useTransition();
   const [deleting, startDelete] = useTransition();
+  const [briefingTab, setBriefingTab] = useState<"briefing" | "notas">("briefing");
+  const notesKey = `step-notes-${step.id}`;
+  const [notes, setNotes] = useState(() =>
+    typeof window !== "undefined" ? (localStorage.getItem(notesKey) ?? "") : ""
+  );
+
+  function handleNotesChange(val: string) {
+    setNotes(val);
+    localStorage.setItem(notesKey, val);
+  }
 
   function handleSave() {
     if (!title.trim()) return;
@@ -68,152 +78,219 @@ function EditModal({ step, onClose }: { step: Step; onClose: () => void }) {
     });
   }
 
+  const panelStyle = {
+    background: "rgba(22,21,21,0.98)",
+    border: "1px solid rgba(255,92,0,0.25)",
+    boxShadow: "0 0 60px rgba(0,0,0,0.7), 0 0 30px rgba(255,92,0,0.08)",
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: "rgba(0,0,0,0.8)", backdropFilter: "blur(6px)" }}
       onClick={onClose}
     >
+      {/* Two-panel container — shifted slightly left */}
       <div
-        className="relative w-full max-w-lg rounded-2xl flex flex-col gap-0 overflow-hidden"
-        style={{
-          background: "rgba(22,21,21,0.98)",
-          border: "1px solid rgba(255,92,0,0.25)",
-          boxShadow: "0 0 60px rgba(0,0,0,0.7), 0 0 30px rgba(255,92,0,0.08)",
-        }}
+        className="relative flex gap-3 w-full max-w-[880px] -translate-x-6 items-stretch"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/20">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#ff5c00] text-[16px]">edit_note</span>
-            <span className="text-xs font-bold uppercase tracking-widest text-tertiary">
-              Editar Tarefa
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-tertiary hover:text-on-surface transition"
-          >
-            <span className="material-symbols-outlined text-[20px]">close</span>
-          </button>
-        </div>
-
-        {/* Body */}
-        <div className="flex flex-col gap-5 px-6 py-5">
-          {/* Title */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
-              Título
-            </label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-lg px-3 py-2.5 text-sm text-on-surface bg-surface-container border border-outline-variant/40 focus:border-[#ff5c00]/60 outline-none transition-colors placeholder:text-tertiary"
-              placeholder="Nome da tarefa..."
-              autoFocus
-            />
-          </div>
-
-          {/* Status */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
-              Status
-            </label>
-            <div className="flex gap-2">
-              {(["todo", "in_progress", "done"] as StepStatus[]).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => setStatus(s)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-[10px] font-bold uppercase tracking-widest transition-all ${
-                    status === s
-                      ? s === "todo"
-                        ? "border-outline-variant bg-surface-container-high text-on-surface"
-                        : s === "in_progress"
-                          ? "border-[#ff5c00]/60 bg-[rgba(255,92,0,0.12)] text-[#ffb59a]"
-                          : "border-[#e9c349]/60 bg-[rgba(233,195,73,0.12)] text-[#e9c349]"
-                      : "border-outline-variant/30 bg-transparent text-tertiary hover:border-outline-variant/60"
-                  }`}
-                >
-                  <span className={`material-symbols-outlined text-[13px] filled ${status === s ? STEP_ICON_COLOR[s] : "text-tertiary"}`}>
-                    {STEP_ICON[s]}
-                  </span>
-                  {STEP_LABEL[s]}
-                </button>
-              ))}
+        {/* ── LEFT: Edit form ── */}
+        <div className="flex-1 min-w-0 rounded-2xl flex flex-col overflow-hidden" style={panelStyle}>
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/20">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-[#ff5c00] text-[16px]">edit_note</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-tertiary">
+                Editar Tarefa
+              </span>
             </div>
-          </div>
-
-          {/* Description */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
-              Descrição
-            </label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-              className="w-full rounded-lg px-3 py-2.5 text-sm text-on-surface bg-surface-container border border-outline-variant/40 focus:border-[#ff5c00]/60 outline-none transition-colors placeholder:text-tertiary resize-none"
-              placeholder="Descreva a tarefa, prompt, notas..."
-            />
-          </div>
-
-          {/* Due date */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
-              Prazo (opcional)
-            </label>
-            <input
-              type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-              className="w-full rounded-lg px-3 py-2.5 text-sm text-on-surface bg-surface-container border border-outline-variant/40 focus:border-[#ff5c00]/60 outline-none transition-colors"
-            />
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-outline-variant/20">
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={deleting || saving}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest text-red-400/70 hover:text-red-400 hover:bg-red-400/10 border border-transparent hover:border-red-400/20 transition-all disabled:opacity-40"
-          >
-            <span className="material-symbols-outlined text-[14px]">delete</span>
-            Deletar
-          </button>
-
-          <div className="flex gap-2">
             <button
               type="button"
               onClick={onClose}
-              disabled={saving || deleting}
-              className="px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest text-tertiary border border-outline-variant/40 hover:border-outline-variant/70 transition-all disabled:opacity-40"
+              className="text-tertiary hover:text-on-surface transition"
             >
-              Cancelar
+              <span className="material-symbols-outlined text-[20px]">close</span>
+            </button>
+          </div>
+
+          {/* Body */}
+          <div className="flex flex-col gap-5 px-6 py-5 flex-1">
+            {/* Title */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
+                Título
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full rounded-lg px-3 py-2.5 text-sm text-on-surface bg-surface-container border border-outline-variant/40 focus:border-[#ff5c00]/60 outline-none transition-colors placeholder:text-tertiary"
+                placeholder="Nome da tarefa..."
+                autoFocus
+              />
+            </div>
+
+            {/* Status */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
+                Status
+              </label>
+              <div className="flex gap-2">
+                {(["todo", "in_progress", "done"] as StepStatus[]).map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setStatus(s)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-[10px] font-bold uppercase tracking-widest transition-all ${
+                      status === s
+                        ? s === "todo"
+                          ? "border-outline-variant bg-surface-container-high text-on-surface"
+                          : s === "in_progress"
+                            ? "border-[#ff5c00]/60 bg-[rgba(255,92,0,0.12)] text-[#ffb59a]"
+                            : "border-[#e9c349]/60 bg-[rgba(233,195,73,0.12)] text-[#e9c349]"
+                        : "border-outline-variant/30 bg-transparent text-tertiary hover:border-outline-variant/60"
+                    }`}
+                  >
+                    <span className={`material-symbols-outlined text-[13px] filled ${status === s ? STEP_ICON_COLOR[s] : "text-tertiary"}`}>
+                      {STEP_ICON[s]}
+                    </span>
+                    {STEP_LABEL[s]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="flex flex-col gap-1.5 flex-1">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
+                Descrição
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="flex-1 w-full rounded-lg px-3 py-2.5 text-sm text-on-surface bg-surface-container border border-outline-variant/40 focus:border-[#ff5c00]/60 outline-none transition-colors placeholder:text-tertiary resize-none"
+                placeholder="Descreva a tarefa, prompt, notas..."
+                style={{ minHeight: "100px" }}
+              />
+            </div>
+
+            {/* Due date */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
+                Prazo (opcional)
+              </label>
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="w-full rounded-lg px-3 py-2.5 text-sm text-on-surface bg-surface-container border border-outline-variant/40 focus:border-[#ff5c00]/60 outline-none transition-colors"
+              />
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="flex items-center justify-between gap-3 px-6 py-4 border-t border-outline-variant/20">
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={deleting || saving}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest text-red-400/70 hover:text-red-400 hover:bg-red-400/10 border border-transparent hover:border-red-400/20 transition-all disabled:opacity-40"
+            >
+              <span className="material-symbols-outlined text-[14px]">delete</span>
+              Deletar
+            </button>
+
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={saving || deleting}
+                className="px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest text-tertiary border border-outline-variant/40 hover:border-outline-variant/70 transition-all disabled:opacity-40"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={!title.trim() || saving || deleting}
+                className="px-5 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-[#ff5c00] hover:bg-[#ff7b33] text-white transition-all hover:shadow-[0_0_15px_rgba(255,92,0,0.35)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+              >
+                {saving ? (
+                  <>
+                    <span className="material-symbols-outlined text-[14px] animate-spin">progress_activity</span>
+                    Salvando...
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-[14px]">check</span>
+                    Salvar
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ── RIGHT: Briefing / Anotações ── */}
+        <div
+          className="w-[340px] shrink-0 rounded-2xl flex flex-col overflow-hidden"
+          style={{
+            background: "rgba(22,21,21,0.98)",
+            border: "1px solid rgba(255,92,0,0.15)",
+            boxShadow: "0 0 60px rgba(0,0,0,0.7)",
+          }}
+        >
+          {/* Tabs */}
+          <div className="flex border-b border-outline-variant/20 shrink-0">
+            <button
+              type="button"
+              onClick={() => setBriefingTab("briefing")}
+              className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest transition-colors ${
+                briefingTab === "briefing"
+                  ? "text-[#ffb59a] border-b-2 border-[#ff5c00] -mb-px"
+                  : "text-tertiary hover:text-on-surface"
+              }`}
+            >
+              Briefing
             </button>
             <button
               type="button"
-              onClick={handleSave}
-              disabled={!title.trim() || saving || deleting}
-              className="px-5 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest bg-[#ff5c00] hover:bg-[#ff7b33] text-white transition-all hover:shadow-[0_0_15px_rgba(255,92,0,0.35)] disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+              onClick={() => setBriefingTab("notas")}
+              className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest transition-colors ${
+                briefingTab === "notas"
+                  ? "text-[#ffb59a] border-b-2 border-[#ff5c00] -mb-px"
+                  : "text-tertiary hover:text-on-surface"
+              }`}
             >
-              {saving ? (
-                <>
-                  <span className="material-symbols-outlined text-[14px] animate-spin">progress_activity</span>
-                  Salvando...
-                </>
-              ) : (
-                <>
-                  <span className="material-symbols-outlined text-[14px]">check</span>
-                  Salvar
-                </>
-              )}
+              Anotações
             </button>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 flex flex-col p-4 gap-2">
+            <textarea
+              key={briefingTab}
+              value={briefingTab === "briefing" ? description : notes}
+              onChange={(e) =>
+                briefingTab === "briefing"
+                  ? setDescription(e.target.value)
+                  : handleNotesChange(e.target.value)
+              }
+              className="flex-1 w-full rounded-lg px-3 py-2.5 text-sm text-on-surface bg-surface-container border border-outline-variant/40 focus:border-[#ff5c00]/60 outline-none transition-colors placeholder:text-tertiary resize-none"
+              placeholder={
+                briefingTab === "briefing"
+                  ? "Briefing detalhado, prompt, contexto da tarefa..."
+                  : "Anotações pessoais, rascunhos, ideias..."
+              }
+            />
+          </div>
+
+          {/* Footer note */}
+          <div className="px-4 pb-3 text-[9px] text-tertiary/50 shrink-0">
+            {briefingTab === "notas"
+              ? "Salvo localmente neste dispositivo"
+              : "Sincronizado com o campo Descrição"}
           </div>
         </div>
       </div>
