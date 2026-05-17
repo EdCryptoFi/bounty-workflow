@@ -5,12 +5,14 @@ import { GlowCard } from "@/components/ui/glow-card";
 import { ProfilePanel } from "./profile-panel";
 import { BillingPanel } from "./billing-panel";
 import { ActivationCodePanel } from "./activation-code-panel";
+import { XAccountsPanel } from "./x-accounts-panel";
 
-type Tab = "settings" | "billing";
+type Tab = "settings" | "billing" | "x";
 
 const TABS: { id: Tab; label: string; subtitle: string; icon: string }[] = [
   { id: "settings", label: "Settings", subtitle: "Perfil e segurança", icon: "manage_accounts" },
   { id: "billing", label: "Pagamento", subtitle: "Plano e faturamento", icon: "credit_card" },
+  { id: "x", label: "X / Twitter", subtitle: "Contas conectadas", icon: "alternate_email" },
 ];
 
 type SettingsTabsProps = {
@@ -34,14 +36,19 @@ type SettingsTabsProps = {
   };
   appliedCode: string | null;
   trialEndsAt: string | null;
+  xAccounts: Array<{
+    id: string;
+    x_username: string;
+    x_name: string | null;
+    x_avatar_url: string | null;
+  }>;
 };
 
-export function SettingsTabs({ profile, billing, appliedCode, trialEndsAt }: SettingsTabsProps) {
+export function SettingsTabs({ profile, billing, appliedCode, trialEndsAt, xAccounts }: SettingsTabsProps) {
   const [active, setActive] = useState<Tab>("settings");
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Tab selector cards */}
       <div className="grid grid-cols-3 gap-4">
         {TABS.map((tab) => (
           <GlowCard
@@ -94,7 +101,6 @@ export function SettingsTabs({ profile, billing, appliedCode, trialEndsAt }: Set
         ))}
       </div>
 
-      {/* Panel content */}
       <div>
         {active === "settings" && (
           <div className="flex flex-col gap-6">
@@ -121,6 +127,9 @@ export function SettingsTabs({ profile, billing, appliedCode, trialEndsAt }: Set
           </div>
         )}
 
+        {active === "x" && (
+          <XAccountsPanel accounts={xAccounts} />
+        )}
       </div>
     </div>
   );

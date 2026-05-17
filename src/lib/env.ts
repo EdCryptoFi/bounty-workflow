@@ -33,6 +33,9 @@ const serverSchema = z.object({
   GROQ_API_KEY: optStr(),
   GEMINI_API_KEY: optStr(),
   MISTRAL_API_KEY: optStr(),
+
+  X_CLIENT_ID: optStr(),
+  X_CLIENT_SECRET: optStr(),
 });
 
 const clientSchema = z.object({

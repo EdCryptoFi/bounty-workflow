@@ -70,3 +70,15 @@ export type CampaignWithCounts = Campaign & {
   protocol_website?: string | null;
   protocol_logo?: string | null;
 };
+
+export type XAccount = {
+  id: string;
+  user_id: string;
+  x_user_id: string;
+  x_username: string;
+  x_name: string | null;
+  x_avatar_url: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};

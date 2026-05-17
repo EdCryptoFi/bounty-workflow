@@ -4,12 +4,14 @@ import Link from "next/link";
 import { getCampaignById } from "@/lib/campaigns/queries";
 import { daysUntil, formatDeadlineFull } from "@/lib/campaigns/date-utils";
 import { requireUser } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import { TaskCard } from "@/components/campaigns/task-card";
 import { AddStepModal } from "@/components/campaigns/add-step-modal";
 import { FlowLeftPanel } from "@/components/campaigns/flow-left-panel";
 import { FlowNodes } from "@/components/campaigns/flow-nodes";
 import { CampaignStatusSelect } from "@/components/campaigns/campaign-status-select";
 import { GlowCard } from "@/components/ui/glow-card";
+import { CampaignPublishButton } from "@/components/x/campaign-publish-button";
 
 export const metadata: Metadata = { title: "Campanha" };
 
@@ -20,9 +22,16 @@ export default async function CampaignDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await requireUser();
+  const { user } = await requireUser();
   const data = await getCampaignById(id);
   if (!data) notFound();
+
+  const supabase = await createClient();
+  const { data: xAccounts } = await supabase
+    .from("user_x_accounts")
+    .select("id, x_username, x_name, x_avatar_url")
+    .eq("user_id", user.id)
+    .eq("is_active", true);
 
   const { campaign, steps, attachments } = data;
   const links = attachments.filter((a) => a.type === "link");
@@ -115,6 +124,15 @@ export default async function CampaignDetailPage({
                 </div>
               </>
             )}
+          </div>
+
+          <div className="shrink-0">
+            <CampaignPublishButton
+              campaignTitle={campaign.title}
+              stepsDone={stepsDone}
+              stepsTotal={steps.length}
+              accounts={(xAccounts ?? []) as Array<{ id: string; x_username: string; x_name: string | null; x_avatar_url: string | null }>}
+            />
           </div>
         </div>
       </GlowCard>

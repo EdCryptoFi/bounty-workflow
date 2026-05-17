@@ -16,6 +16,7 @@ export default async function SettingsPage() {
     { data: billing },
     { data: sub },
     { count: campaignCount },
+    { data: xAccounts },
   ] = await Promise.all([
     supabase
       .from("users")
@@ -38,6 +39,11 @@ export default async function SettingsPage() {
       .select("id", { count: "exact", head: true })
       .eq("user_id", user.id)
       .is("archived_at", null),
+    supabase
+      .from("user_x_accounts")
+      .select("id, x_user_id, x_username, x_name, x_avatar_url, is_active")
+      .eq("user_id", user.id)
+      .eq("is_active", true),
   ]);
 
   // Fetch applied activation code if exists
@@ -83,6 +89,7 @@ export default async function SettingsPage() {
         }}
         appliedCode={appliedCode}
         trialEndsAt={profile?.trial_ends_at ?? null}
+        xAccounts={(xAccounts ?? []) as Array<{ id: string; x_username: string; x_name: string | null; x_avatar_url: string | null }>}
       />
     </div>
   );
