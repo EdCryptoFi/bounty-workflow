@@ -301,11 +301,12 @@ const FALLBACK_PROTOCOLS = ["CLASHO","KREATORS","MAGVERSE","RALLY","STARKNET","A
 
 export function LandingClient({ protocols: protocolsProp }: { protocols?: string[] }) {
   const [showDemo, setShowDemo] = useState(false);
-  const [cookieAccepted, setCookieAccepted] = useState(true);
-
-  useEffect(() => {
-    setCookieAccepted(localStorage.getItem("cookie_consent") === "1");
-  }, []);
+  const [cookieAccepted, setCookieAccepted] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("cookie_consent") === "1";
+    }
+    return true;
+  });
 
   function acceptCookies() {
     localStorage.setItem("cookie_consent", "1");

@@ -13,6 +13,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // eslint-disable-next-line react-hooks/purity
   const in48h = new Date(Date.now() + 48 * 3600 * 1000).toISOString();
 
   const [adminFlag, { data: profile }, { data: billing }, { data: rawReminders }] = await Promise.all([

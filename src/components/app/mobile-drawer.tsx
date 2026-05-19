@@ -10,8 +10,8 @@ export function MobileDrawer({ userSlot, showAdmin }: { userSlot?: React.ReactNo
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  // Fecha ao navegar
-  useEffect(() => setOpen(false), [pathname]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setOpen(false); }, [pathname]);
 
   // Trava scroll quando aberto
   useEffect(() => {

@@ -77,7 +77,7 @@ export function DrivePanel({ attachments }: { attachments: AttachmentRow[] }) {
         <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
           Drive Kernel Online
         </span>
-        <span className="text-tertiary opacity-30">//</span>
+        <span className="text-tertiary opacity-30">{'//'}</span>
         <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary">
           Node_Storage_Active
         </span>

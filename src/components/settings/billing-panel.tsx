@@ -32,9 +32,10 @@ export function BillingPanel({
 }: BillingPanelProps) {
   const [pending, start] = useTransition();
   const isTrialing = status === "trialing";
+  const [now] = useState(() => Date.now());
   const daysLeft =
     trialEnds != null
-      ? Math.max(0, Math.ceil((trialEnds.getTime() - Date.now()) / 86_400_000))
+      ? Math.max(0, Math.ceil((trialEnds.getTime() - now) / 86_400_000))
       : null;
 
   function handleUpgrade() {

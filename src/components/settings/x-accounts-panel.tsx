@@ -23,13 +23,15 @@ export function XAccountsPanel({ accounts }: XAccountsPanelProps) {
   const xError = searchParams?.get("x_error");
   const xSuccess = searchParams?.get("x_success");
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    if (xError) setError(decodeURIComponent(xError));
+    if (xError) { setError(decodeURIComponent(xError)); }
     if (xSuccess) {
       setSuccess(`Conta @${decodeURIComponent(xSuccess)} conectada com sucesso!`);
       window.location.reload();
     }
   }, [xError, xSuccess]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   async function handleConnect() {
     setConnecting(true);
