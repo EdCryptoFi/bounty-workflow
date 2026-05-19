@@ -7,7 +7,7 @@ create table if not exists public.waitlist_subscribers (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   email citext not null unique,
-  profile_type text not null check (profile_type in ('creator', 'hunter', 'both')),
+  twitter_handle text,
   referral_source text,
   created_at timestamptz not null default now()
 );

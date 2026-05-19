@@ -7,9 +7,7 @@ import { queueFullNurtureSequence } from "@/lib/email/nurture";
 const joinSchema = z.object({
   name: z.string().min(2, "Nome precisa de pelo menos 2 caracteres").max(100),
   email: z.string().email("Email inválido"),
-  profile_type: z.enum(["creator", "hunter", "both"] as const, {
-    message: "Selecione seu perfil",
-  }),
+  twitter: z.string().min(2, "Digite seu @ do X/Twitter").max(50),
   ref: z.string().optional(),
 });
 
@@ -24,7 +22,7 @@ export async function joinWaitlistAction(
     return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
-  const { name, email, profile_type, ref } = parsed.data;
+  const { name, email, twitter, ref } = parsed.data;
 
   const supabase = createAdminClient();
 
@@ -33,7 +31,7 @@ export async function joinWaitlistAction(
     .insert({
       name,
       email,
-      profile_type,
+      twitter_handle: twitter,
       referral_source: ref || null,
     });
 

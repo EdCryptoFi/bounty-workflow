@@ -10,24 +10,20 @@ export default async function AdminLancamentoPage() {
   const [
     { data: subscribers },
     { count: totalCount },
-    { data: profileStats },
     { data: recentSubscribers },
     { data: referralStats },
     { data: emailStats },
   ] = await Promise.all([
     supabase
       .from("waitlist_subscribers")
-      .select("id, name, email, profile_type, referral_source, created_at")
+      .select("id, name, email, twitter_handle, referral_source, created_at")
       .order("created_at", { ascending: false }),
     supabase
       .from("waitlist_subscribers")
       .select("*", { count: "exact", head: true }),
     supabase
       .from("waitlist_subscribers")
-      .select("profile_type"),
-    supabase
-      .from("waitlist_subscribers")
-      .select("name, email, profile_type, created_at")
+      .select("name, email, twitter_handle, created_at")
       .order("created_at", { ascending: false })
       .limit(10),
     supabase
@@ -38,14 +34,6 @@ export default async function AdminLancamentoPage() {
       .select("id, sent_at, error")
       .order("created_at", { ascending: false }),
   ]);
-
-  const profileBreakdown = (profileStats ?? []).reduce(
-    (acc: Record<string, number>, s: { profile_type: string }) => {
-      acc[s.profile_type] = (acc[s.profile_type] ?? 0) + 1;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
 
   const totalClicks = referralStats?.length ?? 0;
   const conversions = referralStats?.filter((c: { converted: boolean }) => c.converted).length ?? 0;
@@ -75,35 +63,6 @@ export default async function AdminLancamentoPage() {
         <StatCard icon="person_add" label="Conversões" value={conversions} color="#34d05f" />
         <StatCard icon="mail" label="Emails Enviados" value={sentEmails} color="#e9c349" />
       </div>
-
-      {/* Profile breakdown */}
-      {subscribers && subscribers.length > 0 && (
-        <div className="grid grid-cols-3 gap-4">
-          {["creator", "hunter", "both"].map((type) => {
-            const labels: Record<string, string> = {
-              creator: "Criadores",
-              hunter: "Hunters",
-              both: "Ambos",
-            };
-            const count = profileBreakdown[type] ?? 0;
-            const pct = totalCount ? ((count / totalCount) * 100).toFixed(0) : "0";
-            return (
-              <div
-                key={type}
-                className="rounded-2xl border border-outline-variant/30 p-5 text-center"
-                style={{ background: "rgba(24,23,23,0.9)", backdropFilter: "blur(20px)" }}
-              >
-                <p className="text-2xl font-bold font-display text-on-surface">{count}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-tertiary mt-1">{labels[type]}</p>
-                <div className="mt-3 h-2 rounded-full overflow-hidden bg-zinc-800">
-                  <div className="h-full rounded-full bg-[#ff5c00]" style={{ width: `${pct}%` }} />
-                </div>
-                <p className="text-[10px] text-tertiary mt-1">{pct}%</p>
-              </div>
-            );
-          })}
-        </div>
-      )}
 
       {/* Email queue status */}
       <div
@@ -169,14 +128,11 @@ export default async function AdminLancamentoPage() {
           </div>
         ) : (
           <div className="divide-y divide-zinc-800/40">
-            {recentSubscribers.map((s: { name: string; email: string; profile_type: string; created_at: string }) => {
+            {recentSubscribers.map((s: { name: string; email: string; twitter_handle: string | null; created_at: string }) => {
               const initials = s.name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
               const joined = new Date(s.created_at).toLocaleDateString("pt-BR", {
                 day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit",
               });
-              const profileLabels: Record<string, string> = {
-                creator: "Criador", hunter: "Hunter", both: "Ambos",
-              };
               return (
                 <div key={s.email} className="flex items-center gap-4 px-6 py-3 hover:bg-[rgba(255,92,0,0.03)] transition-colors">
                   <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
@@ -187,16 +143,11 @@ export default async function AdminLancamentoPage() {
                     <p className="text-sm font-medium text-on-surface truncate">{s.name}</p>
                     <p className="text-xs text-tertiary truncate">{s.email}</p>
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full"
-                    style={{
-                      background: s.profile_type === "hunter" ? "rgba(255,92,0,0.1)" : s.profile_type === "creator" ? "rgba(233,195,73,0.1)" : "rgba(52,208,95,0.1)",
-                      color: s.profile_type === "hunter" ? "#ff5c00" : s.profile_type === "creator" ? "#e9c349" : "#34d05f",
-                      border: `1px solid ${
-                        s.profile_type === "hunter" ? "rgba(255,92,0,0.3)" : s.profile_type === "creator" ? "rgba(233,195,73,0.3)" : "rgba(52,208,95,0.3)"
-                      }`,
-                    }}>
-                    {profileLabels[s.profile_type] ?? s.profile_type}
-                  </span>
+                  {s.twitter_handle && (
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#ff5c00]">
+                      {s.twitter_handle}
+                    </span>
+                  )}
                   <span className="text-[10px] font-bold uppercase tracking-widest text-tertiary shrink-0">{joined}</span>
                 </div>
               );
@@ -226,18 +177,18 @@ export default async function AdminLancamentoPage() {
                 <tr className="border-b border-zinc-800/40 text-[10px] font-bold uppercase tracking-widest text-tertiary">
                   <th className="text-left px-6 py-3">Nome</th>
                   <th className="text-left px-6 py-3">Email</th>
-                  <th className="text-left px-6 py-3">Perfil</th>
+                  <th className="text-left px-6 py-3">X/Twitter</th>
                   <th className="text-left px-6 py-3">Origem</th>
                   <th className="text-left px-6 py-3">Data</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-800/30">
-                {subscribers.map((s: { id: string; name: string; email: string; profile_type: string; referral_source: string | null; created_at: string }) => (
+                {subscribers.map((s: { id: string; name: string; email: string; twitter_handle: string | null; referral_source: string | null; created_at: string }) => (
                   <tr key={s.id} className="hover:bg-[rgba(255,92,0,0.03)]">
                     <td className="px-6 py-3 font-medium text-on-surface">{s.name}</td>
                     <td className="px-6 py-3 text-tertiary">{s.email}</td>
                     <td className="px-6 py-3">
-                      <span className="text-[10px] font-bold uppercase tracking-widest">{s.profile_type}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest">{s.twitter_handle ?? "—"}</span>
                     </td>
                     <td className="px-6 py-3 text-tertiary">{s.referral_source ?? "—"}</td>
                     <td className="px-6 py-3 text-tertiary">

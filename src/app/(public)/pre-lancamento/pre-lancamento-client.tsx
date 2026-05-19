@@ -209,26 +209,23 @@ export function PreLancamentoClient({ initialCount, refCode }: { initialCount: n
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="profile_type" style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#9d978d" }}>
-                        Perfil <span style={{ color: "#ff5c00" }}>*</span>
+                      <label htmlFor="twitter" style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: "#9d978d" }}>
+                        Seu X/Twitter <span style={{ color: "#ff5c00" }}>*</span>
                       </label>
-                      <select
-                        id="profile_type"
-                        name="profile_type"
+                      <input
+                        id="twitter"
+                        name="twitter"
+                        type="text"
                         required
+                        placeholder="@seudousuario"
                         style={{
                           width: "100%", padding: "12px 14px", borderRadius: 12, fontSize: 14,
                           background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.12)",
-                          color: "#b0aaa2", outline: "none", appearance: "none",
+                          color: "#fff", outline: "none",
                         }}
                         onFocus={(e) => e.currentTarget.style.borderColor = "rgba(255,92,0,0.5)"}
                         onBlur={(e) => e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)"}
-                      >
-                        <option value="" disabled selected style={{ background: "#1a1714" }}>Selecione seu perfil</option>
-                        <option value="creator" style={{ background: "#1a1714" }}>Criador de Conteúdo</option>
-                        <option value="hunter" style={{ background: "#1a1714" }}>Bounty Hunter</option>
-                        <option value="both" style={{ background: "#1a1714" }}>Ambos</option>
-                      </select>
+                      />
                     </div>
 
                     {state?.error && (
@@ -266,7 +263,8 @@ export function PreLancamentoClient({ initialCount, refCode }: { initialCount: n
               {[
                 { icon: "notifications_active", title: "Alertas de Prazo", desc: "Notificações automáticas 48h antes de cada deadline. Nunca mais perca um bounty." },
                 { icon: "account_tree", title: "Gestão de Campanhas", desc: "Organize cada bounty do início ao fim com pipeline visual, etapas e status." },
-                { icon: "hub", title: "Rede de Protocolos", desc: "Conectado aos maiores protocolos. Catálogo vivo com links oficiais e informações." },
+                { icon: "voucher", title: "Sorteio de Keys de Ativação", desc: "Participe de sorteios exclusivos de keys de ativação para hunters selecionados." },
+                { icon: "radar", title: "Alphas for ado radar", desc: "Receba alphas e oportunidades antes de todo mundo. Radar ligado 24/7." },
               ].map((benefit) => (
                 <div key={benefit.title} style={{
                   padding: "28px 24px", borderRadius: 20,
