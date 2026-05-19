@@ -1,18 +1,15 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SignupForm } from "./signup-form";
-import { GoogleButton } from "@/components/auth/google-button";
-import { TwitterButton } from "@/components/auth/twitter-button";
 
 export const metadata: Metadata = { title: "Criar conta" };
 
 export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; ref?: string }>;
 }) {
-  const { next = "/dashboard" } = await searchParams;
+  const { next = "/dashboard", ref } = await searchParams;
 
   return (
     <>
@@ -72,24 +69,7 @@ export default async function SignupPage({
 
       {/* Glass card */}
       <div className="glass rounded-2xl p-10 shadow-[0_8px_48px_rgba(0,0,0,0.8)]" style={{ borderColor: "rgba(255,92,0,0.18)" }}>
-        {/* Social logins — lado a lado */}
-        <div className="mb-6">
-          <Suspense fallback={<div className="grid grid-cols-2 gap-3 h-10" />}>
-            <div className="grid grid-cols-2 gap-3">
-              <GoogleButton />
-              <TwitterButton />
-            </div>
-          </Suspense>
-        </div>
-
-        <div className="relative flex items-center justify-center mb-6">
-          <div className="absolute w-full border-t border-surface-container-highest" />
-          <span className="relative bg-[#131313] px-3 text-[10px] font-bold uppercase tracking-widest text-tertiary">
-            Ou crie com e-mail
-          </span>
-        </div>
-
-        <SignupForm next={next} />
+        <SignupForm next={next} refCode={ref} />
 
         <p className="mt-4 text-[10px] text-tertiary text-center">
           Ao criar a conta, você aceita nossos{" "}

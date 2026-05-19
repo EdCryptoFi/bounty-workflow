@@ -14,7 +14,14 @@ export async function requireUser() {
   return { supabase, user };
 }
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "bountyworkflow@proton.me";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "cryptolairbr@gmail.com";
+
+export const WHITELIST_EMAILS = [ADMIN_EMAIL, "cryptolairbr@gmail.com"];
+
+export function isWhitelisted(email: string | null | undefined): boolean {
+  if (!email) return false;
+  return WHITELIST_EMAILS.includes(email.toLowerCase());
+}
 
 export async function isAdmin() {
   const supabase = await createClient();

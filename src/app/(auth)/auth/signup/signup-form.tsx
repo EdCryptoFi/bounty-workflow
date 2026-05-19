@@ -3,12 +3,13 @@
 import { useFormStatus, useFormState } from "react-dom";
 import { signupAction, type SignupState } from "./actions";
 
-export function SignupForm({ next }: { next: string }) {
+export function SignupForm({ next, refCode }: { next: string; refCode?: string }) {
   const [state, action] = useFormState<SignupState, FormData>(signupAction, null);
 
   return (
     <form action={action} className="space-y-6">
       <input type="hidden" name="next" value={next} />
+      {refCode && <input type="hidden" name="ref" value={refCode} />}
 
       <GlassField
         id="full_name"

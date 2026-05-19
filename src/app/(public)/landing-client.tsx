@@ -398,7 +398,7 @@ export function LandingClient({ protocols: protocolsProp }: { protocols?: string
             border: "1px solid rgba(255,255,255,0.10)",
             boxShadow: "0 1px 0 rgba(255,255,255,0.18) inset",
           }}>Entrar</Link>
-          <Link href="/auth/signup" style={{
+          <Link href="/pre-lancamento" style={{
             height: 36, padding: "0 16px", display: "inline-flex", alignItems: "center",
             borderRadius: 999, fontSize: 13, fontWeight: 600, color: "#fff", textDecoration: "none",
             background: "linear-gradient(180deg, #ff9b50 0%, #ff6a14 38%, #d44600 100%)",
@@ -406,7 +406,7 @@ export function LandingClient({ protocols: protocolsProp }: { protocols?: string
             position: "relative", overflow: "hidden",
           }}>
             <span style={{ position: "absolute", left: "8%", right: "8%", top: 3, height: "38%", borderRadius: 999, background: "linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.05))", filter: "blur(.3px)" }}/>
-            <span style={{ position: "relative" }}>Começar grátis →</span>
+            <span style={{ position: "relative" }}>Entrar na lista →</span>
           </Link>
         </div>
       </header>
@@ -460,7 +460,7 @@ export function LandingClient({ protocols: protocolsProp }: { protocols?: string
               {/* CTA buttons */}
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 40 }}>
                 {/* Primary aqua button */}
-                <Link href="/auth/signup" style={{
+                <Link href="/pre-lancamento" style={{
                   display: "inline-flex", alignItems: "center", gap: 8,
                   height: 52, padding: "0 28px", borderRadius: 999,
                   fontWeight: 600, fontSize: 16, color: "#fff", textDecoration: "none",
@@ -470,7 +470,7 @@ export function LandingClient({ protocols: protocolsProp }: { protocols?: string
                   position: "relative", overflow: "hidden",
                 }}>
                   <span style={{ position: "absolute", left: "6%", right: "6%", top: 3, height: "38%", borderRadius: 999, background: "linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.05))", filter: "blur(.4px)" }}/>
-                  <span style={{ position: "relative" }}>Começar grátis</span>
+                  <span style={{ position: "relative" }}>Entrar na lista</span>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ position: "relative" }}>
                     <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
@@ -656,31 +656,31 @@ export function LandingClient({ protocols: protocolsProp }: { protocols?: string
             {/* Row 1 */}
             <div className="grid md:grid-cols-3 gap-5 mb-5">
               <motion.div className="md:col-span-1" variants={fadeInUp}>
-                <MotionBentoCard title="Rede de Protocolos" description="Conectado aos maiores protocolos DeFi e NFT do ecossistema. Um catálogo vivo, sempre atualizado." feature="protocols" href="/auth/signup"/>
+                <MotionBentoCard title="Rede de Protocolos" description="Conectado aos maiores protocolos DeFi e NFT do ecossistema. Um catálogo vivo, sempre atualizado." feature="protocols" href="/pre-lancamento"/>
               </motion.div>
               <motion.div className="md:col-span-2" variants={fadeInUp}>
-                <MotionBentoCard title="Gestão de Campanhas" description="Orquestre cada campanha de bounty do início ao fim com total visibilidade e controle." feature="spotlight" spotlightItems={["Reordenação de etapas por drag & drop","Fluxo multi-status (Todo → Em Progresso → Concluído)","Campanhas vinculadas a protocolos","Rastreamento de prazo com alertas","Progresso visual por etapa"]} href="/auth/signup"/>
+                <MotionBentoCard title="Gestão de Campanhas" description="Orquestre cada campanha de bounty do início ao fim com total visibilidade e controle." feature="spotlight" spotlightItems={["Reordenação de etapas por drag & drop","Fluxo multi-status (Todo → Em Progresso → Concluído)","Campanhas vinculadas a protocolos","Rastreamento de prazo com alertas","Progresso visual por etapa"]} href="/pre-lancamento"/>
               </motion.div>
             </div>
             {/* Row 2 */}
             <div className="grid md:grid-cols-3 gap-5 mb-5">
               <motion.div className="md:col-span-2" variants={fadeInUp}>
-                <MotionBentoCard title="Alertas Inteligentes" description="Sistema de alertas ciente de prazos que mantém sua equipe sempre no ritmo certo." feature="metrics" metrics={[{label:"Cobertura de prazos",value:95,suffix:"%"},{label:"Entrega no prazo",value:87,suffix:"%"},{label:"Resposta a alertas",value:78,suffix:"%"}]} href="/auth/signup"/>
+                <MotionBentoCard title="Alertas Inteligentes" description="Sistema de alertas ciente de prazos que mantém sua equipe sempre no ritmo certo." feature="metrics" metrics={[{label:"Cobertura de prazos",value:95,suffix:"%"},{label:"Entrega no prazo",value:87,suffix:"%"},{label:"Resposta a alertas",value:78,suffix:"%"}]} href="/pre-lancamento"/>
               </motion.div>
               <motion.div className="md:col-span-1" variants={fadeInUp}>
-                <MotionBentoCard title="Ciclo do Bounty" description="Da descoberta ao pagamento, cada etapa rastreada em tempo real." feature="timeline" timeline={[{year:"01",event:"Protocolo atribuído & campanha criada"},{year:"02",event:"Etapas definidas com prazos"},{year:"03",event:"Em execução — alertas ativos"},{year:"04",event:"Revisão & submissão"},{year:"05",event:"Pagamento confirmado"}]} href="/auth/signup"/>
+                <MotionBentoCard title="Ciclo do Bounty" description="Da descoberta ao pagamento, cada etapa rastreada em tempo real." feature="timeline" timeline={[{year:"01",event:"Protocolo atribuído & campanha criada"},{year:"02",event:"Etapas definidas com prazos"},{year:"03",event:"Em execução — alertas ativos"},{year:"04",event:"Revisão & submissão"},{year:"05",event:"Pagamento confirmado"}]} href="/pre-lancamento"/>
               </motion.div>
             </div>
             {/* Row 3 */}
             <div className="grid md:grid-cols-3 gap-5">
               <motion.div variants={fadeInUp}>
-                <MotionBentoCard title="Organização Total" description="Protocolos, steps, links e prazos em um só lugar. Zero planilha, zero caos." feature="spotlight" spotlightItems={["Links de evidência por campanha","Steps com status e prazos","Histórico completo de submissões","Protocolos organizados por categoria"]} href="/auth/signup"/>
+                <MotionBentoCard title="Organização Total" description="Protocolos, steps, links e prazos em um só lugar. Zero planilha, zero caos." feature="spotlight" spotlightItems={["Links de evidência por campanha","Steps com status e prazos","Histórico completo de submissões","Protocolos organizados por categoria"]} href="/pre-lancamento"/>
               </motion.div>
               <motion.div variants={fadeInUp}>
-                <MotionBentoCard title="Sistema de Indicação" description="Indique outros hunters e multiplique suas recompensas. Programa exclusivo para membros." feature="counter" statistic={{value:"2.4×",label:"MULTIPLICADOR DE RECOMPENSA",start:1.8,end:2.4,suffix:"×"}} href="/auth/signup"/>
+                <MotionBentoCard title="Sistema de Indicação" description="Indique outros hunters e multiplique suas recompensas. Programa exclusivo para membros." feature="counter" statistic={{value:"2.4×",label:"MULTIPLICADOR DE RECOMPENSA",start:1.8,end:2.4,suffix:"×"}} href="/pre-lancamento"/>
               </motion.div>
               <motion.div variants={fadeInUp}>
-                <MotionBentoCard title="Bounty AI — Algoritmo X" description="Analise seus posts com o algoritmo Phoenix (xAI 2026) antes de publicar. Score 0-100 em tempo real." feature="bountyai" href="/auth/signup"/>
+                <MotionBentoCard title="Bounty AI — Algoritmo X" description="Analise seus posts com o algoritmo Phoenix (xAI 2026) antes de publicar. Score 0-100 em tempo real." feature="bountyai" href="/pre-lancamento"/>
               </motion.div>
             </div>
           </motion.div>
@@ -720,7 +720,7 @@ export function LandingClient({ protocols: protocolsProp }: { protocols?: string
                   </li>
                 ))}
               </ul>
-              <Link href="/auth/signup" style={{
+              <Link href="/pre-lancamento" style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
                 width: "100%", height: 46, borderRadius: 999,
                 background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.18)",
@@ -759,7 +759,7 @@ export function LandingClient({ protocols: protocolsProp }: { protocols?: string
                   </li>
                 ))}
               </ul>
-              <Link href="/auth/signup" style={{
+              <Link href="/pre-lancamento" style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
                 width: "100%", height: 46, borderRadius: 999,
                 background: "linear-gradient(180deg, #ff9b50 0%, #ff6a14 38%, #d44600 100%)",
@@ -829,7 +829,7 @@ export function LandingClient({ protocols: protocolsProp }: { protocols?: string
                   ))}
                 </ul>
 
-                <Link href="/auth/signup" style={{
+                <Link href="/pre-lancamento" style={{
                   display: "flex", alignItems: "center", justifyContent: "center",
                   width: "100%", height: 46, borderRadius: 999,
                   background: "linear-gradient(180deg, #ffb870 0%, #ff7a1f 38%, #c93e00 100%)",
@@ -984,7 +984,7 @@ function DemoPipelineModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
         <div className="px-8 pb-8 flex gap-4">
-          <Link href="/auth/signup" onClick={onClose} className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-sm font-bold uppercase tracking-widest rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,92,0,0.4)]">
+          <Link href="/pre-lancamento" onClick={onClose} className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-[#ff5c00] hover:bg-[#ff7b33] text-white text-sm font-bold uppercase tracking-widest rounded-lg transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,92,0,0.4)]">
             Começar grátis — 14 dias
           </Link>
           <Link href="/como-usar" onClick={onClose} className="px-6 py-3.5 text-sm font-bold uppercase tracking-widest rounded-lg border border-zinc-700 text-tertiary hover:text-on-surface hover:border-zinc-500 transition-all">

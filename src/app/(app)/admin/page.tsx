@@ -122,6 +122,13 @@ export default async function AdminDashboardPage() {
         </div>
         <div className="flex gap-3">
           <Link
+            href="/admin/lancamento"
+            className="flex items-center gap-2 px-4 py-2.5 rounded border border-green-500/30 text-green-400 text-xs font-bold uppercase tracking-widest hover:bg-green-500/10 transition-all"
+          >
+            <span className="material-symbols-outlined text-[16px]">rocket_launch</span>
+            Lançamento
+          </Link>
+          <Link
             href="/admin/analytics"
             className="flex items-center gap-2 px-4 py-2.5 rounded border border-[rgba(255,92,0,0.3)] text-[#ffb59a] text-xs font-bold uppercase tracking-widest hover:bg-[rgba(255,92,0,0.08)] transition-all"
           >
@@ -269,6 +276,12 @@ export default async function AdminDashboardPage() {
       {/* Quick links */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
+          {
+            href: "/admin/lancamento",
+            icon: "rocket_launch",
+            label: "Campanha de Lançamento",
+            desc: "Controle total da lista de espera, indicações e fila de email.",
+          },
           {
             href: "/admin/analytics",
             icon: "analytics",

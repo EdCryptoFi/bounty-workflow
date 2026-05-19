@@ -10,6 +10,7 @@ const nav = [
   { href: "/campaigns", label: "Campaigns", icon: "rocket_launch" },
   { href: "/reminders", label: "Reminders", icon: "notifications_active" },
   { href: "/referrals", label: "Referrals", icon: "redeem" },
+  { href: "/referrals/points", label: "Pontos", icon: "emoji_events" },
   { href: "/dicas", label: "Bounty AI", icon: "bolt" },
   { href: "/como-usar", label: "Como usar", icon: "school" },
 ];

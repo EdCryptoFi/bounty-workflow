@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { isWhitelisted } from "@/lib/auth";
 
 const loginSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -24,6 +25,10 @@ export async function loginAction(_: LoginState, formData: FormData): Promise<Lo
   }
   const { email, password, next } = parsed.data;
 
+  if (!isWhitelisted(email)) {
+    return { error: "Acesso restrito. O lançamento oficial ainda não ocorreu." };
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: "Email ou senha incorretos" };
@@ -40,6 +45,10 @@ export async function magicLinkAction(
     return { error: parsed.error.issues[0]?.message ?? "Email inválido" };
   }
   const { email, next } = parsed.data;
+
+  if (!isWhitelisted(email)) {
+    return { error: "Acesso restrito. O lançamento oficial ainda não ocorreu." };
+  }
 
   const supabase = await createClient();
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";

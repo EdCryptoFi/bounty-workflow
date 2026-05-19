@@ -54,8 +54,8 @@ export function PublicHeader() {
             <Link href="/auth/login" className="aqua-ghost-btn" style={{ padding: "7px 16px", fontSize: 12, borderRadius: 999 }}>
               Entrar
             </Link>
-            <Link href="/auth/signup" className="aqua-pill-btn" style={{ padding: "7px 16px", fontSize: 12, borderRadius: 999 }}>
-              Começar grátis →
+            <Link href="/pre-lancamento" className="aqua-pill-btn" style={{ padding: "7px 16px", fontSize: 12, borderRadius: 999 }}>
+              Entrar na lista →
             </Link>
           </div>
         </div>

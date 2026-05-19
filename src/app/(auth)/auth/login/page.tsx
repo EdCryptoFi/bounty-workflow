@@ -1,9 +1,6 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { LoginForm } from "./login-form";
-import { GoogleButton } from "@/components/auth/google-button";
-import { TwitterButton } from "@/components/auth/twitter-button";
 
 export const metadata: Metadata = { title: "Entrar" };
 
@@ -87,23 +84,6 @@ export default async function LoginPage({
             Email confirmado. Faça login pra continuar.
           </div>
         )}
-
-        {/* Social logins — lado a lado */}
-        <div className="mb-6">
-          <Suspense fallback={<div className="grid grid-cols-2 gap-3 h-10" />}>
-            <div className="grid grid-cols-2 gap-3">
-              <GoogleButton />
-              <TwitterButton />
-            </div>
-          </Suspense>
-        </div>
-
-        <div className="relative flex items-center justify-center mb-6">
-          <div className="absolute w-full border-t border-surface-container-highest" />
-          <span className="relative bg-[#131313] px-3 text-[10px] font-bold uppercase tracking-widest text-tertiary">
-            Ou entre com e-mail
-          </span>
-        </div>
 
         <LoginForm next={next} />
       </div>
