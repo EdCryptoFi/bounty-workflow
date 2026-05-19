@@ -41,8 +41,6 @@ export default async function AdminLancamentoPage() {
       .select("value")
       .eq("key", "launch_mode")
       .single(),
-    supabase
-      .rpc("get_daily_waitlist_counts"),
   ]);
 
   const totalClicks = referralStats?.length ?? 0;

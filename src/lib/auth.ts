@@ -16,7 +16,7 @@ export async function requireUser() {
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "cryptolairbr@gmail.com";
 
-export const WHITELIST_EMAILS = [ADMIN_EMAIL, "cryptolairbr@gmail.com"];
+export const WHITELIST_EMAILS = [ADMIN_EMAIL];
 
 export function isWhitelisted(email: string | null | undefined): boolean {
   if (!email) return false;
