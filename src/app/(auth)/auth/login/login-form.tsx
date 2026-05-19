@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useFormStatus, useFormState } from "react-dom";
 import { loginAction, magicLinkAction, type LoginState } from "./actions";
+import { GoogleButton } from "@/components/auth/google-button";
+import { TwitterButton } from "@/components/auth/twitter-button";
+
 export function LoginForm({ next }: { next: string }) {
   const [mode, setMode] = useState<"password" | "magic">("password");
   const [pwState, pwAction] = useFormState<LoginState, FormData>(loginAction, null);
@@ -91,6 +94,20 @@ export function LoginForm({ next }: { next: string }) {
         >
           {mode === "password" ? "Usar magic link →" : "← Usar senha"}
         </button>
+      </div>
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-outline-variant/20" />
+        </div>
+        <div className="relative flex justify-center text-[10px] font-bold uppercase tracking-widest">
+          <span className="bg-[#181715] px-3 text-tertiary">Ou continue com</span>
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <GoogleButton />
+        <TwitterButton />
       </div>
     </div>
   );

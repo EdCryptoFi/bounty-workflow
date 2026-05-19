@@ -2,52 +2,70 @@
 
 import { useFormStatus, useFormState } from "react-dom";
 import { signupAction, type SignupState } from "./actions";
+import { GoogleButton } from "@/components/auth/google-button";
+import { TwitterButton } from "@/components/auth/twitter-button";
 
 export function SignupForm({ next, refCode }: { next: string; refCode?: string }) {
   const [state, action] = useFormState<SignupState, FormData>(signupAction, null);
 
   return (
-    <form action={action} className="space-y-6">
-      <input type="hidden" name="next" value={next} />
-      {refCode && <input type="hidden" name="ref" value={refCode} />}
+    <>
+      <form action={action} className="space-y-6">
+        <input type="hidden" name="next" value={next} />
+        {refCode && <input type="hidden" name="ref" value={refCode} />}
 
-      <GlassField
-        id="full_name"
-        type="text"
-        label="Nome"
-        placeholder="Como podemos te chamar?"
-        icon="person"
-      />
-      <GlassField
-        id="email"
-        type="email"
-        label="E-mail Corporativo"
-        placeholder="nome@empresa.com"
-        icon="mail"
-        required
-      />
-      <GlassField
-        id="password"
-        type="password"
-        label="Senha de Acesso"
-        placeholder="8+ caracteres, 1 maiúscula, 1 número"
-        icon="lock"
-        required
-      />
+        <GlassField
+          id="full_name"
+          type="text"
+          label="Nome"
+          placeholder="Como podemos te chamar?"
+          icon="person"
+        />
+        <GlassField
+          id="email"
+          type="email"
+          label="E-mail Corporativo"
+          placeholder="nome@empresa.com"
+          icon="mail"
+          required
+        />
+        <GlassField
+          id="password"
+          type="password"
+          label="Senha de Acesso"
+          placeholder="8+ caracteres, 1 maiúscula, 1 número"
+          icon="lock"
+          required
+        />
 
-      {state?.error && (
-        <div className="rounded border border-red-900/40 bg-red-900/20 px-3 py-2 text-xs font-medium text-red-300">
-          {state.error}
+        {state?.error && (
+          <div className="rounded border border-red-900/40 bg-red-900/20 px-3 py-2 text-xs font-medium text-red-300">
+            {state.error}
+          </div>
+        )}
+        {state?.ok && (
+          <div className="rounded border border-secondary/30 bg-secondary/10 px-3 py-2 text-xs font-medium text-secondary">
+            {state.ok}
+          </div>
+        )}
+
+        <SubmitButton />
+      </form>
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-outline-variant/20" />
         </div>
-      )}
-      {state?.ok && (
-        <div className="rounded border border-secondary/30 bg-secondary/10 px-3 py-2 text-xs font-medium text-secondary">
-          {state.ok}
+        <div className="relative flex justify-center text-[10px] font-bold uppercase tracking-widest">
+          <span className="bg-[#181715] px-3 text-tertiary">Ou continue com</span>
         </div>
-      )}
+      </div>
 
-      <SubmitButton />
-    </form>
+      <div className="flex gap-3">
+        <GoogleButton />
+        <TwitterButton />
+      </div>
+    </>
   );
 }
 

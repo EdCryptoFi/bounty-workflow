@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { isWhitelisted } from "@/lib/auth";
 
 /**
  * Handler de callback OAuth + magic link.
@@ -25,6 +26,11 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient();
     const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
     if (!exchangeError) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!isWhitelisted(user?.email)) {
+        await supabase.auth.signOut();
+        return NextResponse.redirect(new URL("/pre-lancamento", origin));
+      }
       return NextResponse.redirect(new URL(safeNext, origin));
     }
     const url = new URL("/auth/login", origin);

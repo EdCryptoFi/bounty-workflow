@@ -31,7 +31,7 @@ export async function signupAction(
   const { email, password, full_name, next, ref } = parsed.data;
 
   if (!isWhitelisted(email)) {
-    return { error: "Acesso restrito. O lançamento oficial ainda não ocorreu." };
+    redirect("/pre-lancamento");
   }
 
   // Track referral if provided

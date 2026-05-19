@@ -26,7 +26,7 @@ export async function loginAction(_: LoginState, formData: FormData): Promise<Lo
   const { email, password, next } = parsed.data;
 
   if (!isWhitelisted(email)) {
-    return { error: "Acesso restrito. O lançamento oficial ainda não ocorreu." };
+    redirect("/pre-lancamento");
   }
 
   const supabase = await createClient();
@@ -47,7 +47,7 @@ export async function magicLinkAction(
   const { email, next } = parsed.data;
 
   if (!isWhitelisted(email)) {
-    return { error: "Acesso restrito. O lançamento oficial ainda não ocorreu." };
+    redirect("/pre-lancamento");
   }
 
   const supabase = await createClient();
