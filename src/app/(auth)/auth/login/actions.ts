@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { isWhitelisted } from "@/lib/auth";
+import { isWhitelisted, isLaunchOpen } from "@/lib/auth";
 
 const loginSchema = z.object({
   email: z.string().email("Email inválido"),
@@ -25,7 +25,7 @@ export async function loginAction(_: LoginState, formData: FormData): Promise<Lo
   }
   const { email, password, next } = parsed.data;
 
-  if (!isWhitelisted(email)) {
+  if (!(await isLaunchOpen()) && !isWhitelisted(email)) {
     redirect("/pre-lancamento");
   }
 
@@ -46,7 +46,7 @@ export async function magicLinkAction(
   }
   const { email, next } = parsed.data;
 
-  if (!isWhitelisted(email)) {
+  if (!(await isLaunchOpen()) && !isWhitelisted(email)) {
     redirect("/pre-lancamento");
   }
 

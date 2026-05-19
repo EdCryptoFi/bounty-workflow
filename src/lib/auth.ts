@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 /**
  * Retorna o user autenticado ou faz redirect. Use em Server Components
@@ -21,6 +21,20 @@ export const WHITELIST_EMAILS = [ADMIN_EMAIL, "cryptolairbr@gmail.com"];
 export function isWhitelisted(email: string | null | undefined): boolean {
   if (!email) return false;
   return WHITELIST_EMAILS.includes(email.toLowerCase());
+}
+
+export async function isLaunchOpen(): Promise<boolean> {
+  try {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from("app_config")
+      .select("value")
+      .eq("key", "launch_mode")
+      .single();
+    return data?.value === true;
+  } catch {
+    return false;
+  }
 }
 
 export async function isAdmin() {
